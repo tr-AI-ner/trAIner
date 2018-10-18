@@ -1,6 +1,7 @@
 package game;
 
 import functionality.GraphicsManager;
+import functionality.InputManager;
 
 public class Main {
 
@@ -12,7 +13,8 @@ public class Main {
 
 	public Main() {
 		
-		GraphicsManager gm = new GraphicsManager(); //create the panel
+		InputManager inputManager = new InputManager();
+		GraphicsManager gm = new GraphicsManager(inputManager); //create the panel
 		game = new Game(gm); // create the game
 			
 //		game.init(gm, gm.getInputSystem()); // Initialize all variables in game, including the panel
