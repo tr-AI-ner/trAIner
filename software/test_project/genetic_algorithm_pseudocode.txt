@@ -1,0 +1,13 @@
+GeneticAlgorithm():
+    initialize population
+    determinte fitness of population
+
+    while(termination criteria is reached):
+        select parents
+        perform crossover with crossover probability pc
+        mutate with mutation probability pm
+        transform solution from genotype to phenotype space
+        select survivors
+        find best
+    
+    return best
