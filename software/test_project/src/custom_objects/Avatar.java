@@ -8,6 +8,8 @@ public class Avatar extends Entity {
 	
 	private int toMoveX = getX();
 	private int toMoveY = getY();
+	
+	private Setup setup;
 
 	public Avatar(int x, int y, int width, int height, Color color) {
 		super(x, y, width, height);
@@ -18,13 +20,37 @@ public class Avatar extends Entity {
 		this.toMoveX = (int) (this.toMoveX != 0 ? this.toMoveX : this.getX() + incX); 
 		this.toMoveY = (int) (this.toMoveY != 0 ? this.toMoveY : this.getY() + incY); 
 		
-		if(incY == 0) // A D
+		if(incY == 0) // left-arrow right-arrow
 			this.toMoveX = (this.getX() + incX);
-		else if(incX == 0)  // W S
+		else if(incX == 0)  // up-arrow down-arrow
 			this.toMoveY = (this.getY() + incY);
 		
-		this.setX(toMoveX);
-		this.setY(toMoveY);
+		if(!checkForCollision()){
+			this.setX(toMoveX);
+			this.setY(toMoveY);
+		} else {
+			toMoveX = getX();
+			toMoveY = getY();
+			System.out.println("colliding with border");
+		}
+	}
+	
+	/**
+	 *  checks if avatar collides with border,
+	 *  if so return true
+	 * @return
+	 */
+	public boolean checkForCollision(){
+		return (
+				this.toMoveX <= 0 ||
+				this.toMoveY <= 0 ||
+				this.toMoveX >= (setup.getFrameWidth() - getWidth()) ||
+				this.toMoveY >= (setup.getFrameHeight() - getHeight())
+				);
+	}
+	
+	public void setSetup(Setup setup){
+		this.setup = setup;
 	}
 	
 //	public void controlMove(int incX, int incY) {

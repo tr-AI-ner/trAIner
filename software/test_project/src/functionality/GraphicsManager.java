@@ -25,6 +25,8 @@ public class GraphicsManager extends JPanel {
 			getDefaultScreenDevice().getDefaultConfiguration();
 	private BufferedImage imageBuffer;
 	private Graphics graphics;
+	
+	private Color backgroundColor = new Color(34, 30, 31);//new Color(0,0,255);
 
 	JFrame frame;
 	Game game;
@@ -73,7 +75,7 @@ public class GraphicsManager extends JPanel {
 	
 	public void clear(){
 //		graphics.setColor(Color.DARK_GRAY);
-		graphics.setColor(new Color(34, 30, 31));
+		graphics.setColor(backgroundColor);
 		graphics.fillRect(0, 0,setup.getFrameWidth()+12,setup.getFrameHeight()+12);
 	}
 
@@ -109,6 +111,9 @@ public class GraphicsManager extends JPanel {
 		return inputManager;
 	}
 
+	public void setBackgroundColor(Color newCol){
+		backgroundColor = newCol;
+	}
 
 
 }
