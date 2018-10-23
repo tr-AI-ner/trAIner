@@ -32,6 +32,7 @@ public class Game {
 				//r, g, b
 				new Color(255, 0, 0)
 				);
+		avatar.setSetup(setup);
 	}
 	
 	public void run(){
