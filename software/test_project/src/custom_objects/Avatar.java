@@ -31,13 +31,13 @@ public class Avatar extends Entity {
 		} else {
 			toMoveX = getX();
 			toMoveY = getY();
-			System.out.println("colliding with border");
+//			System.out.println("colliding with border");
 		}
 	}
 	
 	/**
 	 *  checks if avatar collides with border,
-	 *  if so return true
+	 *  if so returns true
 	 * @return
 	 */
 	public boolean checkForCollision(){
