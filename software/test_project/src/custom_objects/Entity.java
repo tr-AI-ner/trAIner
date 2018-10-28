@@ -1,6 +1,7 @@
 package custom_objects;
 
 import java.awt.Color;
+import java.awt.Graphics;
 
 public abstract class Entity {
 
@@ -12,25 +13,52 @@ public abstract class Entity {
 	private double alpha;
 	private Color color;
 	
-	public Entity(int x, int y, int width, int height, double alpha, Color color){
+	private EntityType type = EntityType.Default;
+	
+	public Entity(int x, int y, int width, int height, double alpha, Color color, EntityType type){
 		this.x = x;
 		this.y = y; 
 		this.width = width;
 		this.height = height;
 		this.alpha = alpha;
 		this.color = color;
+		this.type = type;
 	}
 	
-	public Entity(int x, int y, int width, int height){
+	public Entity(int x, int y, int width, int height, Color color, EntityType type){
+		this.x = x;
+		this.y = y; 
+		this.width = width;
+		this.height = height;
+		this.color = color;
+		this.type = type;
+	}
+	
+	public Entity(int x, int y, int width, int height, EntityType type){
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
+		this.type = type;
+	}
+	
+	/**
+	 * draw a basic entity
+	 * (any class extending this one should override this function)
+	 * 
+	 * @param graphics
+	 */
+	public void draw(Graphics graphics){
+		//draw fill
+		graphics.setColor(getColor());
+		graphics.fillRect(getX(), getY(), getWidth(), getHeight());
+		//draw border with same color
+		graphics.drawRect(getX(), getY(), getWidth(), getHeight());
 	}
 	
 	@Override
 	public String toString() {
-		return "entity object, x: "+x+", y: "+y+", width: "+width+", height: "+height+
+		return "entity object of type "+type.name()+", x: "+x+", y: "+y+", width: "+width+", height: "+height+
 				", alpha: "+alpha+
 				", color: "+color.getRed()+","+color.getGreen()+","+color.getBlue();
 	}
@@ -76,8 +104,16 @@ public abstract class Entity {
 	public void setColor(Color color) {
 		this.color = color;
 	}
-	
-	
+
+	public EntityType getType() {
+		return type;
+	}
+//	public String getTypeString(){
+//		
+//	}
+	public void setType(EntityType type) {
+		this.type = type;
+	}
 	
 	
 	

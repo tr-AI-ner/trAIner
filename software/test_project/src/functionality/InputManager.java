@@ -10,13 +10,14 @@ public class InputManager implements KeyListener, MouseListener, MouseMotionList
 
 	// everything a user can press on keyboard or mouse	
 	private int mousePressedX, mousePressedY, mouseMovedX, mouseMovedY, mouseButton;
+	private int mouseDraggedX, mouseDraggedY;
 	private char keyPressed;
 
 	private char secondKeyPressed;
 	private boolean isSecondKeyEvent;
 
 	// if Mouse was clicked, Key was pressed or Mouse is still hold down
-	private boolean isMouseEvent, isKeyEvent, isMousePressed; 
+	private boolean isMouseEvent, isKeyEvent, isMousePressed, isMouseDragged; 
 	
 	private long lastMouseProcessTime = 0;
 
@@ -43,16 +44,16 @@ public class InputManager implements KeyListener, MouseListener, MouseMotionList
 
 	@Override
 	public void mouseDragged(MouseEvent evt){ 
-		mouseMovedX=evt.getX();
-		mouseMovedY=evt.getY();
+		isMouseEvent   = true;
+		mouseDraggedX=evt.getX();
+		mouseDraggedY=evt.getY();
+		isMouseDragged = true;
 	}
 
 	//boolean array to "save" keys
 	private boolean[] keyArray = new boolean[100]; 
 	//0=up-arrow 1=down-arrow   2=left-arrow   3=right-arrow    4=ESC   5=SHIFT
 	//UP, DOWN, LEFT, RIGHT, ESCAPE, RUN
-	//6=1   7=2   8=E   9=3
-	//WWALL RWALL TRAP  BERRY
 
 	//if the key is being pressed sets the respective key to true
 	//i.e. when w is being pressed sets keyArray[0] to true, which is up
@@ -103,6 +104,8 @@ public class InputManager implements KeyListener, MouseListener, MouseMotionList
 	public int getMousePressedY(){return mousePressedY;}
 	public int getMouseMovedX(){return mouseMovedX;}
 	public int getMouseMovedY(){return mouseMovedY;}
+	public int getMouseDraggedX(){return mouseDraggedX;}
+	public int getMouseDraggedY(){return mouseDraggedY;}
 	public int getMouseButton(){return mouseButton;}
 
 	public char getKeyPressed(){return keyPressed;}
@@ -113,6 +116,7 @@ public class InputManager implements KeyListener, MouseListener, MouseMotionList
 	}
 
 	public boolean getIsMouseEvent(){return isMouseEvent;}
+	public boolean getIsMouseDragged(){return isMouseDragged;}
 	public boolean getIsKeyEvent(){return isKeyEvent;}
 	public boolean getIsMousePressed(){return isMousePressed;}
 
