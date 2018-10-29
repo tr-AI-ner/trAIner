@@ -1,9 +1,42 @@
 package functionality;
 
+import java.awt.Color;
+
 public final class Constants {
 
 	public static final long FRAME_MINIMUM_MILLIS = 20;
 	
+	// basic window sizes
+	public static final int WINDOW_MAP_WIDTH = 1024; //1024 or 960
+	public static final int WINDOW_MAP_HEIGHT = 576; //576 or 540
+	public static final int WINDOW_MAP_MARGIN = 20;
+	public static final int WINDOW_HEADER_HEIGHT = 52; //52 or 70 - same for footer height
+	public static final int WINDOW_RIGHT_BAR_WIDTH = 216; //216 or 280
+	public static final int WINDOW_RIGHT_BAR_HEIGHT = 616; //616 or 580
+	
+//	public static final int WINDOW_MAP_WIDTH = 960; //1024 or 960
+//	public static final int WINDOW_MAP_HEIGHT = 540; //576 or 540
+//	public static final int WINDOW_MAP_MARGIN = 20;
+//	public static final int WINDOW_HEADER_HEIGHT = 70; //52 or 70 - same for footer height
+//	public static final int WINDOW_RIGHT_BAR_WIDTH = 280; //216 or 280
+//	public static final int WINDOW_RIGHT_BAR_HEIGHT = 580; //616 or 580
+	
+	public static final int WINDOW_MAP_X0 = WINDOW_MAP_MARGIN;
+	public static final int WINDOW_MAP_Y0 = WINDOW_HEADER_HEIGHT + WINDOW_MAP_MARGIN;
+	
+	
 	//colors
+	public static final Color COLOR_BACKGROUND = new Color(38,40,71); // #262847
+	public static final Color COLOR_HEADER_1 = new Color(30,37,59); // #1E253B
+	public static final Color COLOR_HEADER_2 = new Color(42,50,77); // #2A324D
+	public static final Color COLOR_MAP_LAND = new Color(52,59,98); // #343B62
+	public static final Color COLOR_MAP_START = new Color(108,77,111); // #6C4D6F
+	public static final Color COLOR_AVATAR_RED = new Color(252,137,130); // #FC8982
+	public static final Color COLOR_AVATAR_BLUE = new Color(100,188,252); // #64BCFC
+	public static final Color COLOR_AVATAR_WHITE = new Color(222,226,237); // #DEE2ED
+	
+	public static final Color COLOR_ACCENT = new Color(127,119,229); // #7F77E5
+	public static final Color COLOR_ACCENT_2 = new Color(154,240,144); // #9AF090
+	
 	
 }

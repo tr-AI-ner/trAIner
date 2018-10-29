@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import custom_objects.Avatar;
 import custom_objects.Entity;
 import functionality.Clock;
+import functionality.Constants;
 import functionality.GraphicsManager;
 import functionality.InputManager;
 import functionality.Setup;
@@ -23,7 +24,7 @@ public class Game {
 	ArrayList<Entity> entities = new ArrayList<>();
 	ArrayList<MapElement> mapElements;
 	ElementWall theGreatWall;
-	final int avatarWidht=20, avatarHeight=20;
+	final int avatarWidth=20, avatarHeight=20;
 	
 	public Game(GraphicsManager gm){
 		this.graphicsManager = gm;
@@ -34,11 +35,12 @@ public class Game {
 		entities = new ArrayList<>();
 		
 		avatar = new Avatar(
-				((setup.getFrameWidth() - (avatarWidht/2)) / 2), 
-				((setup.getFrameHeight() - (avatarHeight/2)) / 2),
-				avatarWidht, avatarHeight,
+				((Constants.WINDOW_MAP_X0+Constants.WINDOW_MAP_WIDTH - (avatarWidth/2)) / 2), 
+				((Constants.WINDOW_MAP_HEIGHT - (avatarHeight/2)) / 2),
+				avatarWidth, avatarHeight,
+				Constants.COLOR_AVATAR_RED
 				//r, g, b
-				new Color(255, 0, 0)
+//				new Color(255, 0, 0)
 				);
 		avatar.setSetup(setup);
 		avatar.setGame(this);
@@ -47,7 +49,7 @@ public class Game {
 		
 		mapElements = new ArrayList<>();
 		
-		theGreatWall = new ElementWall(50, 50, 50, 20, new Color(0, 255, 0));
+		theGreatWall = new ElementWall(100, 100, 50, 20, new Color(0, 255, 0));
 		mapElements.add(theGreatWall);
 		// add all map-elements to entities
 		entities.addAll(mapElements);

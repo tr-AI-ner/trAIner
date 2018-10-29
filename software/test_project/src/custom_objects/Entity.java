@@ -3,6 +3,8 @@ package custom_objects;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import functionality.Constants;
+
 public abstract class Entity {
 
 	private int x;
@@ -69,12 +71,18 @@ public abstract class Entity {
 	public void setX(int x) {
 		this.x = x;
 	}
+	public int getMapX(){
+		return x + Constants.WINDOW_MAP_X0;
+	}
 
 	public int getY() {
 		return y;
 	}
 	public void setY(int y) {
 		this.y = y;
+	}
+	public int getMapY(){
+		return y + Constants.WINDOW_MAP_Y0;
 	}
 	
 	public int getWidth() {

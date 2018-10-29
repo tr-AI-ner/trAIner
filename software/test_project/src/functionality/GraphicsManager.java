@@ -82,8 +82,36 @@ public class GraphicsManager extends JPanel {
 	 * clears full window and draws background color
 	 */
 	public void clear(){
-		graphics.setColor(backgroundColor);
+		graphics.setColor(Constants.COLOR_BACKGROUND);
 		graphics.fillRect(0, 0,setup.getFrameWidth()+12,setup.getFrameHeight()+12);
+		drawWindowSetup();
+	}
+	
+	private void drawWindowSetup(){
+		//draw header
+		graphics.setColor(Constants.COLOR_HEADER_1);
+		graphics.fillRect(0, 0, setup.getFrameWidth()+12, Constants.WINDOW_HEADER_HEIGHT);
+		
+		//draw map
+		graphics.setColor(Constants.COLOR_MAP_LAND);
+		graphics.fillRect(Constants.WINDOW_MAP_MARGIN,
+						  Constants.WINDOW_HEADER_HEIGHT+Constants.WINDOW_MAP_MARGIN, 
+						  Constants.WINDOW_MAP_WIDTH, 
+						  Constants.WINDOW_MAP_HEIGHT);
+		
+		//draw footer
+		graphics.setColor(Constants.COLOR_HEADER_1);
+		graphics.fillRect(0, 
+						  Constants.WINDOW_HEADER_HEIGHT+(Constants.WINDOW_MAP_MARGIN*2)+Constants.WINDOW_MAP_HEIGHT, 
+						  setup.getFrameWidth()+12, 
+						  Constants.WINDOW_HEADER_HEIGHT);
+		
+		//draw right bar
+		graphics.setColor(Constants.COLOR_MAP_LAND);
+		graphics.fillRect((Constants.WINDOW_MAP_MARGIN*2)+Constants.WINDOW_MAP_WIDTH,
+						  Constants.WINDOW_HEADER_HEIGHT, 
+						  Constants.WINDOW_RIGHT_BAR_WIDTH, 
+						  Constants.WINDOW_RIGHT_BAR_HEIGHT);
 	}
 	
 	/**
