@@ -3,6 +3,7 @@ package custom_objects;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import functionality.Constants;
 import functionality.Setup;
 import game.Game;
 import map_builder.MapElement;
@@ -57,10 +58,10 @@ public class Avatar extends Entity {
 	 */
 	private boolean collidingWithBorder(){
 		return (
-				   this.toMoveX <= 0 
-				|| this.toMoveY <= 0 
-				|| this.toMoveX >= (setup.getFrameWidth() - getWidth()) 
-				|| this.toMoveY >= (setup.getFrameHeight() - getHeight())
+				       this.toMoveX <= 0 
+					|| this.toMoveY <= 0
+					|| this.toMoveX >= (Constants.WINDOW_MAP_WIDTH - getWidth()) 
+					|| this.toMoveY >= (Constants.WINDOW_MAP_HEIGHT - getHeight())
 				);
 	}
 	

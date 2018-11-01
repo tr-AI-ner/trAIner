@@ -16,6 +16,7 @@ import custom_objects.Entity;
 import game.Game;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import map_builder.Map;
 import map_builder.MapElement;
 
 public class GraphicsManager extends JPanel {
@@ -35,13 +36,15 @@ public class GraphicsManager extends JPanel {
 	Game game;
 	Setup setup = new Setup();
 	InputManager inputManager;
+	Map map;
 
 
-	public GraphicsManager(InputManager inputManager){
+	public GraphicsManager(InputManager inputManager, Map map){
 		//set window size
 		setPreferredSize(new Dimension(setup.getFrameWidth(), setup.getFrameHeight()));
 		
 		this.inputManager = inputManager;
+		this.map = map;
 
 		// set up window configurations
 		frame = new JFrame("trAIner");
@@ -93,11 +96,7 @@ public class GraphicsManager extends JPanel {
 		graphics.fillRect(0, 0, setup.getFrameWidth()+12, Constants.WINDOW_HEADER_HEIGHT);
 		
 		//draw map
-		graphics.setColor(Constants.COLOR_MAP_LAND);
-		graphics.fillRect(Constants.WINDOW_MAP_MARGIN,
-						  Constants.WINDOW_HEADER_HEIGHT+Constants.WINDOW_MAP_MARGIN, 
-						  Constants.WINDOW_MAP_WIDTH, 
-						  Constants.WINDOW_MAP_HEIGHT);
+		map.draw(graphics);
 		
 		//draw footer
 		graphics.setColor(Constants.COLOR_HEADER_1);
@@ -167,6 +166,10 @@ public class GraphicsManager extends JPanel {
 
 	public Setup getSetup(){
 		return setup;
+	}
+	
+	public Map getMap(){
+		return map;
 	}
 
 	public InputManager getInputManager(){

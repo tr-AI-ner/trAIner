@@ -1,5 +1,7 @@
 package map_builder;
 
+import java.awt.Graphics;
+
 import functionality.Constants;
 
 public class Map {
@@ -44,6 +46,19 @@ public class Map {
 				map[col][row] = MapType.LAND.representation();
 			}
 		}
+	}
+	
+	/**
+	 * draw full map
+	 * 
+	 * @param graphics
+	 */
+	public void draw(Graphics graphics){
+		graphics.setColor(Constants.COLOR_MAP_LAND);
+		graphics.fillRect(Constants.WINDOW_MAP_MARGIN,
+						  Constants.WINDOW_HEADER_HEIGHT+Constants.WINDOW_MAP_MARGIN, 
+						  Constants.WINDOW_MAP_WIDTH, 
+						  Constants.WINDOW_MAP_HEIGHT);
 	}
 
 }

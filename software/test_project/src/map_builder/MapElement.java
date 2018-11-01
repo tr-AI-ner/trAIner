@@ -50,11 +50,11 @@ public abstract class MapElement extends Entity {
 	public void draw(Graphics graphics){
 		//draw fill
 		graphics.setColor(getColor());
-		graphics.fillRect(getX(), getY(), getWidth(), getHeight());
+		graphics.fillRect(getMapX(), getMapY(), getWidth(), getHeight());
 		
 		//draw border
 //		graphics.setColor(Color.DARK_GRAY);
-		graphics.drawRect(getX(), getY(), getWidth(), getHeight());
+		graphics.drawRect(getMapX(), getMapY(), getWidth(), getHeight());
 	}
 	
 	@Override
