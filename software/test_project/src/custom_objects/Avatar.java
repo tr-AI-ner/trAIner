@@ -1,8 +1,11 @@
 package custom_objects;
 
 import java.awt.Color;
+import java.awt.Graphics;
 
 import functionality.Setup;
+import game.Game;
+import map_builder.MapElement;
 
 public class Avatar extends Entity {
 	
@@ -10,9 +13,10 @@ public class Avatar extends Entity {
 	private int toMoveY = getY();
 	
 	private Setup setup;
+	private Game game;
 
 	public Avatar(int x, int y, int width, int height, Color color) {
-		super(x, y, width, height);
+		super(x, y, width, height, EntityType.Avatar);
 		this.setColor(color);
 	}
 	
@@ -31,8 +35,19 @@ public class Avatar extends Entity {
 		} else {
 			toMoveX = getX();
 			toMoveY = getY();
-//			System.out.println("colliding with border");
 		}
+	}
+	
+	/**
+	 *  checks if avatar collides with any objects or border,
+	 *  if so returns true
+	 * @return
+	 */
+	private boolean checkForCollision(){
+		return (
+				collidingWithBorder() || 
+				collidingWithMapElement()
+				);
 	}
 	
 	/**
@@ -40,46 +55,55 @@ public class Avatar extends Entity {
 	 *  if so returns true
 	 * @return
 	 */
-	public boolean checkForCollision(){
+	private boolean collidingWithBorder(){
 		return (
-				this.toMoveX <= 0 ||
-				this.toMoveY <= 0 ||
-				this.toMoveX >= (setup.getFrameWidth() - getWidth()) ||
-				this.toMoveY >= (setup.getFrameHeight() - getHeight())
+				   this.toMoveX <= 0 
+				|| this.toMoveY <= 0 
+				|| this.toMoveX >= (setup.getFrameWidth() - getWidth()) 
+				|| this.toMoveY >= (setup.getFrameHeight() - getHeight())
 				);
 	}
+	
+	/**
+	 *  checks if avatar collides with another map-element,
+	 *  if so returns true
+	 * @return
+	 */
+	private boolean collidingWithMapElement(){
+		for (MapElement element: game.getMapElements()){
+			if (toMoveX+getWidth() >= element.getX() 
+				&& toMoveX <= (element.getX()+element.getWidth())
+				&& (toMoveY+getHeight() >= element.getY() 
+				&& toMoveY <= (element.getY()+element.getHeight()))
+				)
+				return true;
+		}
+		// no collision detected
+		return false;
+	}
+	
+	/**
+	 * draws the avatar
+	 * 
+	 * @param graphics
+	 */
+	public void draw(Graphics graphics){
+		//draw fill
+		graphics.setColor(getColor());
+		graphics.fillRect(getMapX(), getMapY(), getWidth(), getHeight());
+		//draw border
+		graphics.setColor(Color.DARK_GRAY);
+		graphics.drawRect(getMapX(), getMapY(), getWidth(), getHeight());
+	}
+	
+	
 	
 	public void setSetup(Setup setup){
 		this.setup = setup;
 	}
+	public void setGame(Game game){
+		this.game = game;
+	}
 	
-//	public void controlMove(int incX, int incY) {
-//		//Ok this magically works, don't ask why, no time
-//		
-//		this.toMoveX = (int) (this.toMoveX != 0 ? this.toMoveX : this.getX() + incX); 
-//		this.toMoveY = (int) (this.toMoveY != 0 ? this.toMoveY : this.getY() + incY); 
-//
-////		this.tMath.ceil(this.toMoveX*this.speed);
-//		
-//		if(incY == 0) // A D
-//			this.toMoveX = (this.getX() + incX);
-//		else if(incX == 0)  // W S
-//			this.toMoveY = (this.getY() + incY);
-//	}
-//		
-//	public void move(){
-//		this.move(this.toMoveX, this.toMoveY);
-//		this.toMoveX = 0;
-//		this.toMoveY = 0;
-//	}
-//	
-//	public void move(int toX, int toY){
-//		if(toX < 1 || toY < 1 || toX > Setup.frameWidth -1 || toY > Setup.frameHeight -1){
-//			return;
-//		}
-//		
-//		this.setX(toX);
-//		this.setY(toY);
-//	}
 
 }

@@ -1,23 +1,47 @@
 package map_builder;
 
+import functionality.Constants;
+
 public class Map {
 	
-	int[][] map;
-	int mapPixelWidth = 852;
-	int mapPixelHeight = 520;
+	//full window size 1280x720
+	/*
+	 * ___________________________________________________________________
+	 * | ______________________________________________
+	 * | |
+	 * | |
+	 * | |
+	 * | |
+	 * | |
+	 * | |
+	 * | |
+	 * | |
+	 * | |
+	 * | |
+	 * | ------------------------------------------------
+	 * ___________________________________________________________________
+	 * 
+	 */
 	
-	final int mapElementWidth = mapPixelWidth / 4;
-	final int mapElementHeight = mapPixelHeight / 4;
+	char[][] map;
+//	final int mapPixelWidth = 1024;
+//	final int mapPixelHeight = 576;
+	
+//	final int mapElementWidth = mapPixelWidth / 4;
+//	final int mapElementHeight = mapPixelHeight / 4;
 	
 	public Map(){
-		map = new int[mapElementWidth][mapElementHeight];
+		map = new char[Constants.WINDOW_MAP_WIDTH][Constants.WINDOW_MAP_HEIGHT];
 		initBasicMap();
 	}
 	
+	/**
+	 * init basic map with only LAND
+	 */
 	private void initBasicMap(){
-		for(int col=0; col<mapElementWidth; col+=4){
-			for(int row=0; row<mapElementHeight; row+=4){
-				
+		for(int col=0; col<Constants.WINDOW_MAP_WIDTH; col+=4){
+			for(int row=0; row<Constants.WINDOW_MAP_HEIGHT; row+=4){
+				map[col][row] = MapType.LAND.representation();
 			}
 		}
 	}
