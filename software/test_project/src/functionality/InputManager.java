@@ -19,6 +19,11 @@ public class InputManager implements KeyListener, MouseListener, MouseMotionList
 	// if Mouse was clicked, Key was pressed or Mouse is still hold down
 	private boolean isMouseEvent, isKeyEvent, isMousePressed, isMouseDragged; 
 	
+	//boolean array to "save" keys
+	private boolean[] keyArray = new boolean[100]; 
+	//0=up-arrow 1=down-arrow   2=left-arrow   3=right-arrow    4=ESC   5=SHIFT
+	//UP, DOWN, LEFT, RIGHT, ESCAPE, RUN
+	
 	private long lastMouseProcessTime = 0;
 
 	@Override
@@ -49,11 +54,6 @@ public class InputManager implements KeyListener, MouseListener, MouseMotionList
 		mouseDraggedY=evt.getY();
 		isMouseDragged = true;
 	}
-
-	//boolean array to "save" keys
-	private boolean[] keyArray = new boolean[100]; 
-	//0=up-arrow 1=down-arrow   2=left-arrow   3=right-arrow    4=ESC   5=SHIFT
-	//UP, DOWN, LEFT, RIGHT, ESCAPE, RUN
 
 	//if the key is being pressed sets the respective key to true
 	//i.e. when w is being pressed sets keyArray[0] to true, which is up
