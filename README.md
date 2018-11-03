@@ -35,7 +35,7 @@ Train and test your own AI on the trAIner battlefield and compete with other pla
     
     2.3 Function names always begin with a lowercase character, the rest is written in CamelCase
     
-    2.4 Variable names always begin with a lowercase character, the rest is either in CamelCase or in underscore_case
+    2.4 Variable names always begin with a lowercase character, the rest is either in CamelCase ~~or in underscore_case~~
     
     2.5 Constants are written in all uppercase combined with UNDERSCORE_CASE
     
