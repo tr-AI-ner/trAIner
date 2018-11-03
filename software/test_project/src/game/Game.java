@@ -26,8 +26,7 @@ public class Game {
 	ArrayList<Entity> entities = new ArrayList<>();
 	ArrayList<MapElement> mapElements;
 	ElementWall theGreatWall;
-	final int avatarWidth=20, avatarHeight=20;
-	
+
 	public Game(GraphicsManager gm){
 		this.graphicsManager = gm;
 		this.clock = new Clock(); // Initialize clock
@@ -37,10 +36,8 @@ public class Game {
 		
 		entities = new ArrayList<>();
 		
-		avatar = new Avatar(
-				((Constants.WINDOW_MAP_X0+Constants.WINDOW_MAP_WIDTH - (avatarWidth/2)) / 2), 
-				((Constants.WINDOW_MAP_HEIGHT+Constants.WINDOW_MAP_Y0 - (avatarHeight/2)) / 2),
-				avatarWidth, avatarHeight,
+		avatar = new Avatar(Constants.AVATAR_START_X,Constants.AVATAR_START_Y,
+				Constants.AVATAR_WIDTH, Constants.AVATAR_HEIGHT,
 				Constants.COLOR_AVATAR_RED
 				//r, g, b
 //				new Color(255, 0, 0)
