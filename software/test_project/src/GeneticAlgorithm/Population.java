@@ -32,9 +32,11 @@ public class Population {
         this.generations = 0;
         for (int i = 0; i < population.length; i++) {
             // TO DO !!
-            population[i] = new Individual(def_x, def_y, def_width, def_height, color);
+            population[i] = new Individual(def_x+i, def_y+i, def_width, def_height, color);
         }
     }
+
+
 
     public Individual getFittest() {
         double most_fit = Integer.MIN_VALUE;
@@ -89,6 +91,10 @@ public class Population {
 
     public void crossover() {
         // TO DO
+    }
+
+    public Individual getIndividual(int index){
+        return population[index];
     }
 
 
