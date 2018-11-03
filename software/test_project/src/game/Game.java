@@ -11,6 +11,7 @@ import functionality.GraphicsManager;
 import functionality.InputManager;
 import functionality.Setup;
 import map_builder.ElementWall;
+import map_builder.Map;
 import map_builder.MapElement;
 
 public class Game {
@@ -19,6 +20,7 @@ public class Game {
 	private InputManager inputManager;
 	private Clock clock; // Clock (time manager)
 	Setup setup;
+	Map map;
 	
 	Avatar avatar;
 	ArrayList<Entity> entities = new ArrayList<>();
@@ -31,12 +33,13 @@ public class Game {
 		this.clock = new Clock(); // Initialize clock
 		this.inputManager = gm.getInputManager();
 		this.setup = gm.getSetup();
+		this.map = gm.getMap();
 		
 		entities = new ArrayList<>();
 		
 		avatar = new Avatar(
 				((Constants.WINDOW_MAP_X0+Constants.WINDOW_MAP_WIDTH - (avatarWidth/2)) / 2), 
-				((Constants.WINDOW_MAP_HEIGHT - (avatarHeight/2)) / 2),
+				((Constants.WINDOW_MAP_HEIGHT+Constants.WINDOW_MAP_Y0 - (avatarHeight/2)) / 2),
 				avatarWidth, avatarHeight,
 				Constants.COLOR_AVATAR_RED
 				//r, g, b

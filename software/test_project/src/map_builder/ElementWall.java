@@ -16,11 +16,11 @@ public class ElementWall extends MapElement{
 //		System.out.println("okay drawing specific ElementWall");
 		//draw fill
 		graphics.setColor(getColor());
-		graphics.fillRect(getX(), getY(), getWidth(), getHeight());
+		graphics.fillRect(getMapX(), getMapY(), getWidth(), getHeight());
 
 		//draw border
 		//			graphics.setColor(Color.DARK_GRAY);
-		graphics.drawRect(getX(), getY(), getWidth(), getHeight());
+		graphics.drawRect(getMapX(), getMapY(), getWidth(), getHeight());
 	}
 
 	//	@Override
