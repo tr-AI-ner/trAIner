@@ -1,8 +1,10 @@
 # trAIner
+The immersive java game where you can train your own AI to perform seriously challenging levels!
 
+
+
+# Workflow:
 Cheat sheet for using github successfully:)
-
--Workflow:
 
 1. Pick a feature you want to implement.
 2. Create a new branch for the feature you will implement:
@@ -23,7 +25,7 @@ Cheat sheet for using github successfully:)
 
 Train and test your own AI on the trAIner battlefield and compete with other players in the trAIner-Arena!
 
--Coding Style:
+# Coding Style:
 1. Use 4 spaces to indent tabs
 2. Naming convention:
 
