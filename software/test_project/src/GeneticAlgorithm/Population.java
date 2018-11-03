@@ -1,6 +1,11 @@
 package GeneticAlgorithm;
 
+import functionality.Constants;
+
+import java.awt.*;
 import java.util.ArrayList;
+
+import static functionality.Constants.COLOR_AVATAR_RED;
 
 public class Population {
 
@@ -11,14 +16,23 @@ public class Population {
     int fittest_index = 0;
     int generations;
 
-    public void initializePopulation(int population_size, float mutation_rate) {
+    // defaults for the individual
+    // still hard coded... needs to be added to constants
+    int def_width = 20;
+    int def_height = 20;
+    int def_x = ((Constants.WINDOW_MAP_X0+Constants.WINDOW_MAP_WIDTH - (def_width/2)) / 2);
+    int def_y = ((Constants.WINDOW_MAP_HEIGHT+Constants.WINDOW_MAP_Y0 - (def_height/2)) / 2);
+
+    Color color = COLOR_AVATAR_RED;
+
+    public Population(int population_size, float mutation_rate) {
         this.population_size = population_size;
         this.mutation_rate = mutation_rate;
         this.population = new Individual[population_size];
         this.generations = 0;
         for (int i = 0; i < population.length; i++) {
             // TO DO !!
-            //population[i] = new Individual();
+            population[i] = new Individual(def_x, def_y, def_width, def_height, color);
         }
     }
 

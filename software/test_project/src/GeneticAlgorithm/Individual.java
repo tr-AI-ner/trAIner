@@ -6,10 +6,21 @@ import java.awt.*;
 
 public class Individual extends Avatar {
 
+    // fixed parameters
+
+    // starting fitness
     double fitness = 0;
+    // starting best distance (closest distance to finish)
     double best_dist = 20000;
-    int nr_of_moves = 10;
+    // objects for the avatar and the genome
     Avatar avatar;
+    Genome genome;
+
+
+    // tunable hyper parameters
+
+    // number of moves until current generation terminates
+    int nr_of_moves = 10;
     // x, y coordinate of the goal field
     int[] goal = {1, 1};
     // reached the goal
@@ -17,10 +28,11 @@ public class Individual extends Avatar {
     // start position
     int[] start_pos = {475, 265};
 
-    Genome genome;
+
+
 
     // constructor for the individual inherits from Avatar
-    public Individual(Genome genome, int x, int y, int width, int height, Color color) {
+    public Individual(int x, int y, int width, int height, Color color) {
         super(x, y, width, height, color);
         this.genome = genome;
 
@@ -48,6 +60,7 @@ public class Individual extends Avatar {
 
     }
 
+    // getters and setters
     public double getFitness() {
         return fitness;
     }
