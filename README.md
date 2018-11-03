@@ -22,3 +22,18 @@ Cheat sheet for using github successfully:)
 
 
 Train and test your own AI on the trAIner battlefield and compete with other players in the trAIner-Arena!
+
+-Coding Style:
+1. Use 4 spaces to indent tabs
+2. Naming convention:
+    2.1 Class names always begin with a uppercase character, the rest is written in CamelCase
+    2.2 Package names always begin with a lowercase character, the rest is written in underscore_case
+    2.3 Function names always begin with a lowercase character, the rest is written in CamelCase
+    2.4 Variable names always begin with a lowercase character, the rest is either in CamelCase or in underscore_case
+    2.5 Constants are written in all uppercase combined with UNDERSCORE_CASE
+3. Documentation
+    3.1 Each class needs a brief description of its functionality right after the exports
+    3.2 Each function needs a brief description of its functionality just before its definition
+    3.3 Each non self explanatory variable needs a brief description before its declaration
+    3.4 KEEP DOCUMENTATION MINIMAL, FOCUS ON SELF EXPLAINING CODE
+
