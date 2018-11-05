@@ -67,7 +67,6 @@ public class Game {
 				}
 			}
 		}
-
 		// KEEP OUT
 		// SASHA`S CODE
 
