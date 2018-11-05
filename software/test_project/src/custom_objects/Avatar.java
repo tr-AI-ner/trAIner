@@ -77,6 +77,11 @@ public class Avatar extends Entity {
 				&& (toMoveY+getHeight() >= element.getY() 
 				&& toMoveY <= (element.getY()+element.getHeight()))
 				)
+//			if (toMoveX+getWidth() >= element.getGridX()*Constants.MAP_ELEMENT_SIZE+Constants.WINDOW_MAP_MARGIN 
+//					&& toMoveX <= (element.getGridX()*Constants.MAP_ELEMENT_SIZE+Constants.WINDOW_MAP_MARGIN + Constants.MAP_ELEMENT_SIZE)
+//					&& (toMoveY+getHeight() >= element.getGridY()*Constants.MAP_ELEMENT_SIZE+Constants.WINDOW_MAP_MARGIN+Constants.WINDOW_HEADER_HEIGHT) 
+//					&& toMoveY <= (element.getGridY()*Constants.MAP_ELEMENT_SIZE+Constants.WINDOW_MAP_MARGIN+Constants.WINDOW_HEADER_HEIGHT + Constants.MAP_ELEMENT_SIZE)
+//					)
 				return true;
 		}
 		// no collision detected
