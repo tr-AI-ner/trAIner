@@ -1,7 +1,10 @@
 package map_builder;
 
+import java.awt.Color;
 import java.awt.Graphics;
+import java.util.ArrayList;
 
+import custom_objects.Entity;
 import functionality.Constants;
 
 public class Map {
@@ -53,12 +56,30 @@ public class Map {
 	 * 
 	 * @param graphics
 	 */
-	public void draw(Graphics graphics){
+	public void draw(Graphics graphics, ArrayList<Entity> entities){
+//		graphics.setColor(Constants.COLOR_MAP_LAND);
+//		graphics.setColor(Constants.COLOR_BACKGROUND);
+//		graphics.fillRect(Constants.WINDOW_MAP_MARGIN,
+//						  Constants.WINDOW_HEADER_HEIGHT+Constants.WINDOW_MAP_MARGIN, 
+//						  Constants.WINDOW_MAP_WIDTH, 
+//						  Constants.WINDOW_MAP_HEIGHT);
+		
+		// draw grid for map
 		graphics.setColor(Constants.COLOR_MAP_LAND);
-		graphics.fillRect(Constants.WINDOW_MAP_MARGIN,
-						  Constants.WINDOW_HEADER_HEIGHT+Constants.WINDOW_MAP_MARGIN, 
-						  Constants.WINDOW_MAP_WIDTH, 
-						  Constants.WINDOW_MAP_HEIGHT);
+		
+		for(int i=0; i<36; i++){
+			for(int j=0; j<64; j++){
+				graphics.drawRect(j*16+Constants.WINDOW_MAP_MARGIN, 
+						i*16+Constants.WINDOW_HEADER_HEIGHT+Constants.WINDOW_MAP_MARGIN, 
+						16, 16);
+			}
+		}
+		
+		// draw entities
+		for (Entity e: entities){
+			e.draw(graphics);
+		}
 	}
+	
 
 }

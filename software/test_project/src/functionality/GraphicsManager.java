@@ -95,9 +95,6 @@ public class GraphicsManager extends JPanel {
 		graphics.setColor(Constants.COLOR_HEADER_1);
 		graphics.fillRect(0, 0, setup.getFrameWidth()+12, Constants.WINDOW_HEADER_HEIGHT);
 		
-		//draw map
-		map.draw(graphics);
-		
 		//draw footer
 		graphics.setColor(Constants.COLOR_HEADER_1);
 		graphics.fillRect(0, 
@@ -111,6 +108,16 @@ public class GraphicsManager extends JPanel {
 						  Constants.WINDOW_HEADER_HEIGHT, 
 						  Constants.WINDOW_RIGHT_BAR_WIDTH, 
 						  Constants.WINDOW_RIGHT_BAR_HEIGHT);
+		
+	}
+	
+	/**
+	 * draw map and the entities
+	 * @param entities
+	 */
+	public void drawMap(ArrayList<Entity> entities){
+		//draw map
+		map.draw(graphics, entities);
 	}
 	
 	/**
@@ -118,19 +125,19 @@ public class GraphicsManager extends JPanel {
 	 * 
 	 * @param entities
 	 */
-	public void draw(ArrayList<Entity> entities){
-		for (Entity e: entities){
-			e.draw(graphics);
-//			if (e instanceof Avatar){
-//				((Avatar) e).draw(graphics);
-//			}
-//			else if (e instanceof MapElement){
-//				((MapElement) e).draw(graphics);
-//			} else {
-//				System.out.println("draw function of entity type "+e.getType()+" - not implemented yet");
-//			}
-		}
-	}
+//	public void draw(ArrayList<Entity> entities){
+//		for (Entity e: entities){
+//			e.draw(graphics);
+////			if (e instanceof Avatar){
+////				((Avatar) e).draw(graphics);
+////			}
+////			else if (e instanceof MapElement){
+////				((MapElement) e).draw(graphics);
+////			} else {
+////				System.out.println("draw function of entity type "+e.getType()+" - not implemented yet");
+////			}
+//		}
+//	}
 
 //	public void draw(Avatar avatar){
 ////		this.clear();
