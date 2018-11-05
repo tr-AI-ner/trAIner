@@ -121,7 +121,8 @@ public class Game {
 		graphicsManager.clear();
 		
 		// draw all entities
-		graphicsManager.draw(entities);
+//		graphicsManager.draw(entities);
+		graphicsManager.drawMap(entities);
 		
 		//swap buffers to make changes visible
 		graphicsManager.redraw();
