@@ -3,6 +3,7 @@ package map_builder;
 import java.awt.Graphics;
 
 import functionality.Constants;
+import mapsaver.MapSaver;
 
 public class Map {
 	
@@ -34,9 +35,12 @@ public class Map {
 	
 	public Map(){
 		map = new char[Constants.WINDOW_MAP_WIDTH][Constants.WINDOW_MAP_HEIGHT];
-		initBasicMap();
+		//initBasicMap();
+		DrawMapFromFile("map_01");
 	}
-	
+	public char[][] getMap(){
+		return map;
+	}
 	/**
 	 * init basic map with only LAND
 	 */
@@ -47,7 +51,7 @@ public class Map {
 			}
 		}
 	}
-	
+
 	/**
 	 * draw full map
 	 * 
@@ -60,5 +64,31 @@ public class Map {
 						  Constants.WINDOW_MAP_WIDTH, 
 						  Constants.WINDOW_MAP_HEIGHT);
 	}
+
+
+
+
+
+
+	// BEWARE=========================================================================================
+//====================================================================================================
+// 						DANGER
+	// KEEP OUT
+	// SASHA`S CODE
+
+	private void DrawMapFromFile(String MapFileName){
+		char[][] mapArr= MapSaver.readMap(MapFileName);
+		for(int col=0; col<Constants.WINDOW_MAP_WIDTH; col+=4){
+			for(int row=0; row<Constants.WINDOW_MAP_HEIGHT; row+=4){
+				if(mapArr[col][row]=='W'){map[col][row] = MapType.WALL.representation();}
+				if(mapArr[col][row]=='_'){map[col][row] = MapType.LAND.representation();}
+			}
+		}
+	}
+
+	// BEWARE=========================================================================================
+//====================================================================================================
+
+
 
 }

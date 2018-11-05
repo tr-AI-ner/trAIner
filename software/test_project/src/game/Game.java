@@ -13,9 +13,11 @@ import functionality.Setup;
 import map_builder.ElementWall;
 import map_builder.Map;
 import map_builder.MapElement;
+import map_builder.MapType;
+import mapsaver.MapSaver;
 
 public class Game {
-	
+	boolean z=true;
 	private GraphicsManager graphicsManager;
 	private InputManager inputManager;
 	private Clock clock; // Clock (time manager)
@@ -49,9 +51,26 @@ public class Game {
 		avatar.setGame(this);
 		// add avatar to entities
 		entities.add(avatar);
-		
 		mapElements = new ArrayList<>();
-		
+
+
+		// BEWARE=========================================================================================
+//====================================================================================================
+// 						DANGER
+
+		char[][] map=MapSaver.readMap("map_01");
+		for(int col=0; col<Constants.WINDOW_MAP_WIDTH; col+=4){
+			for(int row=0; row<Constants.WINDOW_MAP_HEIGHT; row+=4){
+				if(map[col][row]== MapType.WALL.representation()){
+					ElementWall newWall=new ElementWall(col, row, 4, 4, new Color(0, 255, 0));
+					mapElements.add(newWall);
+				}
+			}
+		}
+
+		// KEEP OUT
+		// SASHA`S CODE
+
 		theGreatWall = new ElementWall(100, 100, 50, 20, new Color(0, 255, 0));
 		mapElements.add(theGreatWall);
 		// add all map-elements to entities
