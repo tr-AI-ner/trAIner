@@ -23,13 +23,16 @@ public final class Constants {
 	
 	public static final int WINDOW_MAP_X0 = WINDOW_MAP_MARGIN;
 	public static final int WINDOW_MAP_Y0 = WINDOW_HEADER_HEIGHT + WINDOW_MAP_MARGIN;
+	
+	public static final int MAP_ELEMENT_SIZE = 16;
 
 	// Avatar settings
-    public static final int AVATAR_HEIGHT = 20;
-    public static final int AVATAR_WIDTH = 20;
+    public static final int AVATAR_HEIGHT = MAP_ELEMENT_SIZE;
+    public static final int AVATAR_WIDTH = MAP_ELEMENT_SIZE;
 
     public static final int AVATAR_START_X = (WINDOW_MAP_X0+WINDOW_MAP_WIDTH - AVATAR_WIDTH / 2)/2;
     public static final int AVATAR_START_Y = (WINDOW_MAP_HEIGHT+WINDOW_MAP_Y0 - AVATAR_HEIGHT/2) / 2;
+    
 
 	//colors
 	public static final Color COLOR_BACKGROUND = new Color(38,40,71); // #262847
