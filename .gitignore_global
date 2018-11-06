@@ -1,3 +1,6 @@
 */workspace.xml
 ./software/test_project/.idea*
 .DS_Store
+./software/test_project/.idea
+./software/java_project/.idea
+
