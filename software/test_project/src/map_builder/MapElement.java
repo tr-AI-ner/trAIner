@@ -5,11 +5,12 @@ import java.awt.Graphics;
 
 import custom_objects.Entity;
 import custom_objects.EntityType;
+import functionality.Constants;
 
 public abstract class MapElement extends Entity {
 	
-//	private int x;
-//	private int y;
+	private int gridX;
+	private int gridY;
 //	
 //	private int width;
 //	private int height;
@@ -18,8 +19,16 @@ public abstract class MapElement extends Entity {
 	
 //	private Color elementColor;
 	
-	public MapElement(int x, int y, int width, int height, MapType mapType, Color elementColor){
-		super(x, y, width, height, elementColor, EntityType.MapElement);
+//	public MapElement(int x, int y, int width, int height, MapType mapType, Color elementColor){
+//		super(x, y, width, height, elementColor, EntityType.MapElement);
+//		this.mapType = mapType;
+//	}
+	
+	public MapElement(int gridX, int gridY, MapType mapType, Color elementColor){
+		super(gridX*Constants.MAP_ELEMENT_SIZE, gridY*Constants.MAP_ELEMENT_SIZE, 
+				Constants.MAP_ELEMENT_SIZE, Constants.MAP_ELEMENT_SIZE, elementColor, EntityType.MapElement);
+		this.gridX = gridX;
+		this.gridY = gridY;
 		this.mapType = mapType;
 	}
 	
@@ -49,17 +58,31 @@ public abstract class MapElement extends Entity {
 	 */
 	public void draw(Graphics graphics){
 		//draw fill
-		graphics.setColor(getColor());
-		graphics.fillRect(getMapX(), getMapY(), getWidth(), getHeight());
+//		graphics.setColor(getColor());
+//		graphics.fillRect(getMapX(), getMapY(), getWidth(), getHeight());
+//		
+//		//draw border
+////		graphics.setColor(Color.DARK_GRAY);
+//		graphics.drawRect(getMapX(), getMapY(), getWidth(), getHeight());
 		
-		//draw border
-//		graphics.setColor(Color.DARK_GRAY);
-		graphics.drawRect(getMapX(), getMapY(), getWidth(), getHeight());
+		// draw fill
+		graphics.setColor(getColor());
+		graphics.fillRect(
+				(gridX * Constants.MAP_ELEMENT_SIZE) + Constants.WINDOW_MAP_MARGIN, 
+				(gridY*Constants.MAP_ELEMENT_SIZE) + Constants.WINDOW_MAP_MARGIN+Constants.WINDOW_HEADER_HEIGHT, 
+				getWidth(), getHeight());
+		
+		// draw border
+		// set custom color here with graphics.setColor(borderColor);
+		graphics.drawRect(
+				(gridX * Constants.MAP_ELEMENT_SIZE) + Constants.WINDOW_MAP_MARGIN, 
+				(gridY*Constants.MAP_ELEMENT_SIZE) + Constants.WINDOW_MAP_MARGIN+Constants.WINDOW_HEADER_HEIGHT, 
+				getWidth(), getHeight());
 	}
 	
 	@Override
 	public String toString() {
-		return "MapElement ("+mapType.name()+") - x: "+getX()+", y: "+getY()+", width: "+getWidth()+
+		return "MapElement ("+mapType.name()+") - gridX: "+getGridX()+", gridY: "+getGridY()+", width: "+getWidth()+
 				", height: "+getHeight();
 	}
 	
@@ -69,6 +92,20 @@ public abstract class MapElement extends Entity {
 //				);
 //	}
 
+	
+	public int getGridX() {
+		return gridX;
+	}
+	public void setGridX(int gridX) {
+		this.gridX = gridX;
+	}
+
+	public int getGridY() {
+		return gridY;
+	}
+	public void setGridY(int gridY) {
+		this.gridY = gridY;
+	}
 
 	public MapType getMapType() {
 		return mapType;
