@@ -1,1 +1,3 @@
-workspace.xml
+*/workspace.xml
+./software/test_project/.idea*
+.DS_Store

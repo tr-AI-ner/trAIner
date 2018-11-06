@@ -51,7 +51,8 @@ public class Game {
 		
 		mapElements = new ArrayList<>();
 		
-		theGreatWall = new ElementWall(100, 100, 50, 20, new Color(0, 255, 0));
+//		theGreatWall = new ElementWall(100, 100, 50, 20, new Color(0, 255, 0));
+		theGreatWall = new ElementWall(15, 15, new Color(0,255,0));
 		mapElements.add(theGreatWall);
 		// add all map-elements to entities
 		entities.addAll(mapElements);
@@ -168,7 +169,8 @@ public class Game {
 		graphicsManager.clear();
 		
 		// draw all entities
-		graphicsManager.draw(entities);
+//		graphicsManager.draw(entities);
+		graphicsManager.drawMap(entities);
 		
 		//swap buffers to make changes visible
 		graphicsManager.redraw();
