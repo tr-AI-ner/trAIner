@@ -33,13 +33,6 @@ public final class Constants {
     public static final int AVATAR_START_X = (WINDOW_MAP_X0+WINDOW_MAP_WIDTH - AVATAR_WIDTH / 2)/2;
     public static final int AVATAR_START_Y = (WINDOW_MAP_HEIGHT+WINDOW_MAP_Y0 - AVATAR_HEIGHT/2) / 2;
 
-    //Color Map Elements
-	public static final Color WALL = new Color(249,62,65); // #262847
-	public static final Color FORCE_FIELD = new Color(64,186,245); // #1E253B
-	public static final Color LASER = new Color(72,159,223); // #2A324D
-	public static final Color PLASMA_BALL = new Color(240,100,73); // #343B62
-	public static final Color BLACK_HOLE = new Color(22,25,27); // #6C4D6F
-
 
 	//colors
 	public static final Color COLOR_BACKGROUND = new Color(38,40,71); // #262847
@@ -54,5 +47,11 @@ public final class Constants {
 	public static final Color COLOR_ACCENT = new Color(127,119,229); // #7F77E5
 	public static final Color COLOR_ACCENT_2 = new Color(154,240,144); // #9AF090
 	
+	//Color Map Elements
+	public static final Color COLOR_WALL = new Color(249,62,65); // #262847
+	public static final Color COLOR_FORCE_FIELD = new Color(64,186,245); // #1E253B
+	public static final Color COLOR_LASER = new Color(72,159,223); // #2A324D
+	public static final Color COLOR_PLASMA_BALL = new Color(240,100,73); // #343B62
+	public static final Color COLOR_BLACK_HOLE = new Color(22,25,27); // #6C4D6F
 	
 }
