@@ -94,6 +94,7 @@ public class Map {
 		for (Entity e: entities){
 			if (!(e instanceof Avatar))
 				e.draw(graphics);
+
 		}
 		
 		// draw entities which are avatar(s) only, since they're not bound to the grid (they can move freely)

@@ -24,7 +24,7 @@ public final class Constants {
 	public static final int WINDOW_MAP_X0 = WINDOW_MAP_MARGIN;
 	public static final int WINDOW_MAP_Y0 = WINDOW_HEADER_HEIGHT + WINDOW_MAP_MARGIN;
 	
-	public static final int MAP_ELEMENT_SIZE = 16;
+	public static final int MAP_ELEMENT_SIZE = 32;
 
 	// Avatar settings
     public static final int AVATAR_HEIGHT = MAP_ELEMENT_SIZE;
@@ -32,7 +32,14 @@ public final class Constants {
 
     public static final int AVATAR_START_X = (WINDOW_MAP_X0+WINDOW_MAP_WIDTH - AVATAR_WIDTH / 2)/2;
     public static final int AVATAR_START_Y = (WINDOW_MAP_HEIGHT+WINDOW_MAP_Y0 - AVATAR_HEIGHT/2) / 2;
-    
+
+    //Color Map Elements
+	public static final Color WALL = new Color(249,62,65); // #262847
+	public static final Color FORCE_FIELD = new Color(64,186,245); // #1E253B
+	public static final Color LASER = new Color(72,159,223); // #2A324D
+	public static final Color PLASMA_BALL = new Color(240,100,73); // #343B62
+	public static final Color BLACK_HOLE = new Color(22,25,27); // #6C4D6F
+
 
 	//colors
 	public static final Color COLOR_BACKGROUND = new Color(38,40,71); // #262847
