@@ -7,7 +7,8 @@ import functionality.Setup;
 
 /**
  * 
- * abstract class that will define a basic toolbar
+ * abstract class that can be used for basic UI elements,
+ * such as toolbars, buttons, ...
  * 
  * for the game, 3 specific bars should be created:
  * - top-bar
@@ -83,7 +84,6 @@ public abstract class UIElement {
 	public void setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
 	}
-
 	
 	public Setup getSetup() {
 		return setup;

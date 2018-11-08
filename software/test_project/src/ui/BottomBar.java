@@ -11,6 +11,14 @@ import java.awt.geom.Rectangle2D;
 import functionality.Constants;
 import functionality.Setup;
 
+/**
+ * This class is responsible for drawing the bottom bar of the game.
+ * 
+ * Any customizations for the bar should be added here.
+ * 
+ * @author Patrick
+ *
+ */
 public class BottomBar extends UIElement {
 	
 	int copyrightFontSize = 10;

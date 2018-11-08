@@ -13,9 +13,19 @@ import functionality.Setup;
 
 import ui.UIElement;
 
+/**
+ * this will be the header of the game
+ * & should draw 2 states:
+ * 		- AI/game mode
+ * 		- map-building mode
+ * 
+ * @author Patrick
+ *
+ */
 public class TopBar extends UIElement {
 	
-	int fontSize = 17;
+	int fontSize = 16;
+	Font font = new Font(Constants.DEFAULT_FONT, Font.PLAIN, fontSize);
 
 	public TopBar(int x, int y, int width, int height, Color backgroundColor, Setup setup) {
 		super(x, y, width, height, backgroundColor, setup);
@@ -64,15 +74,28 @@ public class TopBar extends UIElement {
 		g2d.fill(new Rectangle2D.Double(startX, startY, endX, endY));
 	}
 	
+	/**
+	 * draws the game name on the top bar (top left)
+	 * 
+	 * @param graphics
+	 */
 	private void drawGameName(Graphics graphics){
 		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
-		graphics.setFont(new Font(Constants.DEFAULT_FONT, Font.PLAIN, fontSize));
+		graphics.setFont(font);
 		
 		int copyX = Constants.WINDOW_MAP_MARGIN / 2;
-		int copyY = (getHeight()/2) + (fontSize/2);
+		// Determine the Y coordinate for the text (note we add the ascent, as in java 2d 0 is top of the screen)
+	    int copyY = getY() + ((getHeight() - graphics.getFontMetrics(font).getHeight()) / 2) 
+	    		+ graphics.getFontMetrics(font).getAscent();
 		graphics.drawString(Constants.GAME_NAME, copyX, copyY);
 	}
 	
+	/**
+	 * draw the separator line at the top-bar (to the right of the game name)
+	 * 
+	 * TODO: currently only some temporary numbers are used, this should be changed 
+	 * @param graphics
+	 */
 	private void drawSeparator(Graphics graphics) {
 		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
 		int x1 = 80; 

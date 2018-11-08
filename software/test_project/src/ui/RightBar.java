@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import functionality.Constants;
 import functionality.Setup;
 import map_builder.ElementBlackHole;
+import map_builder.ElementEnemy;
 import map_builder.ElementFinish;
 import map_builder.ElementLaser;
 import map_builder.ElementPlasmaBall;
@@ -18,6 +19,14 @@ import map_builder.ElementWall;
 import map_builder.MapElement;
 import map_builder.MapType;
 
+/**
+ * This class is responsible for the right bar of the game.
+ * 
+ * Anything that should be on the right bar, should be added here
+ * 
+ * @author Patrick
+ *
+ */
 public class RightBar extends UIElement {
 	
 	/*
@@ -35,51 +44,82 @@ public class RightBar extends UIElement {
 	 * 		
 	 */
 	
+	// list of the static map elements that should be shown in map-building-mode
 	private MapElement[] staticMapElements = new MapElement[]{
-			new ElementStart(0, 0, MapType.START, Constants.COLOR_ACCENT),
-			new ElementFinish(0, 0, MapType.FINISH, Constants.COLOR_ACCENT),
+			new ElementStart(0, 0, Constants.COLOR_ACCENT),
+			new ElementFinish(0, 0, Constants.COLOR_ACCENT),
 			new ElementWall(0,0, Constants.COLOR_ACCENT),
-			new ElementBlackHole(0, 0, MapType.BLACK_HOLE, Constants.COLOR_ACCENT)
+			new ElementBlackHole(0, 0, Constants.COLOR_ACCENT)
 	}; 
+	// list of the dynamic map elements that should be shown in map-building-mode
 	private MapElement[] dynamicMapElements = new MapElement[]{
-//			new ElementEnemy(0, 0, MapType.ENEMY, Constants.COLOR_MAP_START),
-			new ElementLaser(0, 0, MapType.LASER, Constants.COLOR_ACCENT_2),
-			new ElementPlasmaBall(0,0, MapType.PLASMA_BALL, Constants.COLOR_ACCENT_2)
+			new ElementEnemy(0, 0, Constants.COLOR_MAP_START),
+			new ElementLaser(0, 0, Constants.COLOR_ACCENT_2),
+			new ElementPlasmaBall(0,0, Constants.COLOR_ACCENT_2)
 	}; 
 	
+	// string representations of the map elements
 	private String[] staticNames = new String[]{"Start", "Finish", "Wall", "Black Hole"};
-	private String[] dynamicNames = new String[]{/*"Enemy", */"Laser", "Plasma Ball"};
+	private String[] dynamicNames = new String[]{"Enemy", "Laser", "Plasma Ball"};
 	
 	final String[] headers = new String[]{"Static", "Dynamic"};
 	
-	final int listHeaderHeight = 50;
+	// height of each list item & header (in pixels)
 	final int listItemHeight = 50;
 	
+	// font for list items & headers text
 	int fontSize = 16;
 	Font font = new Font(Constants.DEFAULT_FONT, Font.PLAIN, fontSize);
 
+	
 	public RightBar(int x, int y, int width, int height, Color backgroundColor, Setup setup) {
 		super(x, y, width, height, backgroundColor, setup);
-		
-		
 	}
 	
+	/**
+	 * overriding draw method for custom draw behavior:
+	 * 
+	 * either display the map-elements list or
+	 * the game-play options
+	 * 
+	 */
 	@Override
 	public void draw(Graphics graphics) {
 		drawBackground(graphics);
 		
+		//TODO: this boolean should be globally
 		boolean mapBuildingMode = true;
 		
+		// decide whether to draw list with map-elements or configurations for AI game-play 
 		if (mapBuildingMode){
 			drawMapBuilderList(graphics);
+		} else {
+			drawGamePlayList(graphics);
 		}
 	}
 	
+	/**
+	 * draws the basic background of the right bar
+	 * @param graphics
+	 */
 	private void drawBackground(Graphics graphics){
 		graphics.setColor(getBackgroundColor());
 		graphics.fillRect(getX(), getY(), getWidth(), getHeight());
 	}
 	
+	/**
+	 * TODO: draw everything that is needed for the game-play mode
+	 * @param graphics
+	 */
+	private void drawGamePlayList(Graphics graphics){
+		
+	}
+	
+	/**
+	 * draws the map-builder-list, according to design specifications
+	 * 
+	 * @param graphics
+	 */
 	private void drawMapBuilderList(Graphics graphics){
 		int counter = 0;
 		// draw header 'static'
@@ -103,6 +143,17 @@ public class RightBar extends UIElement {
 		}
 	}
 	
+	/**
+	 * 
+	 * draws a single list item for the map-builder-mode
+	 * 
+	 * @param graphics
+	 * @param itemX			-	start x-coordinate of list item 
+	 * @param itemY			-	start y-coordinate of list item
+	 * @param itemHeight	-	height of list item
+	 * @param element		-	the element that should be shown by the list item (if null, it's a header)
+	 * @param name			-	the name that should be shown for the list item
+	 */
 	private void drawMapElementListItem(Graphics graphics, int itemX, int itemY, int itemHeight, 
 			MapElement element, String name){
 		
@@ -121,10 +172,8 @@ public class RightBar extends UIElement {
 		    int theY = itemY + ((itemHeight - graphics.getFontMetrics(font).getHeight()) / 2) + graphics.getFontMetrics(font).getAscent();
 		    graphics.drawString(name, itemX+textIndent, theY);
 		    
-//			graphics.drawString(name, itemX+textIndent, itemY+(itemHeight/2)-(fontSize/2));
-//			System.out.println("header y-start:"+itemY+", header-height: "+itemHeight+", fontSize: "+fontSize+
-//					", middle: "+(itemY+(itemHeight/2)-(fontSize/2)));
 		} else {
+			//TODO: these variables should be added to Constants
 			int elementIndent = 15;
 			int elementWidth = 20;
 			int textIndent = 50;

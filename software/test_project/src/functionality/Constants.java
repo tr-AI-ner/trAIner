@@ -38,6 +38,7 @@ public final class Constants {
 	public static final Color COLOR_BACKGROUND = new Color(38,40,71); // #262847
 	public static final Color COLOR_HEADER_1 = new Color(30,37,59); // #1E253B
 	public static final Color COLOR_HEADER_2 = new Color(42,50,77); // #2A324D
+	public static final Color COLOR_RIGHT_BAR_HEADER = new Color(44,47,81); // #2C2F51
 	public static final Color COLOR_MAP_LAND = new Color(52,59,98); // #343B62
 	public static final Color COLOR_MAP_START = new Color(108,77,111); // #6C4D6F
 	public static final Color COLOR_AVATAR_RED = new Color(252,137,130); // #FC8982
@@ -48,8 +49,6 @@ public final class Constants {
 	public static final Color COLOR_ACCENT_2 = new Color(154,240,144); // #9AF090
 	
 	public static final Color COLOR_COPYRIGHT = new Color(67,76,114); // #DEE2ED
-	
-	public static final Color COLOR_RIGHT_BAR_HEADER = new Color(44,47,81); // #2C2F51
 	
 	
 	// strings

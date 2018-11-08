@@ -39,10 +39,12 @@ public class GraphicsManager extends JPanel {
 	InputManager inputManager;
 	Map map;
 
+	// the 3 bars for the game (these should only be accessed if needed, never overridden)
 	private TopBar topBar;
 	private BottomBar bottomBar;
 	private RightBar rightBar;
 
+	
 	public GraphicsManager(InputManager inputManager, Map map){
 		//set window size
 		setPreferredSize(new Dimension(setup.getFrameWidth(), setup.getFrameHeight()));
@@ -95,6 +97,9 @@ public class GraphicsManager extends JPanel {
 		drawWindowSetup();
 	}
 	
+	/**
+	 * draws the top-, bottom-, & right-bar
+	 */
 	private void drawWindowSetup(){
 		//draw header
 		topBar.draw(graphics);

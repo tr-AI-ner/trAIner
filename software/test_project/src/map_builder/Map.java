@@ -10,24 +10,7 @@ import functionality.Constants;
 
 public class Map {
 	
-	//map size 1024 x 576
-	/*
-	 * ___________________________________________________________________
-	 * | ______________________________________________
-	 * | |
-	 * | |
-	 * | |
-	 * | |
-	 * | |
-	 * | |
-	 * | |
-	 * | |
-	 * | |
-	 * | |
-	 * | ------------------------------------------------
-	 * ___________________________________________________________________
-	 * 
-	 */
+	//map size 1024 x 576 (pixels)
 	
 	// how many rows the grid has
 	int rows = Constants.WINDOW_MAP_HEIGHT / Constants.MAP_ELEMENT_SIZE;
@@ -35,11 +18,6 @@ public class Map {
 	int columns = Constants.WINDOW_MAP_WIDTH / Constants.MAP_ELEMENT_SIZE;
 	
 	char[][] map;
-//	final int mapPixelWidth = 1024;
-//	final int mapPixelHeight = 576;
-	
-//	final int mapElementWidth = mapPixelWidth / 4;
-//	final int mapElementHeight = mapPixelHeight / 4;
 	
 	public Map(){
 		map = new char[columns][rows];

@@ -6,6 +6,14 @@ import java.awt.Graphics;
 import custom_objects.EntityType;
 import functionality.Constants;
 
+/**
+ * map element of type: Wall
+ * 
+ * Any custom behavior should be implemented here
+ * 
+ * @author Patrick
+ *
+ */
 public class ElementWall extends MapElement{
 
 
