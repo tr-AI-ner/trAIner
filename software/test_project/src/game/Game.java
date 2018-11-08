@@ -96,7 +96,7 @@ public class Game {
 
                 mapElements = new ArrayList<>();
 
-                theGreatWall = new ElementWall(100, 100, 50, 20, new Color(0, 255, 0));
+                theGreatWall = new ElementWall( 50, 20, new Color(0, 255, 0));
                 mapElements.add(theGreatWall);
                 // add all map-elements to entities
                 entities.addAll(mapElements);
