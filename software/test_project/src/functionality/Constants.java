@@ -47,5 +47,11 @@ public final class Constants {
 	public static final Color COLOR_ACCENT = new Color(127,119,229); // #7F77E5
 	public static final Color COLOR_ACCENT_2 = new Color(154,240,144); // #9AF090
 	
+	public static final Color COLOR_COPYRIGHT = new Color(67,76,114); // #DEE2ED
+	
+	
+	// misc
+	public static final String COPYRIGHT = "© 2018 trAIner. All rights reserved";
+	
 	
 }

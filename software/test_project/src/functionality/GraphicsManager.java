@@ -18,6 +18,9 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import map_builder.Map;
 import map_builder.MapElement;
+import ui.BottomBar;
+import ui.RightBar;
+import ui.TopBar;
 
 public class GraphicsManager extends JPanel {
 
@@ -29,8 +32,6 @@ public class GraphicsManager extends JPanel {
 			getDefaultScreenDevice().getDefaultConfiguration();
 	private BufferedImage imageBuffer;
 	private Graphics graphics;
-	
-	private Color backgroundColor = new Color(34, 30, 31);//new Color(0,0,255);
 
 	JFrame frame;
 	Game game;
@@ -38,6 +39,9 @@ public class GraphicsManager extends JPanel {
 	InputManager inputManager;
 	Map map;
 
+	private TopBar topBar;
+	private BottomBar bottomBar;
+	private RightBar rightBar;
 
 	public GraphicsManager(InputManager inputManager, Map map){
 		//set window size
@@ -45,6 +49,7 @@ public class GraphicsManager extends JPanel {
 		
 		this.inputManager = inputManager;
 		this.map = map;
+		this.setupToolbars();
 
 		// set up window configurations
 		frame = new JFrame("trAIner");
@@ -92,23 +97,11 @@ public class GraphicsManager extends JPanel {
 	
 	private void drawWindowSetup(){
 		//draw header
-		graphics.setColor(Constants.COLOR_HEADER_1);
-		graphics.fillRect(0, 0, setup.getFrameWidth()+12, Constants.WINDOW_HEADER_HEIGHT);
-		
+		topBar.draw(graphics);
 		//draw footer
-		graphics.setColor(Constants.COLOR_HEADER_1);
-		graphics.fillRect(0, 
-						  Constants.WINDOW_HEADER_HEIGHT+(Constants.WINDOW_MAP_MARGIN*2)+Constants.WINDOW_MAP_HEIGHT, 
-						  setup.getFrameWidth()+12, 
-						  Constants.WINDOW_HEADER_HEIGHT);
-		
+		bottomBar.draw(graphics);
 		//draw right bar
-		graphics.setColor(Constants.COLOR_MAP_LAND);
-		graphics.fillRect((Constants.WINDOW_MAP_MARGIN*2)+Constants.WINDOW_MAP_WIDTH,
-						  Constants.WINDOW_HEADER_HEIGHT, 
-						  Constants.WINDOW_RIGHT_BAR_WIDTH, 
-						  Constants.WINDOW_RIGHT_BAR_HEIGHT);
-		
+		rightBar.draw(graphics);
 	}
 	
 	/**
@@ -121,53 +114,26 @@ public class GraphicsManager extends JPanel {
 	}
 	
 	/**
-	 * draws all entities
+	 * initialize all 3 toolbars
+	 * (top-, bottom-, & right-bar)
 	 * 
-	 * @param entities
 	 */
-//	public void draw(ArrayList<Entity> entities){
-//		for (Entity e: entities){
-//			e.draw(graphics);
-////			if (e instanceof Avatar){
-////				((Avatar) e).draw(graphics);
-////			}
-////			else if (e instanceof MapElement){
-////				((MapElement) e).draw(graphics);
-////			} else {
-////				System.out.println("draw function of entity type "+e.getType()+" - not implemented yet");
-////			}
-//		}
-//	}
-
-//	public void draw(Avatar avatar){
-////		this.clear();
-////		System.out.println("draw avatar: "+avatar.toString());
-//		
-//		avatar.draw(graphics);
-//		
-////		graphics.setColor(avatar.getColor());
-////		graphics.fillRect(avatar.getX(), avatar.getY(), avatar.getWidth(), avatar.getHeight());
-////		graphics.setColor(Color.DARK_GRAY);
-////		graphics.drawRect(avatar.getX(), avatar.getY(), avatar.getWidth(), avatar.getHeight());
-//		
-//		//swap buffers to make changes visible
-////		this.redraw();
-//	}
-	
-//	public void draw(ArrayList<MapElement> mapElements) {
-//		for (MapElement mapElement: mapElements){
-//			mapElement.draw(graphics);
-//		}
-//	}
-	
-//	public void drawOval(int x, int y, int w, int h, Color color){
-//		graphics.setColor(color);
-//		graphics.fillOval(x, y, w, h);
-//		graphics.setColor(Color.DARK_GRAY);
-//		graphics.drawOval(x,y,w,h);
-//		
-//		this.redraw();
-//	}
+	private void setupToolbars(){
+		topBar = new TopBar(0, 0, setup.getFrameWidth()+12, Constants.WINDOW_HEADER_HEIGHT, 
+				Constants.COLOR_HEADER_1, setup);
+		
+		bottomBar = new BottomBar(0, 
+				Constants.WINDOW_HEADER_HEIGHT+(Constants.WINDOW_MAP_MARGIN*2)+Constants.WINDOW_MAP_HEIGHT, 
+				setup.getFrameWidth()+12, 
+				Constants.WINDOW_HEADER_HEIGHT, 
+				Constants.COLOR_HEADER_1, setup);
+		
+		rightBar = new RightBar((Constants.WINDOW_MAP_MARGIN*2)+Constants.WINDOW_MAP_WIDTH, 
+				Constants.WINDOW_HEADER_HEIGHT, 
+				Constants.WINDOW_RIGHT_BAR_WIDTH, 
+				Constants.WINDOW_RIGHT_BAR_HEIGHT, 
+				Constants.COLOR_MAP_LAND, setup);
+	}
 
 
 
@@ -183,9 +149,9 @@ public class GraphicsManager extends JPanel {
 		return inputManager;
 	}
 
-	public void setBackgroundColor(Color newCol){
-		backgroundColor = newCol;
-	}
+	public TopBar getTopBar(){return topBar;}
+	public BottomBar getBottomBar(){return bottomBar;}
+	public RightBar getRightBar(){return rightBar;}
 
 
 }
