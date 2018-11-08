@@ -24,7 +24,7 @@ public final class Constants {
 	public static final int WINDOW_MAP_X0 = WINDOW_MAP_MARGIN;
 	public static final int WINDOW_MAP_Y0 = WINDOW_HEADER_HEIGHT + WINDOW_MAP_MARGIN;
 	
-	public static final int MAP_ELEMENT_SIZE = 32;
+	public static final int MAP_ELEMENT_SIZE = 16;
 
 	// Avatar settings
     public static final int AVATAR_HEIGHT = MAP_ELEMENT_SIZE;
