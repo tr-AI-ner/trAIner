@@ -49,9 +49,12 @@ public final class Constants {
 	
 	public static final Color COLOR_COPYRIGHT = new Color(67,76,114); // #DEE2ED
 	
+	public static final Color COLOR_RIGHT_BAR_HEADER = new Color(44,47,81); // #2C2F51
 	
-	// misc
+	
+	// strings
 	public static final String COPYRIGHT = "© 2018 trAIner. All rights reserved";
-	
+	public static final String GAME_NAME = "trAIner";
+	public static final String DEFAULT_FONT = "Helvetica";
 	
 }

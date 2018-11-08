@@ -52,7 +52,7 @@ public class GraphicsManager extends JPanel {
 		this.setupToolbars();
 
 		// set up window configurations
-		frame = new JFrame("trAIner");
+		frame = new JFrame(Constants.GAME_NAME);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().add(this);
 		frame.setSize(setup.getFrameWidth(),setup.getFrameHeight());

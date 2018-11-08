@@ -1,6 +1,7 @@
 package ui;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -12,6 +13,7 @@ import functionality.Setup;
 
 public class BottomBar extends UIElement {
 	
+	int copyrightFontSize = 10;
 
 	public BottomBar(int x, int y, int width, int height, Color backgroundColor, Setup setup) {
 		super(x, y, width, height, backgroundColor, setup);
@@ -59,8 +61,10 @@ public class BottomBar extends UIElement {
 	
 	private void drawCopyright(Graphics graphics){
 		graphics.setColor(Constants.COLOR_COPYRIGHT);
+		graphics.setFont(new Font(Constants.DEFAULT_FONT, Font.PLAIN, copyrightFontSize));
+		
 		int copyX = Constants.WINDOW_MAP_MARGIN;
-		int copyY = getY() + (getHeight()/2);
+		int copyY = getY() + (getHeight()/2) + (copyrightFontSize/2);
 		graphics.drawString(Constants.COPYRIGHT, copyX, copyY);
 	}
 

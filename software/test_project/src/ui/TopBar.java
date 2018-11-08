@@ -1,6 +1,7 @@
 package ui;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -13,6 +14,8 @@ import functionality.Setup;
 import ui.UIElement;
 
 public class TopBar extends UIElement {
+	
+	int fontSize = 17;
 
 	public TopBar(int x, int y, int width, int height, Color backgroundColor, Setup setup) {
 		super(x, y, width, height, backgroundColor, setup);
@@ -25,6 +28,10 @@ public class TopBar extends UIElement {
 	@Override
 	public void draw(Graphics graphics) {
 		drawBackground(graphics);
+		
+		drawGameName(graphics);
+		
+		drawSeparator(graphics);
 		
 		//draw other UI-elements here...
 	}
@@ -55,6 +62,23 @@ public class TopBar extends UIElement {
 				Constants.COLOR_HEADER_1);
 		g2d.setPaint(theGradient);
 		g2d.fill(new Rectangle2D.Double(startX, startY, endX, endY));
+	}
+	
+	private void drawGameName(Graphics graphics){
+		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
+		graphics.setFont(new Font(Constants.DEFAULT_FONT, Font.PLAIN, fontSize));
+		
+		int copyX = Constants.WINDOW_MAP_MARGIN / 2;
+		int copyY = (getHeight()/2) + (fontSize/2);
+		graphics.drawString(Constants.GAME_NAME, copyX, copyY);
+	}
+	
+	private void drawSeparator(Graphics graphics) {
+		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
+		int x1 = 80; 
+		int y1 = Constants.WINDOW_HEADER_HEIGHT / 3;
+		int y2 = Constants.WINDOW_HEADER_HEIGHT - (y1);
+		graphics.drawLine(x1, y1, x1, y2);
 	}
 
 }
