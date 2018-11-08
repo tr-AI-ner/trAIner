@@ -23,9 +23,9 @@ public class MapSaver {
     //Delimiter used in CSV file
     private static final String COMMA_DELIMITER = ",";
     private static final String NEW_LINE_SEPARATOR = "\n";
-    private static char[][] mapArray=new char[Constants.WINDOW_MAP_WIDTH][Constants.WINDOW_MAP_HEIGHT];
+    private static char[][] mapArray=new char[Constants.WINDOW_MAP_WIDTH/16][Constants.WINDOW_MAP_HEIGHT/16];
 
-    public static void saver(GraphicsManager gc){
+ /*   public static void saver(GraphicsManager gc){
         char[][] a=gc.getMap().getMap();
         for(int y=0;y<Constants.WINDOW_MAP_HEIGHT;y++){
             System.out.print(a[0][y]);
@@ -35,6 +35,8 @@ public class MapSaver {
         }
 
     }
+*/
+
 
     public static char[][] readMap(String mapFileName){
         BufferedReader fileReader = null;
@@ -45,7 +47,7 @@ public class MapSaver {
             //Read the file line by line starting from the second line
             while ((line = fileReader.readLine()) != null) {
                 String [] tokens = line.split(COMMA_DELIMITER);
-                    for (int x = 0; x < Constants.WINDOW_MAP_WIDTH; x++) {
+                    for (int x = 0; x < Constants.WINDOW_MAP_WIDTH/16; x++) {
                         mapArray[x][y] = tokens[x].charAt(0);
                     }
                 y++;
@@ -76,12 +78,12 @@ public class MapSaver {
         try {
             fileWriter = new FileWriter(fileName);
             //Add a new line separator after the header
-            for(int y=0;y<Constants.WINDOW_MAP_HEIGHT;y++){
+            for(int y=0;y<Constants.WINDOW_MAP_HEIGHT/16;y++){
                 if(y>0){fileWriter.append(NEW_LINE_SEPARATOR);}
                 fileWriter.append('W');
                 fileWriter.append(COMMA_DELIMITER);
-                for(int x=1;x<Constants.WINDOW_MAP_WIDTH;x++) {
-                    if(x+y>1024){
+                for(int x=1;x<Constants.WINDOW_MAP_WIDTH/16;x++) {
+                    if(x+y>70){
                         fileWriter.append('W');
                         fileWriter.append(COMMA_DELIMITER);
                     }
