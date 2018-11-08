@@ -14,8 +14,6 @@ import javax.swing.JPanel;
 import custom_objects.Avatar;
 import custom_objects.Entity;
 import game.Game;
-import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 import map_builder.Map;
 import map_builder.MapElement;
 import ui.BottomBar;

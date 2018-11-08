@@ -1,7 +1,6 @@
 package custom_objects;
 
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.*;
 
 import functionality.Constants;
 import functionality.Setup;
@@ -77,11 +76,6 @@ public class Avatar extends Entity {
 				&& (toMoveY+getHeight() >= element.getY() 
 				&& toMoveY <= (element.getY()+element.getHeight()))
 				)
-//			if (toMoveX+getWidth() >= element.getGridX()*Constants.MAP_ELEMENT_SIZE+Constants.WINDOW_MAP_MARGIN 
-//					&& toMoveX <= (element.getGridX()*Constants.MAP_ELEMENT_SIZE+Constants.WINDOW_MAP_MARGIN + Constants.MAP_ELEMENT_SIZE)
-//					&& (toMoveY+getHeight() >= element.getGridY()*Constants.MAP_ELEMENT_SIZE+Constants.WINDOW_MAP_MARGIN+Constants.WINDOW_HEADER_HEIGHT) 
-//					&& toMoveY <= (element.getGridY()*Constants.MAP_ELEMENT_SIZE+Constants.WINDOW_MAP_MARGIN+Constants.WINDOW_HEADER_HEIGHT + Constants.MAP_ELEMENT_SIZE)
-//					)
 				return true;
 		}
 		// no collision detected
@@ -94,12 +88,15 @@ public class Avatar extends Entity {
 	 * @param graphics
 	 */
 	public void draw(Graphics graphics){
-		//draw fill
-		graphics.setColor(getColor());
-		graphics.fillRect(getMapX(), getMapY(), getWidth(), getHeight());
+		Graphics2D g2d = (Graphics2D)graphics;
+		g2d.setColor(getColor());
+		g2d.fillRect(getMapX(), getMapY(), getWidth(), getHeight());
 		//draw border
-		graphics.setColor(Color.DARK_GRAY);
-		graphics.drawRect(getMapX(), getMapY(), getWidth(), getHeight());
+		Color color = new Color(getColor().getRed(),getColor().getGreen(),getColor().getBlue(),85);
+		g2d.setStroke(new BasicStroke(3));
+		g2d.setColor(color);
+		g2d.drawRect(getMapX(), getMapY(), getWidth(), getHeight());
+		g2d.setStroke(new BasicStroke(1));
 	}
 	
 	
