@@ -1,18 +1,11 @@
 package map_builder;
 
-import java.awt.Color;
-import java.awt.Graphics;
-
-import custom_objects.EntityType;
+import java.awt.*;
 import functionality.Constants;
 
 public class ElementWall extends MapElement{
 
 
-
-//	public ElementWall(int x, int y, int width, int height, Color elementColor) {
-//		super(x, y, width, height, MapType.WALL, elementColor);
-//	}
 	public ElementWall(int gridX, int gridY, Color elementColor){
 		super(gridX, gridY, MapType.WALL, elementColor);
 		
@@ -21,33 +14,23 @@ public class ElementWall extends MapElement{
 
 	@Override
 	public void draw(Graphics graphics) {
-//		System.out.println("okay drawing specific ElementWall");
-		//draw fill
-//		graphics.setColor(getColor());
-//		graphics.fillRect(getMapX(), getMapY(), getWidth(), getHeight());
+		int x = (getGridX() * Constants.MAP_ELEMENT_SIZE) + Constants.WINDOW_MAP_MARGIN;
+		int y = (getGridY()*Constants.MAP_ELEMENT_SIZE) + Constants.WINDOW_MAP_MARGIN+Constants.WINDOW_HEADER_HEIGHT;
 
-		//draw border
-		//			graphics.setColor(Color.DARK_GRAY);
-//		graphics.drawRect(getMapX(), getMapY(), getWidth(), getHeight());
-		
-		graphics.setColor(getColor());
-		graphics.fillRect(
-				(getGridX() * Constants.MAP_ELEMENT_SIZE) + Constants.WINDOW_MAP_MARGIN, 
-				(getGridY()*Constants.MAP_ELEMENT_SIZE) + Constants.WINDOW_MAP_MARGIN+Constants.WINDOW_HEADER_HEIGHT, 
-				getWidth(), getHeight());
-		
-		// draw border
-		// set custom color here with graphics.setColor(borderColor);
-		graphics.drawRect(
-				(getGridX() * Constants.MAP_ELEMENT_SIZE) + Constants.WINDOW_MAP_MARGIN, 
-				(getGridY()*Constants.MAP_ELEMENT_SIZE) + Constants.WINDOW_MAP_MARGIN+Constants.WINDOW_HEADER_HEIGHT, 
-				getWidth(), getHeight());
+		Graphics2D g2d = (Graphics2D)graphics;
+
+		g2d.setColor(getColor());
+		g2d.fillRect(x, y, getWidth(), getHeight());
+
+
+		//Border color is just the main color but with an alpha value
+		Color color = new Color(getColor().getRed(),getColor().getGreen(),getColor().getBlue(),85);
+		g2d.setColor(color);
+		g2d.setStroke(new BasicStroke(4));
+		g2d.drawRect(x, y, getWidth(), getHeight());
+		g2d.setStroke(new BasicStroke(1));
 	}
 
-	//	@Override
-	//	public String toString() {
-	//		return "ElementWall - x: "+getX()+", y: "+getY()+", width: "+getWidth()+
-	//				", height: "+getHeight();
-	//	}
+
 
 }
