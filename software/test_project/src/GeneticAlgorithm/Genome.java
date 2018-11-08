@@ -3,7 +3,7 @@ package GeneticAlgorithm;
 import java.util.Random;
 
 public class Genome {
-    int[][] directions;
+    int[][] gene;
     int step;
     int maxNrOfMoves;
 //    int[][][] DNA;
@@ -11,18 +11,18 @@ public class Genome {
     public Genome(int maxNrOfMoves) {
         this.step = 0;
         this.maxNrOfMoves = maxNrOfMoves;
-        this.directions = new int[maxNrOfMoves][2];
+        this.gene = new int[maxNrOfMoves][2];
         for(int i=0; i<maxNrOfMoves; i++){
-            directions[i] = getRandomDirection;
+            gene[i] = getRandomDirection;
         }
-        this.randomize_directions(population_size);
+        this.randomize_gene(population_size);
         
 
     }
 
-    private void randomizeDirections(int population_size) {
+    private void randomizeGene(int population_size) {
         for (int i = 0; i < population_size; i++) {
-            this.directions[i] = get_random_direction();
+            this.gene[i] = get_random_direction();
         }
 
     }
@@ -70,9 +70,9 @@ public class Genome {
     }
 
     public Genome clone() {
-        Genome cloned_genome = new Genome(this.directions.length);
-        for (int i = 0; i < this.directions.length; i++) {
-            cloned_genome.directions[i] = this.directions[i];
+        Genome cloned_genome = new Genome(this.gene.length);
+        for (int i = 0; i < this.gene.length; i++) {
+            cloned_genome.gene[i] = this.gene[i];
         }
         return cloned_genome;
     }
@@ -81,14 +81,14 @@ public class Genome {
         Random rand = new Random();
 
 
-        for (int i = 0; i < this.directions.length; i++) {
+        for (int i = 0; i < this.gene.length; i++) {
             //int random_nr = rand.nextInt(1);
             if (dead && i > death_by_step - 420) {
                 //random_nr = rand.nextDouble(0.420);
             }
             //TODO 
             //if (rand < 0.2) {
-            //    this.directions[i] = this.get_random_direction();
+            //    this.gene[i] = this.get_random_direction();
             //}
 
         }

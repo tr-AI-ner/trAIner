@@ -52,6 +52,12 @@ public class Population {
 
     }
 
+    public void live(){
+        for(int i = 0; i < population.length; i++){
+            population[i]
+        }
+    }
+
     public void calculateFitness() {
 
         for (int i = 0; i < population.length; i++) {

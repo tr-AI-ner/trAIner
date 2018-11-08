@@ -28,6 +28,7 @@ public class Game {
 	ArrayList<Entity> entities = new ArrayList<>();
 	ArrayList<MapElement> mapElements;
 	ElementWall theGreatWall;
+    Population pop;
 
 	public Game(GraphicsManager gm){
 		this.graphicsManager = gm;
@@ -71,7 +72,7 @@ public class Game {
                 int pop_size = 10;
                 float mut_rate = (float) 0.2;
 
-                Population pop = new Population(pop_size,mut_rate);
+               this.pop = new Population(pop_size,mut_rate);
 
                 for(int i = 0; i < pop_size; i++){
                     Individual ind = pop.getIndividual(i);
@@ -116,6 +117,13 @@ public class Game {
 			this.redrawAll();//graphicsManager); // Redraw everything
 		}
 	}
+
+    private void gameLoop(boolean ai_playing){
+        if(this.clock.frameShouldChange()){
+            Population.live(); 
+            this.redrawAll();
+        }
+    }
 
 	// process User Input
 	private void processUserInput() {
@@ -182,3 +190,4 @@ public class Game {
 	}
 	
 }
+
