@@ -28,8 +28,7 @@ public class Game {
 	ArrayList<Entity> entities = new ArrayList<>();
 	ArrayList<MapElement> mapElements;
 	ElementWall theGreatWall;
-	final int avatarWidth=20, avatarHeight=20;
-	
+
 	public Game(GraphicsManager gm){
 		this.graphicsManager = gm;
 		this.clock = new Clock(); // Initialize clock
@@ -39,10 +38,8 @@ public class Game {
 		
 		entities = new ArrayList<>();
 		
-		avatar = new Avatar(
-				((Constants.WINDOW_MAP_X0+Constants.WINDOW_MAP_WIDTH - (avatarWidth/2)) / 2), 
-				((Constants.WINDOW_MAP_HEIGHT+Constants.WINDOW_MAP_Y0 - (avatarHeight/2)) / 2),
-				avatarWidth, avatarHeight,
+		avatar = new Avatar(Constants.AVATAR_START_X,Constants.AVATAR_START_Y,
+				Constants.AVATAR_WIDTH, Constants.AVATAR_HEIGHT,
 				Constants.COLOR_AVATAR_RED
 				//r, g, b
 //				new Color(255, 0, 0)
@@ -59,10 +56,10 @@ public class Game {
 // 						DANGER
 
 		char[][] map=MapSaver.readMap("map_01");
-		for(int col=0; col<Constants.WINDOW_MAP_WIDTH; col+=4){
-			for(int row=0; row<Constants.WINDOW_MAP_HEIGHT; row+=4){
+		for(int col=0; col<Constants.WINDOW_MAP_WIDTH/16; col+=1){
+			for(int row=0; row<Constants.WINDOW_MAP_HEIGHT/16; row+=1){
 				if(map[col][row]== MapType.WALL.representation()){
-					ElementWall newWall=new ElementWall(col, row, 4, 4, new Color(0, 255, 0));
+					ElementWall newWall=new ElementWall(col, row, new Color(0, 255, 0));
 					mapElements.add(newWall);
 				}
 			}
@@ -70,7 +67,7 @@ public class Game {
 		// KEEP OUT
 		// SASHA`S CODE
 
-		theGreatWall = new ElementWall(100, 100, 50, 20, new Color(0, 255, 0));
+		theGreatWall = new ElementWall(15,15, new Color(0, 255, 0));
 		mapElements.add(theGreatWall);
 		// add all map-elements to entities
 		entities.addAll(mapElements);
@@ -142,7 +139,8 @@ public class Game {
 		graphicsManager.clear();
 		
 		// draw all entities
-		graphicsManager.draw(entities);
+//		graphicsManager.draw(entities);
+		graphicsManager.drawMap(entities);
 		
 		//swap buffers to make changes visible
 		graphicsManager.redraw();
