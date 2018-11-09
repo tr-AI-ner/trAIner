@@ -1,0 +1,57 @@
+// Source: https://www.oracle.com/technetwork/java/javase/documentation/index-137868.html
+
+When documenting your code, please make sure to follow the following GUIDELINES
+
+++++++++++++++ Format of a Doc Comment ++++++++++++++++
+A doc comment is written in HTML and MUST precede a CLASS, FIELD, CONSTRUCTOR or METHOD_DECLARATION. 
+It is made up of two parts -- a description followed by block tags. 
+
+GUIDELINES:
+    - So lines won't wrap, limit any doc-comment lines to 80 characters.
+    - The first line contains the begin-comment delimiter (/**)
+    - Each line above is indented to align with the code below the comment.
+    - Write the first sentence as a short summary of the method, as Javadoc automatically places it in the method summary table (and index).
+    - If you have more than one paragraph in the doc comment, separate the paragraphs with a <p> paragraph tag (as shown in example below)
+    - Insert a blank comment line between the description and the list of tags (as shown in example below)
+    - The first line that begins with an "@" character ends the description. 
+      There is only one description block per doc comment; you cannot continue the description following block tags.
+    - End of comment ends with end-comment delimiter (*/) in a new line
+
+
+In this example, the block tags are @param, @return, and @see.
+
+        /**
+         * Returns an Image object that can then be painted on the screen. 
+         * The url argument must specify an absolute {@link URL}. The name
+         * argument is a specifier that is relative to the url argument. 
+         * <p>
+         * This method always returns immediately, whether or not the 
+         * image exists. When this applet attempts to draw the image on
+         * the screen, the data will be loaded. The graphics primitives 
+         * that draw the image will incrementally paint on the screen. 
+         *
+         * @param  url  an absolute URL giving the base location of the image
+         * @param  name the location of the image, relative to the url argument
+         * @return      the image at the specified URL
+         * @see         Image
+         */
+         public Image getImage(URL url, String name) {
+                try {
+                    return getImage(new URL(url, name));
+                } catch (MalformedURLException e) {
+                    return null;
+                }
+         }
+
+(Notice the inline tag {@link URL}, which converts to an HTML hyperlink pointing to the documentation for the URL class. 
+This inline tag can be used anywhere that a comment can be written, such as in the text following block tags.)
+
+// for more simple examples: https://www.oracle.com/technetwork/java/javase/documentation/index-137868.html#examples
+
+-------------------------------------
+
+
+Afterwards you can run the Javadoc tool to see a visual generated representation of your comments
+
+
+
