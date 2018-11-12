@@ -31,6 +31,7 @@ public class Map {
 		for(int col=0; col<columns; col++){
 			for(int row=0; row<rows; row++){
 				map[col][row] = MapType.LAND.representation();
+				if (col==10){map[col][row]=MapType.START.representation();}
 			}
 		}
 	}
@@ -58,12 +59,23 @@ public class Map {
 		for(int i=0; i<columns; i++){
 			for(int j=0; j<rows; j++){
 				// draw grid
+				graphics.setColor(Constants.COLOR_MAP_LAND);
 				graphics.drawRect(
 						(i * Constants.MAP_ELEMENT_SIZE) + Constants.WINDOW_MAP_MARGIN, 
 						(j*Constants.MAP_ELEMENT_SIZE)+Constants.WINDOW_HEADER_HEIGHT+Constants.WINDOW_MAP_MARGIN, 
 						Constants.MAP_ELEMENT_SIZE, 
 						Constants.MAP_ELEMENT_SIZE
 				);
+				
+				if (map[i][j] != MapType.LAND.representation()){
+					graphics.setColor(getMapElementColor(map[i][j]));
+					graphics.fillRect(
+							(i * Constants.MAP_ELEMENT_SIZE) + Constants.WINDOW_MAP_MARGIN, 
+							(j*Constants.MAP_ELEMENT_SIZE)+Constants.WINDOW_HEADER_HEIGHT+Constants.WINDOW_MAP_MARGIN, 
+							Constants.MAP_ELEMENT_SIZE, 
+							Constants.MAP_ELEMENT_SIZE
+					);
+				}
 			}
 		}
 		
@@ -96,5 +108,8 @@ public class Map {
 		}
 	}
 	
+	private Color getMapElementColor(char element){
+		return MapType.getTypeFromColor(element).getTypeColor();
+	}
 
 }
