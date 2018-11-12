@@ -123,7 +123,7 @@ public class GraphicsManager extends JPanel {
 	 */
 	private void setupToolbars(){
 		topBar = new TopBar(0, 0, setup.getFrameWidth()+12, Constants.WINDOW_HEADER_HEIGHT, 
-				Constants.COLOR_HEADER_1, setup);
+				Constants.COLOR_HEADER_1, setup,"Lööps"); // TODO change with the loaded map name
 		
 		bottomBar = new BottomBar(0, 
 				Constants.WINDOW_HEADER_HEIGHT+(Constants.WINDOW_MAP_MARGIN*2)+Constants.WINDOW_MAP_HEIGHT, 

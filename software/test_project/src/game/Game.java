@@ -10,6 +10,7 @@ import functionality.Constants;
 import functionality.GraphicsManager;
 import functionality.InputManager;
 import functionality.Setup;
+import map_builder.ElementBall;
 import map_builder.ElementWall;
 import map_builder.Map;
 import map_builder.MapElement;
@@ -26,6 +27,7 @@ public class Game {
 	ArrayList<Entity> entities = new ArrayList<>();
 	ArrayList<MapElement> mapElements;
 	ElementWall theGreatWall;
+	ElementBall enemy;
 
 	public Game(GraphicsManager gm){
 		this.graphicsManager = gm;
@@ -50,7 +52,9 @@ public class Game {
 		mapElements = new ArrayList<>();
 		
 //		theGreatWall = new ElementWall(100, 100, 50, 20, new Color(0, 255, 0));
-		theGreatWall = new ElementWall(15, 15, new Color(0,255,0));
+		theGreatWall = new ElementWall(15, 15, Constants.COLOR_WALL);
+		enemy = new ElementBall(6,6,Constants.COLOR_PLASMA_BALL);
+		mapElements.add(enemy);
 		mapElements.add(theGreatWall);
 		// add all map-elements to entities
 		entities.addAll(mapElements);

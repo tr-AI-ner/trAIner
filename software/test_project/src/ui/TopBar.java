@@ -9,6 +9,7 @@ import java.awt.RenderingHints;
 import java.awt.geom.Rectangle2D;
 
 import functionality.Constants;
+import functionality.FontLoader;
 import functionality.Setup;
 
 import ui.UIElement;
@@ -25,10 +26,12 @@ import ui.UIElement;
 public class TopBar extends UIElement {
 	
 	int fontSize = 16;
-	Font font = new Font(Constants.DEFAULT_FONT, Font.PLAIN, fontSize);
+	Font font = FontLoader.getFont("ChakraPetch-SemiBold.ttf");
+	String mapName;
 
-	public TopBar(int x, int y, int width, int height, Color backgroundColor, Setup setup) {
+	public TopBar(int x, int y, int width, int height, Color backgroundColor, Setup setup, String mapName) {
 		super(x, y, width, height, backgroundColor, setup);
+		this.mapName = mapName;
 	}
 	
 	/**
@@ -42,7 +45,12 @@ public class TopBar extends UIElement {
 		drawGameName(graphics);
 		
 		drawSeparator(graphics);
-		
+
+		drawMapName(graphics);
+
+		drawLoadButton(graphics);
+
+		drawSaveButton(graphics);
 		//draw other UI-elements here...
 	}
 	
@@ -85,11 +93,59 @@ public class TopBar extends UIElement {
 		
 		int copyX = Constants.WINDOW_MAP_MARGIN / 2;
 		// Determine the Y coordinate for the text (note we add the ascent, as in java 2d 0 is top of the screen)
-	    int copyY = getY() + ((getHeight() - graphics.getFontMetrics(font).getHeight()) / 2) 
+	    int copyY = getY() + ((getHeight() - graphics.getFontMetrics(font).getHeight()) / 2)
 	    		+ graphics.getFontMetrics(font).getAscent();
 		graphics.drawString(Constants.GAME_NAME, copyX, copyY);
 	}
-	
+
+	/**
+	 * draw the time right of the seperator
+	 *
+	 * @param graphics
+	 */
+	private void drawMapName(Graphics graphics){
+		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
+		graphics.setFont(font);
+
+		int copyX = 95;
+		// Determine the Y coordinate for the text (note we add the ascent, as in java 2d 0 is top of the screen)
+		int copyY = getY() + ((getHeight() - graphics.getFontMetrics(font).getHeight()) / 2)
+				+ graphics.getFontMetrics(font).getAscent();
+		graphics.drawString("Map name: " + mapName, copyX, copyY);
+	}
+	/**
+	 * draw the time right of the seperator
+	 *
+	 * @param graphics
+	 */
+	private void drawLoadButton(Graphics graphics){
+		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
+		graphics.setFont(font);
+
+		int copyX = 280;
+		// Determine the Y coordinate for the text (note we add the ascent, as in java 2d 0 is top of the screen)
+		int copyY = getY() + ((getHeight() - graphics.getFontMetrics(font).getHeight()) / 2)
+				+ graphics.getFontMetrics(font).getAscent();
+		graphics.drawString("SAVE", copyX, copyY);
+		graphics.drawRoundRect(copyX-15,copyY-20,70,30,30,30);
+	}
+	/**
+	 * draw the time right of the seperator
+	 *
+	 * @param graphics
+	 */
+	private void drawSaveButton(Graphics graphics){
+		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
+		graphics.setFont(font);
+
+		int copyX = 360;
+		// Determine the Y coordinate for the text (note we add the ascent, as in java 2d 0 is top of the screen)
+		int copyY = getY() + ((getHeight() - graphics.getFontMetrics(font).getHeight()) / 2)
+				+ graphics.getFontMetrics(font).getAscent();
+		graphics.drawString("LOAD", copyX, copyY);
+		graphics.drawRoundRect(copyX-15,copyY-20,70,30,30,30);
+	}
+
 	/**
 	 * draw the separator line at the top-bar (to the right of the game name)
 	 * 
