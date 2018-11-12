@@ -11,18 +11,10 @@ public abstract class MapElement extends Entity {
 	
 	private int gridX;
 	private int gridY;
-//	
-//	private int width;
-//	private int height;
+
 	
 	private MapType mapType;
-	
-//	private Color elementColor;
-	
-//	public MapElement(int x, int y, int width, int height, MapType mapType, Color elementColor){
-//		super(x, y, width, height, elementColor, EntityType.MapElement);
-//		this.mapType = mapType;
-//	}
+
 	
 	public MapElement(int gridX, int gridY, MapType mapType, Color elementColor){
 		super(gridX*Constants.MAP_ELEMENT_SIZE, gridY*Constants.MAP_ELEMENT_SIZE, 
@@ -57,14 +49,7 @@ public abstract class MapElement extends Entity {
 	 * to have the element appear differently
 	 */
 	public void draw(Graphics graphics){
-		//draw fill
-//		graphics.setColor(getColor());
-//		graphics.fillRect(getMapX(), getMapY(), getWidth(), getHeight());
-//		
-//		//draw border
-////		graphics.setColor(Color.DARK_GRAY);
-//		graphics.drawRect(getMapX(), getMapY(), getWidth(), getHeight());
-		
+
 		// draw fill
 		graphics.setColor(getColor());
 		graphics.fillRect(
@@ -85,18 +70,14 @@ public abstract class MapElement extends Entity {
 		return "MapElement ("+mapType.name()+") - gridX: "+getGridX()+", gridY: "+getGridY()+", width: "+getWidth()+
 				", height: "+getHeight();
 	}
-	
-//	public boolean isCollidingWith(Entity e){
-//		return (
-//				
-//				);
-//	}
+
 
 	
 	public int getGridX() {
 		return gridX;
 	}
 	public void setGridX(int gridX) {
+		this.setX(gridX*Constants.MAP_ELEMENT_SIZE);
 		this.gridX = gridX;
 	}
 
@@ -104,6 +85,7 @@ public abstract class MapElement extends Entity {
 		return gridY;
 	}
 	public void setGridY(int gridY) {
+		this.setY(gridY*Constants.MAP_ELEMENT_SIZE);
 		this.gridY = gridY;
 	}
 
