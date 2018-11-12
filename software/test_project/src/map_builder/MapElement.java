@@ -77,6 +77,7 @@ public abstract class MapElement extends Entity {
 		return gridX;
 	}
 	public void setGridX(int gridX) {
+		this.setX(gridX*Constants.MAP_ELEMENT_SIZE);
 		this.gridX = gridX;
 	}
 
@@ -84,6 +85,7 @@ public abstract class MapElement extends Entity {
 		return gridY;
 	}
 	public void setGridY(int gridY) {
+		this.setY(gridY*Constants.MAP_ELEMENT_SIZE);
 		this.gridY = gridY;
 	}
 
