@@ -58,56 +58,63 @@ public class Game {
 		// add all map-elements to entities
 		entities.addAll(mapElements);
 	}
-		public Game(GraphicsManager gm, boolean ai_playing) {
-            if (!ai_playing) {
-                new Game(gm);
-            } else {
-                this.graphicsManager = gm;
-                this.clock = new Clock(); // Initialize clock
-                this.inputManager = gm.getInputManager();
-                this.setup = gm.getSetup();
-                this.map = gm.getMap();
+    public Game(GraphicsManager gm, boolean ai_playing) {
+        if (!ai_playing) {
+            new Game(gm);
+        } else {
+            this.graphicsManager = gm;
+            this.clock = new Clock(); // Initialize clock
+            this.inputManager = gm.getInputManager();
+            this.setup = gm.getSetup();
+            this.map = gm.getMap();
 
-                entities = new ArrayList<>();
-                int pop_size = 10;
-                float mut_rate = (float) 0.2;
+            entities = new ArrayList<>();
+            int pop_size = 10;
+            float mut_rate = (float) 0.2;
 
-               this.pop = new Population(pop_size,mut_rate);
+           this.pop = new Population(pop_size,mut_rate);
 
-                for(int i = 0; i < pop_size; i++){
-                    Individual ind = pop.getIndividual(i);
-                    ind.setSetup(setup);
-                    ind.setGame(this);
-                    entities.add(ind);
-                }
-
-
-               // avatar = new Avatar(
-               //         ((Constants.WINDOW_MAP_X0 + Constants.WINDOW_MAP_WIDTH - (avatarWidth / 2)) / 2),
-               //         ((Constants.WINDOW_MAP_HEIGHT + Constants.WINDOW_MAP_Y0 - (avatarHeight / 2)) / 2),
-               //         avatarWidth, avatarHeight,
-               //         Constants.COLOR_AVATAR_RED
-               //         //r, g, b
-//			//	new Color(255, 0, 0)
-               // );
-                //avatar.setSetup(setup);
-                //avatar.setGame(this);
-                //// add avatar to entities
-                //entities.add(avatar);
-
-                mapElements = new ArrayList<>();
-
-                theGreatWall = new ElementWall( 50, 20, new Color(0, 255, 0));
-                mapElements.add(theGreatWall);
-                // add all map-elements to entities
-                entities.addAll(mapElements);
+            for(int i = 0; i < pop_size; i++){
+                Individual ind = pop.getIndividual(i);
+                ind.setSetup(setup);
+                ind.setGame(this);
+                entities.add(ind);
             }
+
+
+           // avatar = new Avatar(
+           //         ((Constants.WINDOW_MAP_X0 + Constants.WINDOW_MAP_WIDTH - (avatarWidth / 2)) / 2),
+           //         ((Constants.WINDOW_MAP_HEIGHT + Constants.WINDOW_MAP_Y0 - (avatarHeight / 2)) / 2),
+           //         avatarWidth, avatarHeight,
+           //         Constants.COLOR_AVATAR_RED
+           //         //r, g, b
+//			//	new Color(255, 0, 0)
+           // );
+            //avatar.setSetup(setup);
+            //avatar.setGame(this);
+            //// add avatar to entities
+            //entities.add(avatar);
+
+            mapElements = new ArrayList<>();
+
+            theGreatWall = new ElementWall( 50, 20, new Color(0, 255, 0));
+            mapElements.add(theGreatWall);
+            // add all map-elements to entities
+            entities.addAll(mapElements);
         }
+    }
 	
 	public void run(){
 		while(true)
 			this.gameLoop();
 	}
+
+    public void run(boolean ai){
+        if(ai){
+            while(true)
+                this.gameLoop(true);
+        }
+    }
 	
 	// Main game loop
 	private void gameLoop(){
@@ -120,7 +127,7 @@ public class Game {
 
     private void gameLoop(boolean ai_playing){
         if(this.clock.frameShouldChange()){
-            Population.live(); 
+            pop.live(); 
             this.redrawAll();
         }
     }

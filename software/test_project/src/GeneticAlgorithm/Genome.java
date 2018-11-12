@@ -13,11 +13,13 @@ public class Genome {
         this.maxNrOfMoves = maxNrOfMoves;
         this.gene = new int[maxNrOfMoves][2];
         for(int i=0; i<maxNrOfMoves; i++){
-            gene[i] = getRandomDirection;
+            this.gene[i] = this.getRandomDirection();
         }
-        this.randomize_gene(population_size);
-        
 
+    }
+
+    public Genome(int[][] gene){
+        this.gene = gene;
     }
 
     private void randomizeGene(int population_size) {
@@ -77,24 +79,34 @@ public class Genome {
         return cloned_genome;
     }
 
-    public void mutateGene(boolean dead, int death_by_step) {
+    public void mutateGene(float mutationRate) {
         Random rand = new Random();
 
 
         for (int i = 0; i < this.gene.length; i++) {
-            //int random_nr = rand.nextInt(1);
-            if (dead && i > death_by_step - 420) {
-                //random_nr = rand.nextDouble(0.420);
+            if(rand.nextFloat() < mutationRate){
+                this.gene[i] = this.getRandomDirection();
             }
-            //TODO 
-            //if (rand < 0.2) {
-            //    this.gene[i] = this.get_random_direction();
-            //}
-
+       }
+    }
+    
+    public Genome crossover(Genome mate){
+        int [][]child = new int[this.maxNrOfMoves][2];
+        Random rand = new Rand();
+        int crossover = rand.nextInt(this.maxNrOfMoves);
+        for(int i = 0; i<this.maxNrOfMoves;i++){
+            if(i > crossover){
+                child[i] = this.gene[i];
+            }
+            else{
+                child[i] = mate.gene[i];
+            }
         }
+        Genome newGenes = new Genome(child);
+        return newGenes;
     }
 
-    public void increase_number_of_moves() {
-        //to do
+    public void increase_number_of_moves(int nr) {
+        this.maxNrOfMoves = nr;
     }
 }

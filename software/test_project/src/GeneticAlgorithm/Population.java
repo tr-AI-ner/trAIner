@@ -1,9 +1,9 @@
 package GeneticAlgorithm;
 
 import functionality.Constants;
-
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static functionality.Constants.COLOR_AVATAR_RED;
 
@@ -42,9 +42,9 @@ public class Population {
         double most_fit = Integer.MIN_VALUE;
         int most_fit_index = 0;
 
-        for (int i = 0; i > population.length; i++) {
-            if (most_fit >= population[i].fitness) {
-                most_fit = population[i].fitness;
+        for (int i = 0; i > this.population.length; i++) {
+            if (most_fit >= this.population[i].fitness) {
+                most_fit = this.population[i].fitness;
                 most_fit_index = i;
             }
         }
@@ -54,31 +54,34 @@ public class Population {
 
     public void live(){
         for(int i = 0; i < population.length; i++){
-            population[i]
+            if(this.population[i].getX == this.population[i].goal[0] && this.population[i].getY == this.population[i].goal[1]){
+                this.population[i].fin = true;
+            }
+
         }
     }
 
     public void calculateFitness() {
 
         for (int i = 0; i < population.length; i++) {
-            population[i].calcFitness();
+            this.population[i].calcFitness();
         }
 
         getFittest();
     }
 
     public boolean reachedGoal() {
-        for (int i = 0; i < population.length; i++) {
-            if (population[i].fin) return true;
+        for (int i = 0; i < this.population.length; i++) {
+            if (this.population[i].fin) return true;
         }
         return false;
     }
 
     public double getMaxFitness() {
         double fittest = 0;
-        for (int i = 0; i < population.length; i++) {
-            if (population[i].fitness > fittest) {
-                fittest = population[i].fitness;
+        for (int i = 0; i < this.population.length; i++) {
+            if (this.population[i].fitness > fittest) {
+                fittest = this.population[i].fitness;
             }
         }
         return fittest;
@@ -89,7 +92,7 @@ public class Population {
         this.gene_pool.clear();
 
         double max_fit = getMaxFitness();
-        for (int i = 0; i < population.length; i++) {
+        for (int i = 0; i < this.population.length; i++) {
             // TO DO
         }
 
@@ -100,7 +103,7 @@ public class Population {
     }
 
     public Individual getIndividual(int index){
-        return population[index];
+        return this.population[index];
     }
 
 
