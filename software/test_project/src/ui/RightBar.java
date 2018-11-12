@@ -7,7 +7,10 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
+import javax.swing.JSlider;
+
 import functionality.Constants;
+import functionality.GraphicsManager;
 import functionality.Setup;
 import map_builder.ElementBlackHole;
 import map_builder.ElementEnemy;
@@ -44,6 +47,13 @@ public class RightBar extends UIElement {
 	 * 		
 	 */
 	
+//	private GraphicsManager graphicsManager;
+	
+	private String[] gameParameters = new String[]{
+			"Population Size","Number Of Moves","Mutation Rate","Number Of Generations"
+	};
+	private CustomSlider[] sliders;
+	
 	// list of the static map elements that should be shown in map-building-mode
 	private MapElement[] staticMapElements = new MapElement[]{
 			new ElementStart(0, 0, Constants.COLOR_MAP_START),
@@ -74,6 +84,14 @@ public class RightBar extends UIElement {
 	
 	public RightBar(int x, int y, int width, int height, Color backgroundColor, Setup setup) {
 		super(x, y, width, height, backgroundColor, setup);
+		
+		int sliderWidth = 170, sliderHeight = 5;
+		
+		sliders = new CustomSlider[]{
+				new CustomSlider(getX()+(getWidth()/2)-(sliderWidth/2), 
+						getY()+150, 
+						sliderWidth, sliderHeight, getBackgroundColor(), getSetup())
+		};
 	}
 	
 	/**
@@ -112,6 +130,20 @@ public class RightBar extends UIElement {
 	 * @param graphics
 	 */
 	private void drawGamePlayList(Graphics graphics){
+		//parameters: no_of_moves, population_size, mutation_rate, no_of_generations
+		
+//		int sliderWidth = 170, sliderHeight = 5;
+//		JSlider slider = new JSlider(JSlider.HORIZONTAL, 0, 50, 25);
+//		graphicsManager.setLayout(null);
+//		graphicsManager.add(slider);
+//		
+//		slider.setBounds(getX()+(getWidth()/2)-(sliderWidth/2), 
+//				getY()+150, 
+//				sliderWidth, 10);
+		
+		for (int i=0; i<sliders.length; i++){
+			sliders[i].draw(graphics);
+		}
 		
 	}
 	
@@ -196,5 +228,9 @@ public class RightBar extends UIElement {
 		// -1 due to stroke width of line
 		graphics.drawLine(itemX, itemY+itemHeight-1, itemX+Constants.WINDOW_RIGHT_BAR_WIDTH, itemY+itemHeight-1);
 	}
+	
+//	public void setGraphicsManager(GraphicsManager gm){
+//		this.graphicsManager = gm;
+//	}
 
 }
