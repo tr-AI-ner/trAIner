@@ -44,9 +44,11 @@ public final class Constants {
 	public static final Color COLOR_FORCE_FIELD = new Color(64,186,245); // #1E253B
 	public static final Color COLOR_LASER = new Color(72,159,223); // #2A324D
 	public static final Color COLOR_PLASMA_BALL = new Color(240,100,73); // #343B62
+	public static final Color COLOR_ENEMY = new Color(22,244,208); // #16F4D0
 	public static final Color COLOR_BLACK_HOLE = new Color(22,25,27); // #6C4D6F
 	public static final Color COLOR_MAP_LAND = new Color(52,59,98); // #343B62
-	public static final Color COLOR_MAP_START = new Color(108,77,111); // #6C4D6F
+	public static final Color COLOR_MAP_START = new Color(65,72,111); // #41486F
+	public static final Color COLOR_MAP_FINISH = new Color(108,77,111); // #6C4D6F
   
 	public static final Color COLOR_AVATAR_RED = new Color(252,137,130); // #FC8982
 	public static final Color COLOR_AVATAR_BLUE = new Color(100,188,252); // #64BCFC

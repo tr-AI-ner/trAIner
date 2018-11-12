@@ -46,16 +46,16 @@ public class RightBar extends UIElement {
 	
 	// list of the static map elements that should be shown in map-building-mode
 	private MapElement[] staticMapElements = new MapElement[]{
-			new ElementStart(0, 0, Constants.COLOR_ACCENT),
-			new ElementFinish(0, 0, Constants.COLOR_ACCENT),
-			new ElementWall(0,0, Constants.COLOR_ACCENT),
-			new ElementBlackHole(0, 0, Constants.COLOR_ACCENT)
+			new ElementStart(0, 0, Constants.COLOR_MAP_START),
+			new ElementFinish(0, 0, Constants.COLOR_MAP_FINISH),
+			new ElementWall(0,0, Constants.COLOR_WALL),
+			new ElementBlackHole(0, 0, Constants.COLOR_BLACK_HOLE)
 	}; 
 	// list of the dynamic map elements that should be shown in map-building-mode
 	private MapElement[] dynamicMapElements = new MapElement[]{
-			new ElementEnemy(0, 0, Constants.COLOR_MAP_START),
-			new ElementLaser(0, 0, Constants.COLOR_ACCENT_2),
-			new ElementPlasmaBall(0,0, Constants.COLOR_ACCENT_2)
+			new ElementEnemy(0, 0, Constants.COLOR_ENEMY),
+			new ElementLaser(0, 0, Constants.COLOR_LASER),
+			new ElementPlasmaBall(0,0, Constants.COLOR_PLASMA_BALL)
 	}; 
 	
 	// string representations of the map elements
@@ -186,6 +186,7 @@ public class RightBar extends UIElement {
 			graphics.fillRect(itemX+elementIndent, itemY + (itemHeight/2) - (elementWidth/2), elementWidth, elementWidth);
 			//draw text
 			graphics.setFont(font);
+			graphics.setColor(Constants.COLOR_AVATAR_WHITE);
 			int theY = itemY + ((itemHeight - graphics.getFontMetrics(font).getHeight()) / 2) + graphics.getFontMetrics(font).getAscent();
 			graphics.drawString(name, itemX+textIndent, theY);
 		}
