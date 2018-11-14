@@ -10,10 +10,10 @@ import functionality.Constants;
 import functionality.GraphicsManager;
 import functionality.InputManager;
 import functionality.Setup;
-import map_builder.ElementBall;
-import map_builder.ElementWall;
-import map_builder.Map;
-import map_builder.MapElement;
+import map_builder.*;
+import mapsaver.MapSaver;
+
+import static functionality.Constants.MAP_ELEMENT_SIZE;
 
 public class Game {
 	
@@ -37,7 +37,7 @@ public class Game {
 		this.map = gm.getMap();
 		
 		entities = new ArrayList<>();
-		
+
 		avatar = new Avatar(Constants.AVATAR_START_X,Constants.AVATAR_START_Y,
 				Constants.AVATAR_WIDTH, Constants.AVATAR_HEIGHT,
 				Constants.COLOR_AVATAR_RED
@@ -50,7 +50,16 @@ public class Game {
 		entities.add(avatar);
 		
 		mapElements = new ArrayList<>();
-		
+		DrawMap("map_02",mapElements);
+		/*char[][] map=MapSaver.readMap("map_01");
+		for(int col=0; col<Constants.WINDOW_MAP_WIDTH/MAP_ELEMENT_SIZE; col+=4){
+			for(int row=0; row<Constants.WINDOW_MAP_HEIGHT/MAP_ELEMENT_SIZE; row+=4){
+				if(map[col][row]== MapType.WALL.representation()){
+					ElementWall newWall=new ElementWall(col, row,new Color(0, 255, 0));
+					mapElements.add(newWall);
+				}
+			}
+		}*/
 //		theGreatWall = new ElementWall(100, 100, 50, 20, new Color(0, 255, 0));
 		theGreatWall = new ElementWall(15, 15, Constants.COLOR_WALL);
 		enemy = new ElementBall(6,6,Constants.COLOR_PLASMA_BALL);
@@ -138,4 +147,17 @@ public class Game {
 		return mapElements;
 	}
 	
+
+	public  static void DrawMap(String mapFileName, ArrayList<MapElement> mapElements) {
+		char[][] map = MapSaver.readMap(mapFileName);
+		for (int col = 0; col < Constants.WINDOW_MAP_WIDTH / MAP_ELEMENT_SIZE; col += 1) {
+			for (int row = 0; row < Constants.WINDOW_MAP_HEIGHT / MAP_ELEMENT_SIZE; row += 1) {
+				if (map[col][row] == MapType.WALL.representation()) {
+					ElementWall newWall = new ElementWall(col, row, new Color(0, 255, 0));
+					mapElements.add(newWall);
+				//	System.out.println("wall added");
+				}
+			}
+		}
+	}
 }

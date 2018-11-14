@@ -76,16 +76,17 @@ public class MapSaver {
 
     public static void createMap(){
         FileWriter fileWriter = null;
-        String fileName="map_01";
+        String fileName="map_02";
         try {
             fileWriter = new FileWriter(fileName);
             //Add a new line separator after the header
             for(int y=0;y<Constants.WINDOW_MAP_HEIGHT/MAP_ELEMENT_SIZE;y++){
                 if(y>0){fileWriter.append(NEW_LINE_SEPARATOR);}
-                fileWriter.append('W');
+                if(y%4==0){fileWriter.append('W');}
+                else{fileWriter.append('_');}
                 fileWriter.append(COMMA_DELIMITER);
                 for(int x=1;x<Constants.WINDOW_MAP_WIDTH/MAP_ELEMENT_SIZE;x++) {
-                    if(x+y>70){
+                    if((x+y>70)&&(x%4==0)&&(y%4==0)){
                         fileWriter.append('W');
                         fileWriter.append(COMMA_DELIMITER);
                     }
@@ -109,16 +110,17 @@ public class MapSaver {
             }
         }
     }
-    public static void DrawMap(String mapFileNam ) {
-        char[][] map = MapSaver.readMap("map_01");
+    /*
+    public static void DrawMap(String mapFileName, ArrayList<MapElement> mapElements) {
+        char[][] map = MapSaver.readMap(mapFileName);
         for (int col = 0; col < Constants.WINDOW_MAP_WIDTH / MAP_ELEMENT_SIZE; col += 1) {
             for (int row = 0; row < Constants.WINDOW_MAP_HEIGHT / MAP_ELEMENT_SIZE; row += 1) {
                 if (map[col][row] == MapType.WALL.representation()) {
                     ElementWall newWall = new ElementWall(col, row, new Color(0, 255, 0));
-
-               //     .add(newWall);
+                    mapElements.add(newWall);
+                    System.out.println("wall added");
                 }
             }
         }
-    }
+    }*/
 }
