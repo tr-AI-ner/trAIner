@@ -11,6 +11,7 @@ import functionality.GraphicsManager;
 import functionality.InputManager;
 import functionality.Setup;
 import map_builder.ElementWall;
+import map_builder.ElementEnemy;
 import map_builder.Map;
 import map_builder.MapElement;
 
@@ -26,6 +27,7 @@ public class Game {
 	ArrayList<Entity> entities = new ArrayList<>();
 	ArrayList<MapElement> mapElements;
 	ElementWall theGreatWall;
+    ElementEnemy theEnemy;
 
 	public Game(GraphicsManager gm){
 		this.graphicsManager = gm;
@@ -51,7 +53,9 @@ public class Game {
 		
 //		theGreatWall = new ElementWall(100, 100, 50, 20, new Color(0, 255, 0));
 		theGreatWall = new ElementWall(15, 15, new Color(0,255,0));
+        theEnemy = new ElementEnemy(30, 30, Constants.COLOR_ENEMY);
 		mapElements.add(theGreatWall);
+        mapElements.add(theEnemy);
 		// add all map-elements to entities
 		entities.addAll(mapElements);
 	}
@@ -114,6 +118,8 @@ public class Game {
 	}
 	
 	private void updateState(){
+        theEnemy.updateEnemy();
+
         map.updateEntitiesInMap(entities);		
 	}
 	

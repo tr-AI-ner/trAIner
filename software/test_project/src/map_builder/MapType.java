@@ -31,8 +31,8 @@ public enum MapType {
 		default:			return Constants.COLOR_MAP_LAND;
 		}
 	}
-	
-	public static MapType getTypeFromColor(char c){
+
+	public static MapType getTypeFromChar(char c){
 		char[] chars = REPRESENTATIONSTRING.toCharArray();
 		
 		for (int i=0; i<chars.length; i++){

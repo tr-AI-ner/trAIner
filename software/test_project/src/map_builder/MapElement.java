@@ -64,7 +64,24 @@ public abstract class MapElement extends Entity {
 				(gridY*Constants.MAP_ELEMENT_SIZE) + Constants.WINDOW_MAP_MARGIN+Constants.WINDOW_HEADER_HEIGHT, 
 				getWidth(), getHeight());
 	}
-	
+
+    /**
+     *
+     */
+    public static Entity getSpecificInstance(MapType theType, int gridX, int gridY){
+        switch (theType){
+            case START: return new ElementStart(gridX, gridY, Constants.COLOR_MAP_START);
+            case FINISH: return new ElementFinish(gridX, gridY, Constants.COLOR_MAP_FINISH);
+            case WALL: return new ElementWall(gridX, gridY, Constants.COLOR_WALL);
+            case BLACK_HOLE: return new ElementBlackHole(gridX, gridY, Constants.COLOR_BLACK_HOLE);
+            case ENEMY: return new ElementEnemy(gridX, gridY, Constants.COLOR_ENEMY);
+            case WATER: return new ElementWater(gridX, gridY, Constants.COLOR_WATER);
+            case LASER: return new ElementLaser(gridX, gridY, Constants.COLOR_LASER);
+            case PLASMA_BALL: return new ElementPlasmaBall(gridX, gridY, Constants.COLOR_PLASMA_BALL);
+            default: return new ElementLand(gridX, gridY, Constants.COLOR_MAP_LAND);
+        }
+    }
+
 	@Override
 	public String toString() {
 		return "MapElement ("+mapType.name()+") - gridX: "+getGridX()+", gridY: "+getGridY()+", width: "+getWidth()+
