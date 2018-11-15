@@ -42,7 +42,6 @@ package functionality;
 
 import java.awt.Font;
 import java.io.File;
-import java.io.InputStream;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -70,8 +69,8 @@ public class FontLoader {
         }
         String fName = "/" + name;
         try {
-
-            font = Font.createFont(Font.TRUETYPE_FONT, new File("/Users/kgudzius/Documents/Hochschule Ulm/S5/SOFPRO/trAIner/software/test_project/resources/"+name)).deriveFont(16.f);
+            String userDir = System.getProperty("user.dir");
+            font = Font.createFont(Font.TRUETYPE_FONT, new File(userDir + "/software/test_project/resources/"+name)).deriveFont(16.f);
         } catch (Exception ex) {
             ex.printStackTrace();
             System.err.println(fName + " not loaded.  Using serif font.");
