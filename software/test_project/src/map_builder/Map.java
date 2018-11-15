@@ -67,6 +67,7 @@ public class Map {
 						Constants.MAP_ELEMENT_SIZE
 				);
 				
+                // draw map elements
 				if (map[i][j] != MapType.LAND.representation()){
 					graphics.setColor(getMapElementColor(map[i][j]));
 					graphics.fillRect(
@@ -81,10 +82,10 @@ public class Map {
 		
 		//TODO: this could be moved in the above loop if map elements have static colors
 		// draw entities
-		for (Entity e: entities){
+		/*for (Entity e: entities){
 			if (!(e instanceof Avatar))
 				e.draw(graphics);
-		}
+		}*/
 		
 		// draw entities which are avatar(s) only, since they're not bound to the grid (they can move freely)
 		for (Entity avatar: entities){
@@ -95,7 +96,7 @@ public class Map {
 		
 	}
 	
-	private void updateEntitiesInMap(ArrayList<Entity> entities){
+	public void updateEntitiesInMap(ArrayList<Entity> entities){
 		// clear map
 		initBasicMap();
 		

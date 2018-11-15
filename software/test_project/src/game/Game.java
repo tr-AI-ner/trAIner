@@ -114,7 +114,7 @@ public class Game {
 	}
 	
 	private void updateState(){
-		
+        map.updateEntitiesInMap(entities);		
 	}
 	
 	private void redrawAll(){

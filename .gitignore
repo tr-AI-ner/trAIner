@@ -15,6 +15,9 @@
 # java class files
 *.class
 
+# ignore swp files
+*.swp
+
 .DS_Store
 
 # Generated files
