@@ -12,6 +12,9 @@
 .idea/**/dictionaries
 .idea/**/shelf
 
+# java class files
+*.class
+
 .DS_Store
 
 # Generated files
