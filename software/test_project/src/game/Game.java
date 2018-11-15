@@ -10,6 +10,7 @@ import functionality.Constants;
 import functionality.GraphicsManager;
 import functionality.InputManager;
 import functionality.Setup;
+import map_builder.ElementPlasmaBall;
 import map_builder.ElementWall;
 import map_builder.Map;
 import map_builder.MapElement;
@@ -26,6 +27,11 @@ public class Game {
 	ArrayList<Entity> entities = new ArrayList<>();
 	ArrayList<MapElement> mapElements;
 	ElementWall theGreatWall;
+	ElementPlasmaBall ball;
+    ElementPlasmaBall ball2;
+    ElementPlasmaBall ball3;
+    ElementPlasmaBall ball4;
+    ElementPlasmaBall ball5;
 
 	public Game(GraphicsManager gm){
 		this.graphicsManager = gm;
@@ -51,7 +57,17 @@ public class Game {
 		
 //		theGreatWall = new ElementWall(100, 100, 50, 20, new Color(0, 255, 0));
 		theGreatWall = new ElementWall(15, 15, new Color(0,255,0));
+		ball = new ElementPlasmaBall(10,10,Constants.COLOR_PLASMA_BALL);
+        ball2 = new ElementPlasmaBall(4,14,Constants.COLOR_PLASMA_BALL);
+        ball3 = new ElementPlasmaBall(36,22,Constants.COLOR_PLASMA_BALL);
+        ball4 = new ElementPlasmaBall(1,1,Constants.COLOR_PLASMA_BALL);
+        ball5 = new ElementPlasmaBall(50,32,Constants.COLOR_PLASMA_BALL);
 		mapElements.add(theGreatWall);
+		mapElements.add(ball);
+//        mapElements.add(ball2);
+//        mapElements.add(ball3);
+//        mapElements.add(ball4);
+//        mapElements.add(ball5);
 		// add all map-elements to entities
 		entities.addAll(mapElements);
 	}
@@ -114,7 +130,12 @@ public class Game {
 	}
 	
 	private void updateState(){
-        map.updateEntitiesInMap(entities);		
+		ball.update();
+//        ball2.update();
+//        ball3.update();
+//        ball4.update();
+//        ball5.update();
+        map.updateEntitiesInMap(entities);
 	}
 	
 	private void redrawAll(){
