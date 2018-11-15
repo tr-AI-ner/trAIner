@@ -3,11 +3,23 @@ package GeneticAlgorithm;
 import java.util.Random;
 
 public class Genome {
+/**
+ * Class to represent a gene of an individual
+ *
+ * @author Lugges991: Lucas Mahler
+ */
+    
     int[][] gene;
     int step;
     int maxNrOfMoves;
 //    int[][][] DNA;
 
+    /**
+     * default constructor
+     *
+     * takes maximum number of possible moves until Generation ends 
+     * as input
+     */
     public Genome(int maxNrOfMoves) {
         this.step = 0;
         this.maxNrOfMoves = maxNrOfMoves;
@@ -17,18 +29,31 @@ public class Genome {
         }
 
     }
-
+    
+    /**
+     * Copy constructor
+     */
     public Genome(int[][] gene){
         this.gene = gene;
     }
-
+    
+    /**
+     * function to fully randomize the gene
+     *
+     * ---obsolete--
+     */
     private void randomizeGene(int population_size) {
         for (int i = 0; i < population_size; i++) {
             this.gene[i] = get_random_direction();
         }
 
     }
-
+    
+    /**
+     * randomly pick a direction
+     *
+     * returns a array with the new direction
+     */
     private int[] getRandomDirection() {
         int[] direction = new int[2];
         Random rand = new Random();
@@ -70,7 +95,12 @@ public class Genome {
         }
         return direction;
     }
-
+    
+    /**
+     * clone a gene
+     *
+     * returns a new gene, exactly the same as the original
+     */
     public Genome clone() {
         Genome cloned_genome = new Genome(this.gene.length);
         for (int i = 0; i < this.gene.length; i++) {
@@ -79,6 +109,12 @@ public class Genome {
         return cloned_genome;
     }
 
+    /**
+     *
+     * mutates a gene according to the mutation rate
+     *
+     * returns 
+     */
     public void mutateGene(float mutationRate) {
         Random rand = new Random();
 
@@ -86,9 +122,17 @@ public class Genome {
         for (int i = 0; i < this.gene.length; i++) {
             if(rand.nextFloat() < mutationRate){
                 this.gene[i] = this.getRandomDirection();
+                
             }
        }
     }
+
+    /**
+     * exchange genetic material of 2 genes
+     *
+     * creates a  new gene with combined genetic material of the
+     * two parents
+     */
     
     public Genome crossover(Genome mate){
         int [][]child = new int[this.maxNrOfMoves][2];
@@ -106,7 +150,11 @@ public class Genome {
         return newGenes;
     }
 
-    public void increase_number_of_moves(int nr) {
+    /**
+     * increase the possible number of moves until generation ends
+     *
+     */
+    public void increaseNumberOfMoves(int nr) {
         this.maxNrOfMoves = nr;
     }
 }
