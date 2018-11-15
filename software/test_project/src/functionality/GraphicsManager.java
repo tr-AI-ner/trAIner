@@ -1,11 +1,17 @@
 package functionality;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsEnvironment;
-import java.awt.image.BufferedImage;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -70,6 +76,10 @@ public class GraphicsManager extends JPanel {
 		this.addMouseListener(inputManager);
 		this.addMouseMotionListener(inputManager);
 
+		Button rb = new Button("Go");
+		rb.setBackground(Color.yellow);
+
+		frame.add(rb);
 		imageBuffer = graphicsConf.createCompatibleImage(this.getWidth(), this.getHeight());
 		graphics = imageBuffer.getGraphics();
 

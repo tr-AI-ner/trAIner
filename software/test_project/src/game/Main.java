@@ -17,8 +17,8 @@ public class Main {
 		InputManager inputManager = new InputManager();
 		Map map = new Map();
 
-		MapSaver.createMap();
-		MapSaver.readMap("map_02");
+	//	MapSaver.createMap();
+	//	MapSaver.readMap("map_02");
 		GraphicsManager gm = new GraphicsManager(inputManager, map); //create the panel
 		game = new Game(gm); // create the game
 //		game.init(gm, gm.getInputSystem()); // Initialize all variables in game, including the panel
