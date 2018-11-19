@@ -24,7 +24,12 @@ public final class Constants {
 	public static final int WINDOW_MAP_X0 = WINDOW_MAP_MARGIN;
 	public static final int WINDOW_MAP_Y0 = WINDOW_HEADER_HEIGHT + WINDOW_MAP_MARGIN;
 	
+    // width & height of a grid element (square) in pixels
 	public static final int MAP_ELEMENT_SIZE = 16;
+    // number of grid columns
+    public static final int GRID_COLUMNS = WINDOW_MAP_WIDTH / MAP_ELEMENT_SIZE;
+    // number of grid rows
+    public static final int GRID_ROWS = WINDOW_MAP_HEIGHT / MAP_ELEMENT_SIZE;
 
 	// Avatar settings
     public static final int AVATAR_HEIGHT = MAP_ELEMENT_SIZE;
@@ -49,6 +54,7 @@ public final class Constants {
 	public static final Color COLOR_MAP_LAND = new Color(52,59,98); // #343B62
 	public static final Color COLOR_MAP_START = new Color(65,72,111); // #41486F
 	public static final Color COLOR_MAP_FINISH = new Color(108,77,111); // #6C4D6F
+	public static final Color COLOR_WATER = new Color(108,77,111); // #6C4D6F
   
 	public static final Color COLOR_AVATAR_RED = new Color(252,137,130); // #FC8982
 	public static final Color COLOR_AVATAR_BLUE = new Color(100,188,252); // #64BCFC
