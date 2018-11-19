@@ -93,21 +93,13 @@ public class ElementPlasmaBall extends MapElement {
 	private void getNextYCoordinateSin() {
 		int endY = Constants.WINDOW_MAP_HEIGHT/Constants.MAP_ELEMENT_SIZE;
 		double nextY = Math.sin((double)getGridX());
-
-//		if(nextY > endY) {
-//			nextY = endY;
-//		}
-//		if(nextY < 0) {
-//			nextY = 0;
-//		}
-
 		setGridY((int)(nextY * 2 + 18));
 	}
 
 	public void update() {
 		getNextXCoordinate();
-		//getNextYCoordinate();
-		getNextYCoordinateSin();
+		getNextYCoordinate();
+		//getNextYCoordinateSin();
 	}
 
 }

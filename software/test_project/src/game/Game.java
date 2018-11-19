@@ -64,10 +64,10 @@ public class Game {
         ball5 = new ElementPlasmaBall(50,32,Constants.COLOR_PLASMA_BALL);
 		mapElements.add(theGreatWall);
 		mapElements.add(ball);
-//        mapElements.add(ball2);
-//        mapElements.add(ball3);
-//        mapElements.add(ball4);
-//        mapElements.add(ball5);
+        mapElements.add(ball2);
+        mapElements.add(ball3);
+        mapElements.add(ball4);
+        mapElements.add(ball5);
 		// add all map-elements to entities
 		entities.addAll(mapElements);
 	}
@@ -131,10 +131,10 @@ public class Game {
 	
 	private void updateState(){
 		ball.update();
-//        ball2.update();
-//        ball3.update();
-//        ball4.update();
-//        ball5.update();
+        ball2.update();
+        ball3.update();
+        ball4.update();
+        ball5.update();
         map.updateEntitiesInMap(entities);
 	}
 	
