@@ -91,19 +91,41 @@ public class Population {
         // flush the gene pool
         this.gene_pool.clear();
 
-        double max_fit = getMaxFitness();
+        double maxFit = getMaxFitness();
         for (int i = 0; i < this.population.length; i++) {
-            //TO DO
+            double scaledFitness = scaleMinMax(this.population[i].fitness, 0, maxFit);
+            int multiplier = (int)(scaledFitness * 100);
+            for(int j = 0; j < multiplier; j++){
+                gene_pool.add(this.population[i]);
+            }
         }
 
     }
 
-    public void crossover() {
-        // TO DO
+    public void reproduction() {
+        Random rand = new Random();
+        for(int i = 0; i < this.population.length; i++){
+            Individual father = this.gene_pool.get(rand.nextInt(this.gene_pool.size()));
+            Individual mother  =  this.gene_pool.get(rand.nextInt(this.gene_pool.size()));
+            Genome dadsGenes = father.getGenome();
+            Genome momsGenes = mother.getGenome();
+
+            Genome child = momsGenes.crossover(dadsGenes);
+
+            child.mutate(this.mutation_rate);
+            this.population[i] = new Individual(this.def_x, this.def_y, this.def_width, this.def_height, this.color, child);
+
+        }
+        this.generations++;
     }
 
     public Individual getIndividual(int index){
         return this.population[index];
+    }
+    
+    public double scaleMinMax(double val, double min, double  max){
+        double xScaled = (val - min) / (max - min);
+        return xScaled;
     }
 
 

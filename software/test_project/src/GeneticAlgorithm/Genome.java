@@ -157,4 +157,8 @@ public class Genome {
     public void increaseNumberOfMoves(int nr) {
         this.maxNrOfMoves = nr;
     }
+
+    public int[][] getGenes(){
+        return this.gene;
+    }
 }

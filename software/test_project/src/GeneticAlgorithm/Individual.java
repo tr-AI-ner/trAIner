@@ -38,6 +38,11 @@ public class Individual extends Avatar {
 
     }
 
+    public Individual(int x, int y, int width, int height, Color color, Genome genome){
+        super(x, y, width, height, color);
+        this.genome = genome;
+    }
+
     // calculate the fitness of the individual
     public void calcFitness() {
         fitness = Math.pow((1 / best_dist * nr_of_moves), 3);
