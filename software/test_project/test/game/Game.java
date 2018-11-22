@@ -9,12 +9,12 @@
   * Short description for what this file does...
   * 
   */
-package ui;
+package game;
 
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
-public class RightBar {
+public class Game {
 
 
     @Test
