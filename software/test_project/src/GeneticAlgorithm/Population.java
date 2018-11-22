@@ -4,6 +4,7 @@ import functionality.Constants;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
 import static functionality.Constants.COLOR_AVATAR_RED;
 
@@ -53,7 +54,7 @@ public class Population {
     }
 
     public void live(){
-        for(int i = 0; i < population.length; i++){
+        for(int i = 0; i < this.population.length; i++){
             if(this.population[i].getX() == this.population[i].goal[0] && this.population[i].getY() == this.population[i].goal[1]){
                 this.population[i].fin = true;
             }

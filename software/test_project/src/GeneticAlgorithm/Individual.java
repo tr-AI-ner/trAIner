@@ -65,6 +65,10 @@ public class Individual extends Avatar {
 
     }
 
+    public void makeMove(){
+    
+    }
+
     // getters and setters
     public double getFitness() {
         return fitness;
