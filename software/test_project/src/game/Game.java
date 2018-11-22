@@ -31,6 +31,8 @@ public class Game {
     ElementPlasmaBall ball4;
     ElementPlasmaBall ball5;
     ElementEnemy theEnemy;
+	ElementBlackHole blackHole;
+    ElementBlackHole blackHole2;
 
 	public Game(GraphicsManager gm){
 		this.graphicsManager = gm;
@@ -59,9 +61,13 @@ public class Game {
 		ball = new ElementPlasmaBall(10,10,Constants.COLOR_PLASMA_BALL);
         ball2 = new ElementPlasmaBall(4,14,Constants.COLOR_PLASMA_BALL);
         ball3 = new ElementPlasmaBall(36,22,Constants.COLOR_PLASMA_BALL);
-        ball4 = new ElementPlasmaBall(1,1,Constants.COLOR_PLASMA_BALL);
+        ball4 = new ElementPlasmaBall(17,12,Constants.COLOR_PLASMA_BALL);
         ball5 = new ElementPlasmaBall(50,32,Constants.COLOR_PLASMA_BALL);
         theEnemy = new ElementEnemy(30, 30, Constants.COLOR_ENEMY);
+        blackHole = new ElementBlackHole(0,0,Constants.COLOR_BLACK_HOLE);
+        blackHole2 = new ElementBlackHole(Constants.WINDOW_MAP_WIDTH /Constants.MAP_ELEMENT_SIZE-2,Constants.WINDOW_MAP_HEIGHT /Constants.MAP_ELEMENT_SIZE-2,Constants.COLOR_BLACK_HOLE);
+        blackHole.setAttachedBlackHole(blackHole2);
+        blackHole2.setAttachedBlackHole(blackHole);
 		mapElements.add(theGreatWall);
 		mapElements.add(ball);
         mapElements.add(ball2);
@@ -69,6 +75,8 @@ public class Game {
         mapElements.add(ball4);
         mapElements.add(ball5);
         mapElements.add(theEnemy);
+        mapElements.add(blackHole);
+        mapElements.add(blackHole2);
 		// add all map-elements to entities
 		entities.addAll(mapElements);
 	}
@@ -131,13 +139,14 @@ public class Game {
 	}
 	
 	private void updateState(){
-		ball.update();
-        ball2.update();
-        ball3.update();
-        ball4.update();
-        ball5.update();
-        theEnemy.updateEnemy();
-
+		if(Main.MODE == 0 || Main.MODE == 2) {
+            ball.update();
+            ball2.update();
+            ball3.update();
+            ball4.update();
+            ball5.update();
+            theEnemy.updateEnemy();
+        }
         map.updateEntitiesInMap(entities);
 	}
 	

@@ -15,6 +15,13 @@ public abstract class MapElement extends Entity {
 	
 	private MapType mapType;
 
+	public MapElement(int gridX, int gridY, int width, int height, MapType mapType, Color elementColor){
+		super(gridX*Constants.MAP_ELEMENT_SIZE, gridY*Constants.MAP_ELEMENT_SIZE,
+				width * Constants.MAP_ELEMENT_SIZE, height * Constants.MAP_ELEMENT_SIZE, elementColor, EntityType.MapElement);
+		this.gridX = gridX;
+		this.gridY = gridY;
+		this.mapType = mapType;
+	}
 	
 	public MapElement(int gridX, int gridY, MapType mapType, Color elementColor){
 		super(gridX*Constants.MAP_ELEMENT_SIZE, gridY*Constants.MAP_ELEMENT_SIZE, 

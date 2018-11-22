@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import custom_objects.Avatar;
 import custom_objects.Entity;
 import functionality.Constants;
+import game.Main;
 
 public class Map {
 	
@@ -76,13 +77,15 @@ public class Map {
 			if (!(e instanceof Avatar))
 				e.draw(graphics);
 		}
-		
-		// draw entities which are avatar(s) only, since they're not bound to the grid (they can move freely)
-		for (Entity avatar: entities){
-			if (avatar instanceof Avatar){
-				avatar.draw(graphics);
+		if(Main.MODE == 0) {
+			// draw entities which are avatar(s) only, since they're not bound to the grid (they can move freely)
+			for (Entity avatar: entities){
+				if (avatar instanceof Avatar){
+					avatar.draw(graphics);
+				}
 			}
 		}
+
 		
 	}
 

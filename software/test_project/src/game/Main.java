@@ -4,8 +4,11 @@ import functionality.GraphicsManager;
 import functionality.InputManager;
 import map_builder.Map;
 
+
+
 public class Main {
 
+	public static int MODE = 1; //0 = Game , 1 = MapBuilder
 	private Game game = null;
 
 	public static void main(String[] args) {

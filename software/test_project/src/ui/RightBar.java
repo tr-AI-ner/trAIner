@@ -12,6 +12,7 @@ import javax.swing.JSlider;
 import functionality.Constants;
 import functionality.GraphicsManager;
 import functionality.Setup;
+import game.Main;
 import map_builder.ElementBlackHole;
 import map_builder.ElementEnemy;
 import map_builder.ElementFinish;
@@ -104,12 +105,10 @@ public class RightBar extends UIElement {
 	@Override
 	public void draw(Graphics graphics) {
 		drawBackground(graphics);
-		
-		//TODO: this boolean should be globally
-		boolean mapBuildingMode = true;
+
 		
 		// decide whether to draw list with map-elements or configurations for AI game-play 
-		if (mapBuildingMode){
+		if (Main.MODE == 1){
 			drawMapBuilderList(graphics);
 		} else {
 			drawGamePlayList(graphics);
