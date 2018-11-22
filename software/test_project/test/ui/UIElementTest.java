@@ -9,12 +9,12 @@
   * Short description for what this file does...
   * 
   */
-package custom_objects;
+package ui;
 
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
-public class Avatar {
+public class UIElementTest {
 
 
     @Test

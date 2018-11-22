@@ -9,12 +9,12 @@
   * Short description for what this file does...
   * 
   */
-package map_builder;
+package custom_objects;
 
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
-public class ElementEnemy {
+public class EntityTest {
 
 
     @Test

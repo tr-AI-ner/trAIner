@@ -9,12 +9,12 @@
   * Short description for what this file does...
   * 
   */
-package map_builder;
+package game;
 
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
-public class ElementWall {
+public class GameTest {
 
 
     @Test

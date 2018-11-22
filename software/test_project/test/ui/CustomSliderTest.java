@@ -9,12 +9,12 @@
   * Short description for what this file does...
   * 
   */
-package map_builder;
+package ui;
 
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
-public class ElementBall {
+public class CustomSliderTest {
 
 
     @Test

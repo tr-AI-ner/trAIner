@@ -14,7 +14,7 @@ package map_builder;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
-public class ElementPlasmaBall {
+public class ElementWallTest {
 
 
     @Test

@@ -14,20 +14,16 @@ package game;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
-public class Game {
+public class MainTest {
 
-
-    @Test
-    public void testInteger(){
-        int result = 5 * 10;
-        
-        assertEquals(50, result);
+    public static void main(String args[]){
+        System.out.println("Shut the fuck up bitch !!!!!!!");
     }
 
     @Test
-    public void testString(){
-        String result = "the string";
-        assertEquals("the string", result);
+    public void a(){
+        String s = "ss";
+        assertEquals("ss", s);
     }
 
 

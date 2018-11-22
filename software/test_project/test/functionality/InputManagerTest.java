@@ -9,12 +9,12 @@
   * Short description for what this file does...
   * 
   */
-package map_builder;
+package functionality;
 
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
-public class ElementLand {
+public class InputManagerTest {
 
 
     @Test

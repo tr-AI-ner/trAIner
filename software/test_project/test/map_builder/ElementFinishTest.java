@@ -9,12 +9,12 @@
   * Short description for what this file does...
   * 
   */
-package functionality;
+package map_builder;
 
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
-public class Setup {
+public class ElementFinishTest {
 
 
     @Test
