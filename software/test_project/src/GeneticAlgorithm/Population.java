@@ -54,7 +54,7 @@ public class Population {
 
     public void live(){
         for(int i = 0; i < population.length; i++){
-            if(this.population[i].getX == this.population[i].goal[0] && this.population[i].getY == this.population[i].goal[1]){
+            if(this.population[i].getX() == this.population[i].goal[0] && this.population[i].getY() == this.population[i].goal[1]){
                 this.population[i].fin = true;
             }
 
@@ -67,7 +67,7 @@ public class Population {
             this.population[i].calcFitness();
         }
 
-        getFittest();
+        //getFittest();
     }
 
     public boolean reachedGoal() {
@@ -112,7 +112,7 @@ public class Population {
 
             Genome child = momsGenes.crossover(dadsGenes);
 
-            child.mutate(this.mutation_rate);
+            child.mutateGene(this.mutation_rate);
             this.population[i] = new Individual(this.def_x, this.def_y, this.def_width, this.def_height, this.color, child);
 
         }

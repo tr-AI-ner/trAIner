@@ -30,6 +30,17 @@ public class Game {
 	ElementWall theGreatWall;
     Population pop;
 
+    // lifetime of a population
+    int lifetime;
+    //size of the population
+    int populationSize;
+    //mutation rate of the population
+    float mutationRate;
+    //current lifecycle
+    int lifecycle;
+    //least nr of steps to complete the map
+    int recordtime;
+
 	public Game(GraphicsManager gm){
 		this.graphicsManager = gm;
 		this.clock = new Clock(); // Initialize clock
@@ -67,33 +78,22 @@ public class Game {
             this.inputManager = gm.getInputManager();
             this.setup = gm.getSetup();
             this.map = gm.getMap();
+            this.lifetime = 40000;
 
             entities = new ArrayList<>();
-            int pop_size = 10;
-            float mut_rate = (float) 0.2;
+            this.populationSize = 10;
+            this.mutationRate = (float) 0.2;
 
-           this.pop = new Population(pop_size,mut_rate);
-
-            for(int i = 0; i < pop_size; i++){
+            this.pop = new Population(this.populationSize, this.mutationRate);
+            this.lifecycle = 0;
+            for(int i = 0; i < populationSize; i++){
                 Individual ind = pop.getIndividual(i);
                 ind.setSetup(setup);
                 ind.setGame(this);
                 entities.add(ind);
             }
 
-
-           // avatar = new Avatar(
-           //         ((Constants.WINDOW_MAP_X0 + Constants.WINDOW_MAP_WIDTH - (avatarWidth / 2)) / 2),
-           //         ((Constants.WINDOW_MAP_HEIGHT + Constants.WINDOW_MAP_Y0 - (avatarHeight / 2)) / 2),
-           //         avatarWidth, avatarHeight,
-           //         Constants.COLOR_AVATAR_RED
-           //         //r, g, b
-//			//	new Color(255, 0, 0)
-           // );
-            //avatar.setSetup(setup);
-            //avatar.setGame(this);
-            //// add avatar to entities
-            //entities.add(avatar);
+            this.recordtime = this.lifetime +1;
 
             mapElements = new ArrayList<>();
 
@@ -103,7 +103,41 @@ public class Game {
             entities.addAll(mapElements);
         }
     }
-	
+
+    public Game(GraphicsManager gm, boolean ai_playing, int lifetime, int populationSize, float mutationRate) {
+        if (!ai_playing) {
+            new Game(gm);
+        } else {
+            this.graphicsManager = gm;
+            this.clock = new Clock(); // Initialize clock
+            this.inputManager = gm.getInputManager();
+            this.setup = gm.getSetup();
+            this.map = gm.getMap();
+
+            this.lifetime = lifetime;
+            entities = new ArrayList<>();
+            this.populationSize = populationSize;
+            this.mutationRate = mutationRate;
+
+            this.pop = new Population(this.populationSize, this.mutationRate);
+            this.lifecycle = 0;
+
+            for(int i = 0; i < populationSize; i++){
+                Individual ind = pop.getIndividual(i);
+                ind.setSetup(setup);
+                ind.setGame(this);
+                entities.add(ind);
+            }
+            this.recordtime = this.lifetime +1;
+            mapElements = new ArrayList<>();
+
+            theGreatWall = new ElementWall( 50, 20, new Color(0, 255, 0));
+            mapElements.add(theGreatWall);
+            // add all map-elements to entities
+            entities.addAll(mapElements);
+        }
+    }
+
 	public void run(){
 		while(true)
 			this.gameLoop();
@@ -127,7 +161,18 @@ public class Game {
 
     private void gameLoop(boolean ai_playing){
         if(this.clock.frameShouldChange()){
-            pop.live(); 
+            if(this.lifecycle < this.lifetime){
+                this.pop.live();
+                if(this.pop.reachedGoal() && (this.lifecycle < this.recordtime)){
+                this.recordtime = this.lifecycle;
+                }
+                this.lifecycle++;
+            }else{
+                this.lifecycle = 0;
+                this.pop.calculateFitness();
+                this.pop.selection();
+                this.pop.reproduction();
+            } 
             this.redrawAll();
         }
     }

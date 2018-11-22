@@ -44,7 +44,7 @@ public class Genome {
      */
     private void randomizeGene(int population_size) {
         for (int i = 0; i < population_size; i++) {
-            this.gene[i] = get_random_direction();
+            this.gene[i] = getRandomDirection();
         }
 
     }
@@ -136,7 +136,7 @@ public class Genome {
     
     public Genome crossover(Genome mate){
         int [][]child = new int[this.maxNrOfMoves][2];
-        Random rand = new Rand();
+        Random rand = new Random();
         int crossover = rand.nextInt(this.maxNrOfMoves);
         for(int i = 0; i<this.maxNrOfMoves;i++){
             if(i > crossover){
