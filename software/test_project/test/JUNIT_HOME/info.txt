@@ -1,0 +1,23 @@
+# for running the JUnit tests
+#
+#   1. go to testing directory (you should see the packagename directories & JUNIT_HOME)
+#           cd /software/test_project/test/
+#
+#   2. remove class files:
+#           rm {custom_objects,functionality,game,map_builder,ui}/*.class
+#
+#   3. compiling project with jar file 
+#      (note that the dir JUNIT_HOME is on same level as the dir of pacakgename):
+#           javac -cp JUNIT_HOME/junit.jar {custom_objects,functionality,game,map_builder,ui}/*
+#
+#   4. running the project:
+#           java -cp .:JUNIT_HOME/junit.jar game/Main
+#
+
+
+
+
+
+
+
+
