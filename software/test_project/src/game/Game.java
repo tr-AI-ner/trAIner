@@ -104,38 +104,16 @@ public class Game {
 		if(inputManager.getKeyResult()[3]) {avatar.move(( +setup.getNewEntitySpeed() ), 0);}
 		//Exits when escape is pressed
 		if(inputManager.getKeyResult()[4]) {System.exit(0);}
-		
+		if(inputManager.getKeyResult()[5]) { Main.MODE = 0; }
+		if(inputManager.getKeyResult()[6]) { Main.MODE = 1; }
+
+
 		//check for mouse dragging
 //		if(inputManager.getIsMousePressed() && inputManager.getIsMouseDragged()){
 //			System.out.println("mouse pressed at x: "+inputManager.getMousePressedX()+", y: "
 //					+inputManager.getMousePressedY());
 //		}
-		if(inputManager.getIsMousePressed() && inputManager.getIsMouseDragged()){
-			//TODO: change this
-			int width = mapElements.get(0).getWidth();
-			int height = mapElements.get(0).getHeight();
-			mapElements.get(0).move(inputManager.getMouseDraggedX() - (width / 2), 
-					inputManager.getMouseDraggedY() - (height / 2));
-			
-			//look if mouse clicked on a map-element & on which
-//			int index = -1;
-//			
-//			int counter = 0;
-//			for (MapElement e: mapElements){
-//				if (e.mousePressedInRange(inputManager.getMousePressedX(), inputManager.getMousePressedY())){
-//					index = counter;
-//					break;
-//				}
-//				counter++;
-//			}
-//			
-//			// if index was found, move the element 
-//			if (index >= 0){
-//				System.out.println("mouse dragged at x: "+inputManager.getMouseDraggedX()+", y: "
-//					+inputManager.getMouseDraggedY());
-//			mapElements.get(index).move(inputManager.getMouseDraggedX(), inputManager.getMouseDraggedY());
-//			}
-		}
+//
 	}
 	
 	private void updateState(){

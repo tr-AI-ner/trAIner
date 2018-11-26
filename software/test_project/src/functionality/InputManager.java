@@ -60,14 +60,15 @@ public class InputManager implements KeyListener, MouseListener, MouseMotionList
 	@Override
 	public void keyPressed(KeyEvent evt){
 //		System.out.println("key pressed: "+evt.getKeyChar());
-		
+
 		//these commands work better on MacBook (please don't delete them)
 		if(evt.getKeyCode() == KeyEvent.VK_UP) { keyArray[0] = true; } //up-arrow goes UP
 		if(evt.getKeyCode() == KeyEvent.VK_DOWN) { keyArray[1] = true; } //down-arrow goes DOWN
 		if(evt.getKeyCode() == KeyEvent.VK_LEFT) { keyArray[2] = true; } //left-arrow goes LEFT
 		if(evt.getKeyCode() == KeyEvent.VK_RIGHT) { keyArray[3] = true; } //right-arrow goes RIGHT
-
 		if(evt.getKeyCode() == KeyEvent.VK_ESCAPE) { keyArray[4] = true; } //ESC CLOSE_GAME
+		if(evt.getKeyCode() == KeyEvent.VK_G) { keyArray[5] = true; } //Change into game mode
+		if(evt.getKeyCode() == KeyEvent.VK_B) { keyArray[6] = true; } //Change into build mode
 
 	}	
 
@@ -76,13 +77,15 @@ public class InputManager implements KeyListener, MouseListener, MouseMotionList
 	@Override
 	public void keyReleased(KeyEvent evt){
 //		System.out.println("key released: "+evt.getKeyChar());
-		
+
 		if(evt.getKeyCode() == KeyEvent.VK_UP) { keyArray[0] = false; }
 		if(evt.getKeyCode() == KeyEvent.VK_DOWN) { keyArray[1] = false; }
 		if(evt.getKeyCode() == KeyEvent.VK_LEFT) { keyArray[2] = false; }
 		if(evt.getKeyCode() == KeyEvent.VK_RIGHT) { keyArray[3] = false; }
-		
 		if(evt.getKeyCode() == KeyEvent.VK_ESCAPE) { keyArray[4] = false; }
+		if(evt.getKeyCode() == KeyEvent.VK_G) { keyArray[5] = false; }
+		if(evt.getKeyCode() == KeyEvent.VK_B) { keyArray[6] = false; }
+
 	}
 
 	@Override
@@ -114,6 +117,8 @@ public class InputManager implements KeyListener, MouseListener, MouseMotionList
 	public boolean areTwoKeysPressed(){
 		return isKeyEvent && isSecondKeyEvent;
 	}
+
+
 
 	public boolean getIsMouseEvent(){return isMouseEvent;}
 	public boolean getIsMouseDragged(){return isMouseDragged;}
