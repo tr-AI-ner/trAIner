@@ -1,6 +1,5 @@
 package game;
 
-import java.awt.Color;
 import java.util.ArrayList;
 
 import custom_objects.Avatar;
@@ -21,18 +20,16 @@ public class Game {
 	Map map;
 	
 	Avatar avatar;
-	ArrayList<Entity> entities = new ArrayList<>();
+	ArrayList<Entity> entities;
 	ArrayList<MapElement> mapElements;
 	ElementWall theGreatWall;
 
 	ElementPlasmaBall ball;
-    ElementPlasmaBall ball2;
-    ElementPlasmaBall ball3;
-    ElementPlasmaBall ball4;
-    ElementPlasmaBall ball5;
     ElementEnemy theEnemy;
 	ElementBlackHole blackHole;
     ElementBlackHole blackHole2;
+	ElementStart start;
+	ElementFinish finish;
 
 	public Game(GraphicsManager gm){
 		this.graphicsManager = gm;
@@ -42,12 +39,11 @@ public class Game {
 		this.map = gm.getMap();
 		
 		entities = new ArrayList<>();
-		
-		avatar = new Avatar(Constants.AVATAR_START_X,Constants.AVATAR_START_Y,
+
+		//TODO set the avatar to appear on the start block
+		avatar = new Avatar(33 * Constants.MAP_ELEMENT_SIZE,33 * Constants.MAP_ELEMENT_SIZE,
 				Constants.AVATAR_WIDTH, Constants.AVATAR_HEIGHT,
 				Constants.COLOR_AVATAR_RED
-				//r, g, b
-//				new Color(255, 0, 0)
 				);
 		avatar.setSetup(setup);
 		avatar.setGame(this);
@@ -55,25 +51,36 @@ public class Game {
 		entities.add(avatar);
 		
 		mapElements = new ArrayList<>();
-		
-//		theGreatWall = new ElementWall(100, 100, 50, 20, new Color(0, 255, 0));
-		theGreatWall = new ElementWall(15, 15, new Color(0,255,0));
-		ball = new ElementPlasmaBall(10,10,Constants.COLOR_PLASMA_BALL);
-        ball2 = new ElementPlasmaBall(4,14,Constants.COLOR_PLASMA_BALL);
-        ball3 = new ElementPlasmaBall(36,22,Constants.COLOR_PLASMA_BALL);
-        ball4 = new ElementPlasmaBall(17,12,Constants.COLOR_PLASMA_BALL);
-        ball5 = new ElementPlasmaBall(50,32,Constants.COLOR_PLASMA_BALL);
+
+		start = new ElementStart(33,33,Constants.COLOR_MAP_START);
+        finish = new ElementFinish(50,12,Constants.COLOR_MAP_FINISH);
+
+		for(int i = 0; i < 36; i++) {
+            theGreatWall = new ElementWall(15, i, Constants.COLOR_WALL);
+            if(i != 30 && i != 31)  mapElements.add(theGreatWall);
+        }
+        for(int i = 0; i < 36; i++) {
+            theGreatWall = new ElementWall(43, i, Constants.COLOR_WALL);
+            mapElements.add(theGreatWall);
+        }
+
+		ball = new ElementPlasmaBall(13,7,Constants.COLOR_PLASMA_BALL);
+
         theEnemy = new ElementEnemy(30, 30, Constants.COLOR_ENEMY);
-        blackHole = new ElementBlackHole(0,0,Constants.COLOR_BLACK_HOLE);
-        blackHole2 = new ElementBlackHole(Constants.WINDOW_MAP_WIDTH /Constants.MAP_ELEMENT_SIZE-2,Constants.WINDOW_MAP_HEIGHT /Constants.MAP_ELEMENT_SIZE-2,Constants.COLOR_BLACK_HOLE);
+
+        blackHole = new ElementBlackHole(52,2,Constants.COLOR_BLACK_HOLE);
+        blackHole2 = new ElementBlackHole(4,
+                25,
+                       Constants.COLOR_BLACK_HOLE);
+
+
         blackHole.setAttachedBlackHole(blackHole2);
         blackHole2.setAttachedBlackHole(blackHole);
-		mapElements.add(theGreatWall);
+
+
+        mapElements.add(start);
+        mapElements.add(finish);
 		mapElements.add(ball);
-        mapElements.add(ball2);
-        mapElements.add(ball3);
-        mapElements.add(ball4);
-        mapElements.add(ball5);
         mapElements.add(theEnemy);
         mapElements.add(blackHole);
         mapElements.add(blackHole2);
@@ -107,23 +114,30 @@ public class Game {
 		if(inputManager.getKeyResult()[5]) { Main.MODE = 0; }
 		if(inputManager.getKeyResult()[6]) { Main.MODE = 1; }
 
-
-		//check for mouse dragging
-//		if(inputManager.getIsMousePressed() && inputManager.getIsMouseDragged()){
-//			System.out.println("mouse pressed at x: "+inputManager.getMousePressedX()+", y: "
-//					+inputManager.getMousePressedY());
-//		}
-//
 	}
-	
+
+    /**
+     * Restart the game by resetting the enemies to their original positions. This is needed so that the game is
+     * consistent every time
+     */
+	public void restart() {
+        for (MapElement element: this.getMapElements()){
+            element.reset();
+        }
+        avatar.reset();
+    }
+
 	private void updateState(){
 		if(Main.MODE == 0 || Main.MODE == 2) {
-            ball.update();
-            ball2.update();
-            ball3.update();
-            ball4.update();
-            ball5.update();
-            theEnemy.updateEnemy();
+            for (MapElement element: this.getMapElements()){
+                if(element.getMapType() == MapType.PLASMA_BALL || element.getMapType() == MapType.ENEMY) {
+                    element.update();
+                    // Because of the grid element system we have to check if the elements don't collide on the grid level
+                    if(Math.abs(element.getX()  - avatar.getX()) < 16 && Math.abs(element.getY()  - avatar.getY()) < 16) {
+                        this.restart();
+                    }
+                }
+            }
         }
         map.updateEntitiesInMap(entities);
 	}
@@ -133,7 +147,6 @@ public class Game {
 		graphicsManager.clear();
 		
 		// draw all entities
-//		graphicsManager.draw(entities);
 		graphicsManager.drawMap(entities);
 		
 		//swap buffers to make changes visible
@@ -144,5 +157,8 @@ public class Game {
 	public ArrayList<MapElement> getMapElements(){
 		return mapElements;
 	}
-	
+
+	public ElementStart getStart() {
+		return start;
+	}
 }

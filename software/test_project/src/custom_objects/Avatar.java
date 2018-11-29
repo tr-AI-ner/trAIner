@@ -17,9 +17,12 @@ public class Avatar extends Entity {
 	private Setup setup;
 	private Game game;
 	private ElementBlackHole currentlyTouched;
+	private int sourceX,sourceY;
 
 	public Avatar(int x, int y, int width, int height, Color color) {
 		super(x, y, width, height, EntityType.Avatar);
+		sourceX=x;
+		sourceY=y;
 		this.setColor(color);
 	}
 	
@@ -31,31 +34,45 @@ public class Avatar extends Entity {
 			this.toMoveX = (this.getX() + incX);
 		else if(incX == 0)  // up-arrow down-arrow
 			this.toMoveY = (this.getY() + incY);
-		
-		if(!checkForCollision()){
-		    if(blackHoled()) {
-                toMoveX = currentlyTouched.getAttachedBlackHole().getX() + 4 * Constants.MAP_ELEMENT_SIZE;
-                toMoveY =  currentlyTouched.getAttachedBlackHole().getY() +  4 *  Constants.MAP_ELEMENT_SIZE;
-		        if(this.toMoveX <= 0  || this.toMoveX >= (Constants.WINDOW_MAP_WIDTH - getWidth())) {
-                    toMoveX = currentlyTouched.getAttachedBlackHole().getX()  -  2 * Constants.MAP_ELEMENT_SIZE;
-                    this.setX(currentlyTouched.getAttachedBlackHole().getX() - 2 * Constants.MAP_ELEMENT_SIZE);
-                } else {
-                    this.setX(currentlyTouched.getAttachedBlackHole().getX() + 2 * Constants.MAP_ELEMENT_SIZE);
-                }
-                if(this.toMoveY <= 0  || this.toMoveY >= (Constants.WINDOW_MAP_HEIGHT - getHeight())) {
-                    toMoveY =  currentlyTouched.getAttachedBlackHole().getY()  - 4 * Constants.MAP_ELEMENT_SIZE;
-                    this.setY(currentlyTouched.getAttachedBlackHole().getY() -  2 * Constants.MAP_ELEMENT_SIZE);
-                } else {
-                    this.setY(currentlyTouched.getAttachedBlackHole().getY() + 2 *  Constants.MAP_ELEMENT_SIZE);
-                }
-            } else {
-                this.setX(toMoveX);
-                this.setY(toMoveY);
-            }
-		} else {
-			toMoveX = getX();
-			toMoveY = getY();
-		}
+
+
+			if(!checkForCollision()){
+				if(blackHoled()) {
+
+					toMoveX = currentlyTouched.getAttachedBlackHole().getX() + 4 * Constants.MAP_ELEMENT_SIZE;
+					toMoveY =  currentlyTouched.getAttachedBlackHole().getY() +  4 *  Constants.MAP_ELEMENT_SIZE;
+
+					int sideOffset = 3 * Constants.MAP_ELEMENT_SIZE;
+					int attachedX = currentlyTouched.getAttachedBlackHole().getX();
+					int attachedY = currentlyTouched.getAttachedBlackHole().getY();
+
+					if(this.toMoveX <= 0  || this.toMoveX >= (Constants.WINDOW_MAP_WIDTH - getWidth())) {
+						toMoveX = attachedX  - sideOffset ;
+					} else {
+						toMoveX = attachedX  +  sideOffset;
+					}
+
+
+					if(this.toMoveY <= 0  || this.toMoveY >= (Constants.WINDOW_MAP_HEIGHT - getHeight())) {
+						toMoveY =  attachedY  - sideOffset;
+					} else {
+						toMoveY =  attachedY  + sideOffset;
+					}
+
+				} else if(finished()) {
+					toMoveX = game.getStart().getX();
+					toMoveY = game.getStart().getY();
+					game.restart();
+				}
+			} else {
+				toMoveX = getX();
+				toMoveY = getY();
+			}
+
+
+
+		this.setX(toMoveX);
+		this.setY(toMoveY);
 	}
 	
 	/**
@@ -86,7 +103,7 @@ public class Avatar extends Entity {
 
 
     /**
-     *  Check if avatar entere a Black Hole
+     *  Check if avatar entered a Black Hole
      *  if so returns true
      * @return
      */
@@ -107,6 +124,26 @@ public class Avatar extends Entity {
     }
 
 	/**
+	 *  Check if avatar entered a Black Hole
+	 *  if so returns true
+	 * @return
+	 */
+	private boolean finished(){
+		for (MapElement element: game.getMapElements()){
+			if (toMoveX+getWidth() >= element.getX()
+					&& toMoveX <= (element.getX()+element.getWidth())
+					&& (toMoveY+getHeight() >= element.getY()
+					&& toMoveY <= (element.getY()+element.getHeight()))
+					&& element.getMapType() == MapType.FINISH
+			) {
+				return true;
+			}
+		}
+		// no collision detected
+		return false;
+	}
+
+	/**
 	 *  checks if avatar collides with another map-element,
 	 *  if so returns true
 	 * @return
@@ -114,17 +151,19 @@ public class Avatar extends Entity {
 	private boolean collidingWithMapElement(){
 		for (MapElement element: game.getMapElements()){
 			if (toMoveX+getWidth() >= element.getX() 
-				&& toMoveX <= (element.getX()+element.getWidth())
-				&& (toMoveY+getHeight() >= element.getY() 
-				&& toMoveY <= (element.getY()+element.getHeight()))
-				&& element.getMapType() != MapType.BLACK_HOLE
+					&& toMoveX <= (element.getX()+element.getWidth())
+					&& (toMoveY+getHeight() >= element.getY()
+					&& toMoveY <= (element.getY()+element.getHeight()))
+					&& element.getMapType() != MapType.BLACK_HOLE
+					&& element.getMapType() != MapType.START
+					&& element.getMapType() != MapType.FINISH
 				)
 				return true;
 		}
 		// no collision detected
 		return false;
 	}
-	
+
 	/**
 	 * draws the avatar
 	 * 
@@ -151,6 +190,11 @@ public class Avatar extends Entity {
 	public void setGame(Game game){
 		this.game = game;
 	}
-	
+	public void reset() {
+		setX(sourceX);
+		setY(sourceY);
+		toMoveX=sourceX;
+		toMoveY=sourceY;
+	}
 
 }

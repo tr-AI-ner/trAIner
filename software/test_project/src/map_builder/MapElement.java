@@ -1,7 +1,6 @@
 package map_builder;
 
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.*;
 
 import custom_objects.Entity;
 import custom_objects.EntityType;
@@ -57,20 +56,26 @@ public abstract class MapElement extends Entity {
 	 */
 	public void draw(Graphics graphics){
 
+        Graphics2D g2d = (Graphics2D)graphics;
+        int x = (gridX * Constants.MAP_ELEMENT_SIZE) + Constants.WINDOW_MAP_MARGIN;
+        int y = (gridY*Constants.MAP_ELEMENT_SIZE) + Constants.WINDOW_MAP_MARGIN+Constants.WINDOW_HEADER_HEIGHT;
+
 		// draw fill
-		graphics.setColor(getColor());
-		graphics.fillRect(
-				(gridX * Constants.MAP_ELEMENT_SIZE) + Constants.WINDOW_MAP_MARGIN, 
-				(gridY*Constants.MAP_ELEMENT_SIZE) + Constants.WINDOW_MAP_MARGIN+Constants.WINDOW_HEADER_HEIGHT, 
-				getWidth(), getHeight());
-		
+		g2d.setColor(getColor());
+        g2d.fillRect(x, y, getWidth(), getHeight());
+        //Border color is just the main color but with an alpha value
+        Color color = new Color(getColor().getRed(),getColor().getGreen(),getColor().getBlue(),85);
+        g2d.setColor(color);
+        g2d.setStroke(new BasicStroke(4));
+        g2d.drawRect(x, y, getWidth(), getHeight());
+        g2d.setStroke(new BasicStroke(1));
 		// draw border
 		// set custom color here with graphics.setColor(borderColor);
-		graphics.drawRect(
-				(gridX * Constants.MAP_ELEMENT_SIZE) + Constants.WINDOW_MAP_MARGIN, 
-				(gridY*Constants.MAP_ELEMENT_SIZE) + Constants.WINDOW_MAP_MARGIN+Constants.WINDOW_HEADER_HEIGHT, 
-				getWidth(), getHeight());
+        g2d.drawRect(x, y, getWidth(), getHeight());
+
 	}
+
+
 
     /**
      *
@@ -96,7 +101,8 @@ public abstract class MapElement extends Entity {
 	}
 
 
-	
+	public void update(){}
+	public void reset() {}
 	public int getGridX() {
 		return gridX;
 	}

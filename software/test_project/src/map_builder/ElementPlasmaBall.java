@@ -23,9 +23,12 @@ public class ElementPlasmaBall extends MapElement {
 	 */
 	boolean shouldGoRight = true;
 	boolean shouldGoDown = true;
+	private int sourceX,sourceY;
 
 	public ElementPlasmaBall(int gridX, int gridY, Color elementColor) {
 		super(gridX, gridY, MapType.PLASMA_BALL, elementColor);
+        sourceX = gridX;
+        sourceY = gridY;
 	}
 
 
@@ -82,7 +85,7 @@ public class ElementPlasmaBall extends MapElement {
 		}
 	}
 
-	/**
+    /**
 	 *
 	 * This functions checks which direction on the Y axis the element should go and goes there unless it
 	 * reaches the vertical limit of the map at which point it turns around
@@ -101,5 +104,9 @@ public class ElementPlasmaBall extends MapElement {
 		getNextYCoordinate();
 		//getNextYCoordinateSin();
 	}
+	public void reset() {
+	    setGridX(sourceX);
+	    setGridY(sourceY);
+    }
 
 }
