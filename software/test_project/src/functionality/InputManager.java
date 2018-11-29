@@ -55,34 +55,39 @@ public class InputManager implements KeyListener, MouseListener, MouseMotionList
 		isMouseDragged = true;
 	}
 
-	//if the key is being pressed sets the respective key to true
-	//i.e. when w is being pressed sets keyArray[0] to true, which is up
+	/**
+	 * if the key is being pressed sets the respective key to true
+	 * i.e. when w is being pressed sets keyArray[0] to true, which is up
+	 */
 	@Override
 	public void keyPressed(KeyEvent evt){
-//		System.out.println("key pressed: "+evt.getKeyChar());
-		
+
 		//these commands work better on MacBook (please don't delete them)
 		if(evt.getKeyCode() == KeyEvent.VK_UP) { keyArray[0] = true; } //up-arrow goes UP
 		if(evt.getKeyCode() == KeyEvent.VK_DOWN) { keyArray[1] = true; } //down-arrow goes DOWN
 		if(evt.getKeyCode() == KeyEvent.VK_LEFT) { keyArray[2] = true; } //left-arrow goes LEFT
 		if(evt.getKeyCode() == KeyEvent.VK_RIGHT) { keyArray[3] = true; } //right-arrow goes RIGHT
-
 		if(evt.getKeyCode() == KeyEvent.VK_ESCAPE) { keyArray[4] = true; } //ESC CLOSE_GAME
+		if(evt.getKeyCode() == KeyEvent.VK_G) { keyArray[5] = true; } //Change into game mode
+		if(evt.getKeyCode() == KeyEvent.VK_B) { keyArray[6] = true; } //Change into build mode
 
-	}	
+	}
 
-	//if the key is not being pressed sets the respective key to false
-	//i.e. when w is being pressed sets keyArray[0] to false, which is up
+	/**
+	 * if the key is not being pressed sets the respective key to false
+	 * i.e. when w is being pressed sets keyArray[0] to false, which is up
+	 */
 	@Override
 	public void keyReleased(KeyEvent evt){
-//		System.out.println("key released: "+evt.getKeyChar());
-		
+
 		if(evt.getKeyCode() == KeyEvent.VK_UP) { keyArray[0] = false; }
 		if(evt.getKeyCode() == KeyEvent.VK_DOWN) { keyArray[1] = false; }
 		if(evt.getKeyCode() == KeyEvent.VK_LEFT) { keyArray[2] = false; }
 		if(evt.getKeyCode() == KeyEvent.VK_RIGHT) { keyArray[3] = false; }
-		
 		if(evt.getKeyCode() == KeyEvent.VK_ESCAPE) { keyArray[4] = false; }
+		if(evt.getKeyCode() == KeyEvent.VK_G) { keyArray[5] = false; }
+		if(evt.getKeyCode() == KeyEvent.VK_B) { keyArray[6] = false; }
+
 	}
 
 	@Override
@@ -95,10 +100,6 @@ public class InputManager implements KeyListener, MouseListener, MouseMotionList
 	@Override
 	public void keyTyped(KeyEvent evt){}	
 
-	//TODO I think this method clear is not needed anymore
-	final void clear(){ 
-		isMouseEvent=false; //isKeyEvent=false;
-	}
 
 	public int getMousePressedX(){return mousePressedX;}
 	public int getMousePressedY(){return mousePressedY;}
@@ -114,6 +115,8 @@ public class InputManager implements KeyListener, MouseListener, MouseMotionList
 	public boolean areTwoKeysPressed(){
 		return isKeyEvent && isSecondKeyEvent;
 	}
+
+
 
 	public boolean getIsMouseEvent(){return isMouseEvent;}
 	public boolean getIsMouseDragged(){return isMouseDragged;}

@@ -1,6 +1,5 @@
 package game;
 
-import java.awt.Color;
 import java.util.ArrayList;
 
 import genetic_algorithm.Individual;
@@ -12,9 +11,7 @@ import functionality.Constants;
 import functionality.GraphicsManager;
 import functionality.InputManager;
 import functionality.Setup;
-import map_builder.ElementWall;
-import map_builder.Map;
-import map_builder.MapElement;
+import map_builder.*;
 
 public class Game {
 	
@@ -25,7 +22,7 @@ public class Game {
 	Map map;
 	
 	Avatar avatar;
-	ArrayList<Entity> entities = new ArrayList<>();
+	ArrayList<Entity> entities;
 	ArrayList<MapElement> mapElements;
 	ElementWall theGreatWall;
     Population pop;
@@ -41,6 +38,13 @@ public class Game {
     //least nr of steps to complete the map
     int recordtime;
 
+	ElementPlasmaBall ball;
+    ElementEnemy theEnemy;
+	ElementBlackHole blackHole;
+    ElementBlackHole blackHole2;
+	ElementStart start;
+	ElementFinish finish;
+
 	public Game(GraphicsManager gm){
 		this.graphicsManager = gm;
 		this.clock = new Clock(); // Initialize clock
@@ -49,10 +53,11 @@ public class Game {
 		this.map = gm.getMap();
 		
 		entities = new ArrayList<>();
-		
-		avatar = new Avatar(Constants.AVATAR_START_X,Constants.AVATAR_START_Y,
+
+		//TODO set the avatar to appear on the start block
+		avatar = new Avatar(33 * Constants.MAP_ELEMENT_SIZE,33 * Constants.MAP_ELEMENT_SIZE,
 				Constants.AVATAR_WIDTH, Constants.AVATAR_HEIGHT,
-				Constants.COLOR_AVATAR_RED
+				Constants.COLOR_AVATAR_BLUE
 				);
 		avatar.setSetup(setup);
 		avatar.setGame(this);
@@ -60,9 +65,39 @@ public class Game {
 		entities.add(avatar);
 		
 		mapElements = new ArrayList<>();
-		
-		theGreatWall = new ElementWall(15, 15, new Color(0,255,0));
-		mapElements.add(theGreatWall);
+
+		start = new ElementStart(33,33,Constants.COLOR_MAP_START);
+        finish = new ElementFinish(50,12,Constants.COLOR_MAP_FINISH);
+
+		for(int i = 0; i < 36; i++) {
+            theGreatWall = new ElementWall(15, i, Constants.COLOR_WALL);
+            if(i != 30 && i != 31)  mapElements.add(theGreatWall);
+        }
+        for(int i = 0; i < 36; i++) {
+            theGreatWall = new ElementWall(43, i, Constants.COLOR_WALL);
+            mapElements.add(theGreatWall);
+        }
+
+		ball = new ElementPlasmaBall(13,7,Constants.COLOR_PLASMA_BALL);
+
+        theEnemy = new ElementEnemy(30, 30, Constants.COLOR_ENEMY);
+
+        blackHole = new ElementBlackHole(52,2,Constants.COLOR_BLACK_HOLE);
+        blackHole2 = new ElementBlackHole(4,
+                25,
+                       Constants.COLOR_BLACK_HOLE);
+
+
+        blackHole.setAttachedBlackHole(blackHole2);
+        blackHole2.setAttachedBlackHole(blackHole);
+
+
+        mapElements.add(start);
+        mapElements.add(finish);
+		mapElements.add(ball);
+        mapElements.add(theEnemy);
+        mapElements.add(blackHole);
+        mapElements.add(blackHole2);
 		// add all map-elements to entities
 		entities.addAll(mapElements);
 	}
@@ -101,7 +136,7 @@ public class Game {
 
             mapElements = new ArrayList<>();
 
-            theGreatWall = new ElementWall( 50, 20, new Color(0, 255, 0));
+            theGreatWall = new ElementWall( 50, 20, Constants.COLOR_WALL);
             mapElements.add(theGreatWall);
             // add all map-elements to entities
             entities.addAll(mapElements);
@@ -144,7 +179,7 @@ public class Game {
             this.recordtime = this.maxNrOfMoves +1;
             mapElements = new ArrayList<>();
 
-            theGreatWall = new ElementWall( 50, 20, new Color(0, 255, 0));
+            theGreatWall = new ElementWall( 50, 20, Constants.COLOR_WALL);
             mapElements.add(theGreatWall);
             // add all map-elements to entities
             entities.addAll(mapElements);
@@ -220,23 +255,37 @@ public class Game {
 		if(inputManager.getKeyResult()[3]) {avatar.move(( +setup.getNewEntitySpeed() ), 0);}
 		//Exits when escape is pressed
 		if(inputManager.getKeyResult()[4]) {System.exit(0);}
-		
-		//check for mouse dragging
-//		if(inputManager.getIsMousePressed() && inputManager.getIsMouseDragged()){
-//			System.out.println("mouse pressed at x: "+inputManager.getMousePressedX()+", y: "
-//					+inputManager.getMousePressedY());
-//		}
-		if(inputManager.getIsMousePressed() && inputManager.getIsMouseDragged()){
-			//TODO: change this
-			int width = mapElements.get(0).getWidth();
-			int height = mapElements.get(0).getHeight();
-			mapElements.get(0).move(inputManager.getMouseDraggedX() - (width / 2), 
-					inputManager.getMouseDraggedY() - (height / 2));
-		}
+		//Switches between the game and the build mode
+		if(inputManager.getKeyResult()[5]) { Main.MODE = 0; }
+		if(inputManager.getKeyResult()[6]) { Main.MODE = 1; }
+
 	}
-	
+
+    /**
+     * Restart the game by resetting the enemies to their original positions. This is needed so that the game is
+     * consistent every time
+     */
+	public void restart() {
+        for (MapElement element: this.getMapElements()){
+            element.reset();
+        }
+        avatar.reset();
+    }
+
 	private void updateState(){
-		//TODO
+		if(Main.MODE == 0 || Main.MODE == 2) {
+            for (MapElement element: this.getMapElements()){
+                if(element.getMapType() == MapType.PLASMA_BALL || element.getMapType() == MapType.ENEMY) {
+                    element.update();
+                    // Because of the grid element system we have to check if the elements don't collide on the grid level
+                    if(Math.abs(element.getX()  - avatar.getX()) < Constants.MAP_ELEMENT_SIZE
+                            && Math.abs(element.getY()  - avatar.getY()) < Constants.MAP_ELEMENT_SIZE) {
+                        this.restart();
+                    }
+                }
+            }
+        }
+        map.updateEntitiesInMap(entities);
 	}
 	
 	private void redrawAll(){
@@ -244,7 +293,6 @@ public class Game {
 		graphicsManager.clear();
 		
 		// draw all entities
-//		graphicsManager.draw(entities);
 		graphicsManager.drawMap(entities);
 		
 		//swap buffers to make changes visible
@@ -255,6 +303,9 @@ public class Game {
 	public ArrayList<MapElement> getMapElements(){
 		return mapElements;
 	}
-	
+
+	public ElementStart getStart() {
+		return start;
+	}
 }
 
