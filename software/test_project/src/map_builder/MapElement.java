@@ -66,7 +66,7 @@ public abstract class MapElement extends Entity {
         //Border color is just the main color but with an alpha value
         Color color = new Color(getColor().getRed(),getColor().getGreen(),getColor().getBlue(),85);
         g2d.setColor(color);
-        g2d.setStroke(new BasicStroke(4));
+        g2d.setStroke(new BasicStroke(5));
         g2d.drawRect(x, y, getWidth(), getHeight());
         g2d.setStroke(new BasicStroke(1));
 		// draw border

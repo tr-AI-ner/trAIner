@@ -43,7 +43,7 @@ public class Game {
 		//TODO set the avatar to appear on the start block
 		avatar = new Avatar(33 * Constants.MAP_ELEMENT_SIZE,33 * Constants.MAP_ELEMENT_SIZE,
 				Constants.AVATAR_WIDTH, Constants.AVATAR_HEIGHT,
-				Constants.COLOR_AVATAR_RED
+				Constants.COLOR_AVATAR_BLUE
 				);
 		avatar.setSetup(setup);
 		avatar.setGame(this);

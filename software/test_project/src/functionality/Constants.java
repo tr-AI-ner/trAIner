@@ -57,7 +57,7 @@ public final class Constants {
 	public static final Color COLOR_WATER = new Color(108,77,111); // #6C4D6F
   
 	public static final Color COLOR_AVATAR_RED = new Color(252,137,130); // #FC8982
-	public static final Color COLOR_AVATAR_BLUE = new Color(100,188,252); // #64BCFC
+	public static final Color COLOR_AVATAR_BLUE = new Color(56,110,255); // #64BCFC
 	public static final Color COLOR_AVATAR_WHITE = new Color(222,226,237); // #DEE2ED
 	
 	public static final Color COLOR_ACCENT = new Color(127,119,229); // #7F77E5
