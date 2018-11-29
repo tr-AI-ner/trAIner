@@ -3,8 +3,8 @@ package game;
 import java.awt.Color;
 import java.util.ArrayList;
 
-import GeneticAlgorithm.Individual;
-import GeneticAlgorithm.Population;
+import genetic_algorithm.Individual;
+import genetic_algorithm.Population;
 import custom_objects.Avatar;
 import custom_objects.Entity;
 import functionality.Clock;
