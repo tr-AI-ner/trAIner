@@ -31,13 +31,13 @@ public class Game {
     Population pop;
 
     // lifetime of a population
-    int lifetime;
+    int maxNrOfMoves;
     //size of the population
     int populationSize;
     //mutation rate of the population
     float mutationRate;
     //current lifecycle
-    int lifecycle;
+    int currentLifecycle;
     //least nr of steps to complete the map
     int recordtime;
 
@@ -53,8 +53,6 @@ public class Game {
 		avatar = new Avatar(Constants.AVATAR_START_X,Constants.AVATAR_START_Y,
 				Constants.AVATAR_WIDTH, Constants.AVATAR_HEIGHT,
 				Constants.COLOR_AVATAR_RED
-				//r, g, b
-//				new Color(255, 0, 0)
 				);
 		avatar.setSetup(setup);
 		avatar.setGame(this);
@@ -63,12 +61,18 @@ public class Game {
 		
 		mapElements = new ArrayList<>();
 		
-//		theGreatWall = new ElementWall(100, 100, 50, 20, new Color(0, 255, 0));
 		theGreatWall = new ElementWall(15, 15, new Color(0,255,0));
 		mapElements.add(theGreatWall);
 		// add all map-elements to entities
 		entities.addAll(mapElements);
 	}
+    
+    /**
+     * default constructor for when the AI is playing
+     *
+     * @param gm Graphics Mangaer
+     * @param ai_playing true if in game mode when ai is playing
+     */
     public Game(GraphicsManager gm, boolean ai_playing) {
         if (!ai_playing) {
             new Game(gm);
@@ -78,14 +82,14 @@ public class Game {
             this.inputManager = gm.getInputManager();
             this.setup = gm.getSetup();
             this.map = gm.getMap();
-            this.lifetime = 40000;
+            this.maxNrOfMoves = 40000;
 
             entities = new ArrayList<>();
             this.populationSize = 10;
             this.mutationRate = (float) 0.2;
 
-            this.pop = new Population(this.populationSize, this.mutationRate, this.lifetime);
-            this.lifecycle = 0;
+            this.pop = new Population(this.populationSize, this.mutationRate, this.maxNrOfMoves);
+            this.currentLifecycle = 0;
             for(int i = 0; i < populationSize; i++){
                 Individual ind = pop.getIndividual(i);
                 ind.setSetup(setup);
@@ -93,7 +97,7 @@ public class Game {
                 entities.add(ind);
             }
 
-            this.recordtime = this.lifetime +1;
+            this.recordtime = this.maxNrOfMoves +1;
 
             mapElements = new ArrayList<>();
 
@@ -104,7 +108,16 @@ public class Game {
         }
     }
 
-    public Game(GraphicsManager gm, boolean ai_playing, int lifetime, int populationSize, float mutationRate) {
+    /**
+     * specific constructor to set all hyperparameters of the genetic algorithm
+     *
+     * @param gm GraphicsManager
+     * @param ai_playing true if ai is playing
+     * @param maxNrOfMoves number of moves until the generation ends
+     * @param populationSize number of individuals in the population
+     * @param mutationRate probability for a genome of an individual to get mutated
+     */
+    public Game(GraphicsManager gm, boolean ai_playing, int maxNrOfMoves, int populationSize, float mutationRate) {
         if (!ai_playing) {
             new Game(gm);
         } else {
@@ -114,13 +127,13 @@ public class Game {
             this.setup = gm.getSetup();
             this.map = gm.getMap();
 
-            this.lifetime = lifetime;
+            this.maxNrOfMoves = maxNrOfMoves;
             entities = new ArrayList<>();
             this.populationSize = populationSize;
             this.mutationRate = mutationRate;
 
-            this.pop = new Population(this.populationSize, this.mutationRate, this.lifetime);
-            this.lifecycle = 0;
+            this.pop = new Population(this.populationSize, this.mutationRate, this.maxNrOfMoves);
+            this.currentLifecycle = 0;
 
             for(int i = 0; i < populationSize; i++){
                 Individual ind = pop.getIndividual(i);
@@ -128,7 +141,7 @@ public class Game {
                 ind.setGame(this);
                 entities.add(ind);
             }
-            this.recordtime = this.lifetime +1;
+            this.recordtime = this.maxNrOfMoves +1;
             mapElements = new ArrayList<>();
 
             theGreatWall = new ElementWall( 50, 20, new Color(0, 255, 0));
@@ -137,12 +150,21 @@ public class Game {
             entities.addAll(mapElements);
         }
     }
-
+    
+    /**
+     * run the game loop
+     *
+     */
 	public void run(){
 		while(true)
 			this.gameLoop();
 	}
-
+    
+    /**
+     * run the game loop for when the AI is playing
+     *
+     * @param ai true if ai is playing
+     */
     public void run(boolean ai){
         if(ai){
             while(true)
@@ -150,7 +172,10 @@ public class Game {
         }
     }
 	
-	// Main game loop
+	/**
+     *main game loop, processes user input, updates states and draws everything
+     *
+     */
 	private void gameLoop(){
 		if(this.clock.frameShouldChange()) { // if fps right (ifnot, sleep, or do nothing), and update clock
 			this.processUserInput(); // Process user input		
@@ -158,18 +183,24 @@ public class Game {
 			this.redrawAll();//graphicsManager); // Redraw everything
 		}
 	}
-
+    
+    /**
+     * main game loop for when the AI is playing, let the population live, 
+     * do selection and reproduction
+     *
+     * @param ai_playing true if ai is playing
+     */
     private void gameLoop(boolean ai_playing){
         if(this.clock.frameShouldChange()){
-            if(this.lifecycle < this.lifetime){
-                this.pop.live(lifecycle);
-                if(this.pop.reachedGoal() && (this.lifecycle < this.recordtime)){
-                this.recordtime = this.lifecycle;
+            if(this.currentLifecycle < this.maxNrOfMoves){
+                this.pop.live(currentLifecycle);
+                if(this.pop.reachedGoal() && (this.currentLifecycle < this.recordtime)){
+                this.recordtime = this.currentLifecycle;
                 }
-                System.out.println(lifecycle);
-                this.lifecycle++;
+                System.out.println(currentLifecycle);
+                this.currentLifecycle++;
             }else{
-                this.lifecycle = 0;
+                this.currentLifecycle = 0;
                 this.pop.calculateFitness();
                 this.pop.selection();
                 this.pop.reproduction();
@@ -178,7 +209,10 @@ public class Game {
         }
     }
 
-	// process User Input
+    /**
+     * processes user input 
+     *
+     */
 	private void processUserInput() {
 		//moves in the desired direction
 		if(inputManager.getKeyResult()[0]) {avatar.move(0, ( -setup.getNewEntitySpeed() ));}
@@ -199,30 +233,11 @@ public class Game {
 			int height = mapElements.get(0).getHeight();
 			mapElements.get(0).move(inputManager.getMouseDraggedX() - (width / 2), 
 					inputManager.getMouseDraggedY() - (height / 2));
-			
-			//look if mouse clicked on a map-element & on which
-//			int index = -1;
-//			
-//			int counter = 0;
-//			for (MapElement e: mapElements){
-//				if (e.mousePressedInRange(inputManager.getMousePressedX(), inputManager.getMousePressedY())){
-//					index = counter;
-//					break;
-//				}
-//				counter++;
-//			}
-//			
-//			// if index was found, move the element 
-//			if (index >= 0){
-//				System.out.println("mouse dragged at x: "+inputManager.getMouseDraggedX()+", y: "
-//					+inputManager.getMouseDraggedY());
-//			mapElements.get(index).move(inputManager.getMouseDraggedX(), inputManager.getMouseDraggedY());
-//			}
 		}
 	}
 	
 	private void updateState(){
-		
+		//TODO
 	}
 	
 	private void redrawAll(){
