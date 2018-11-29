@@ -197,7 +197,6 @@ public class Game {
                 if(this.pop.reachedGoal() && (this.currentLifecycle < this.recordtime)){
                 this.recordtime = this.currentLifecycle;
                 }
-                System.out.println(currentLifecycle);
                 this.currentLifecycle++;
             }else{
                 this.currentLifecycle = 0;
