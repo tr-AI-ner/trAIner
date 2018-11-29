@@ -82,7 +82,7 @@ public class Game {
             this.inputManager = gm.getInputManager();
             this.setup = gm.getSetup();
             this.map = gm.getMap();
-            this.maxNrOfMoves = 40000;
+            this.maxNrOfMoves = 800;
 
             entities = new ArrayList<>();
             this.populationSize = 10;
