@@ -38,7 +38,7 @@ public class Avatar extends Entity {
 		}
 	}
 	
-	/**
+    /**
 	 *  checks if avatar collides with any objects or border,
 	 *  if so returns true
 	 * @return

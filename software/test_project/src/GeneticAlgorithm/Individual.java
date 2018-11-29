@@ -1,7 +1,7 @@
 package GeneticAlgorithm;
 
 import custom_objects.Avatar;
-
+import java.util.Random;
 import java.awt.*;
 
 public class Individual extends Avatar {
@@ -15,7 +15,8 @@ public class Individual extends Avatar {
     // objects for the avatar and the genome
     Avatar avatar;
     Genome genome;
-
+    int speed = 3;
+    int lifecycles;
 
     // tunable hyper parameters
 
@@ -32,9 +33,10 @@ public class Individual extends Avatar {
 
 
     // constructor for the individual inherits from Avatar
-    public Individual(int x, int y, int width, int height, Color color) {
+    public Individual(int x, int y, int width, int height, Color color, int lifecycles) {
         super(x, y, width, height, color);
-        this.genome = genome;
+        this.lifecycles = lifecycles;
+        this.genome = new Genome(lifecycles);
 
     }
 
@@ -65,8 +67,66 @@ public class Individual extends Avatar {
 
     }
 
-    public void makeMove(){
-    
+    /**
+     * randomly pick a direction
+     *
+     * returns a array with the new direction
+     */
+    private int[] getRandomDirection() {
+        int[] direction = new int[2];
+        Random rand = new Random();
+        int random_nr = rand.nextInt(8);
+        switch (random_nr) {
+            case 0:
+                //runter
+                direction[0] = 0;
+                direction[1] = speed;
+                break;
+            case 1:
+                // rauf
+                direction[0] = speed;
+                direction[1] = speed;
+                break;
+            case 2:
+                // links
+                direction[0] = speed;
+                direction[1] = 0;
+                break;
+            case 3:
+                // rechts
+                direction[0] = speed;
+                direction[1] = -speed;
+                break;
+            case 4:
+                //runter links
+                direction[0] = 0;
+                direction[1] = -speed;
+                break;
+            case 5:
+                // rauf links
+                direction[0] = -speed;
+                direction[1] = -speed;
+                break;
+            case 6:
+                //runter rechts
+                direction[0] = -speed;
+                direction[1] = 0;
+                break;
+            case 7:
+                // rauf rechts
+                direction[0] = -speed;
+                direction[1] = speed;
+                break;
+
+        }
+        return direction;
+    }
+ 
+
+    public void makeMove(int lifecycleStep){
+        int direction[] = new int[2];
+        direction = this.getGenome().getGenes()[lifecycleStep]; 
+        this.move(direction[0], direction[1]);
     }
 
     // getters and setters

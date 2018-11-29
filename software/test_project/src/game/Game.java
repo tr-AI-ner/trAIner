@@ -84,7 +84,7 @@ public class Game {
             this.populationSize = 10;
             this.mutationRate = (float) 0.2;
 
-            this.pop = new Population(this.populationSize, this.mutationRate);
+            this.pop = new Population(this.populationSize, this.mutationRate, this.lifetime);
             this.lifecycle = 0;
             for(int i = 0; i < populationSize; i++){
                 Individual ind = pop.getIndividual(i);
@@ -119,7 +119,7 @@ public class Game {
             this.populationSize = populationSize;
             this.mutationRate = mutationRate;
 
-            this.pop = new Population(this.populationSize, this.mutationRate);
+            this.pop = new Population(this.populationSize, this.mutationRate, this.lifetime);
             this.lifecycle = 0;
 
             for(int i = 0; i < populationSize; i++){
@@ -162,10 +162,11 @@ public class Game {
     private void gameLoop(boolean ai_playing){
         if(this.clock.frameShouldChange()){
             if(this.lifecycle < this.lifetime){
-                this.pop.live();
+                this.pop.live(lifecycle);
                 if(this.pop.reachedGoal() && (this.lifecycle < this.recordtime)){
                 this.recordtime = this.lifecycle;
                 }
+                System.out.println(lifecycle);
                 this.lifecycle++;
             }else{
                 this.lifecycle = 0;

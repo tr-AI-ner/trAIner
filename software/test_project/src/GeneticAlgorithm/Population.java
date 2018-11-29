@@ -16,6 +16,7 @@ public class Population {
     ArrayList<Individual> gene_pool;
     int fittest_index = 0;
     int generations;
+    int lifecycles;
 
     // defaults for the individual
     // still hard coded... needs to be added to constants
@@ -26,14 +27,15 @@ public class Population {
 
     Color color = COLOR_AVATAR_RED;
 
-    public Population(int population_size, float mutation_rate) {
+    public Population(int population_size, float mutation_rate, int lifecycles) {
         this.population_size = population_size;
         this.mutation_rate = mutation_rate;
         this.population = new Individual[population_size];
         this.generations = 0;
+        this.lifecycles = lifecycles;
         for (int i = 0; i < population.length; i++) {
             // TO DO !!
-            population[i] = new Individual(def_x+i, def_y+i, def_width, def_height, color);
+            population[i] = new Individual(def_x+i, def_y+i, def_width, def_height, color, this.lifecycles);
         }
     }
 
@@ -53,12 +55,13 @@ public class Population {
 
     }
 
-    public void live(){
+    public void live(int currentCycle){
         for(int i = 0; i < this.population.length; i++){
+        
             if(this.population[i].getX() == this.population[i].goal[0] && this.population[i].getY() == this.population[i].goal[1]){
                 this.population[i].fin = true;
             }
-
+            this.population[i].makeMove(currentCycle);
         }
     }
 

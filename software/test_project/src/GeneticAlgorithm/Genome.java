@@ -63,34 +63,42 @@ public class Genome {
                 //runter
                 direction[0] = 0;
                 direction[1] = 1;
+                break;
             case 1:
                 // rauf
                 direction[0] = 1;
                 direction[1] = 1;
+                break;
             case 2:
                 // links
                 direction[0] = 1;
                 direction[1] = 0;
+                break;
             case 3:
                 // rechts
                 direction[0] = 1;
                 direction[1] = -1;
+                break;
             case 4:
                 //runter links
                 direction[0] = 0;
                 direction[1] = -1;
+                break;
             case 5:
                 // rauf links
                 direction[0] = -1;
                 direction[1] = -1;
+                break;
             case 6:
                 //runter rechts
                 direction[0] = -1;
                 direction[1] = 0;
+                break;
             case 7:
                 // rauf rechts
                 direction[0] = -1;
                 direction[1] = 1;
+                break;
 
         }
         return direction;
