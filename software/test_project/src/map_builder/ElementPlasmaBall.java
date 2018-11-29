@@ -10,17 +10,11 @@ import java.awt.*;
  * Any custom behavior should be implemented here
  * 
  * @author Patrick
- *
+ * @author Kasparas
  */
 public class ElementPlasmaBall extends MapElement {
 
-	/**
-	 *
-	 *Direction variables for the walk functions
-	 *
-	 * @author Kasparas
-	 *
-	 */
+	//Direction variables for the walk functions
 	boolean shouldGoRight = true;
 	boolean shouldGoDown = true;
 	private int sourceX,sourceY;
@@ -32,13 +26,10 @@ public class ElementPlasmaBall extends MapElement {
 	}
 
 
-
 	/**
 	 *
 	 * This functions checks which direction on the X axis the element should go and goes there unless it
 	 * reaches the side of the map at which point it turns around
-	 *
-	 * @author Kasparas
 	 *
 	 */
 	private void getNextXCoordinate() {
@@ -64,8 +55,6 @@ public class ElementPlasmaBall extends MapElement {
 	 * This functions checks which direction on the Y axis the element should go and goes there unless it
 	 * reaches the vertical limit of the map at which point it turns around
 	 *
-	 * @author Kasparas
-	 *
 	 */
 	private void getNextYCoordinate() {
 		int endY = Constants.WINDOW_MAP_HEIGHT/Constants.MAP_ELEMENT_SIZE;
@@ -89,8 +78,6 @@ public class ElementPlasmaBall extends MapElement {
 	 *
 	 * This functions checks which direction on the Y axis the element should go and goes there unless it
 	 * reaches the vertical limit of the map at which point it turns around
-	 *
-	 * @author Kasparas
 	 *
 	 */
 	private void getNextYCoordinateSin() {

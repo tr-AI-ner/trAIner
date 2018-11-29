@@ -14,6 +14,7 @@ import java.awt.*;
  */
 public class ElementBlackHole extends MapElement {
 
+    //The hole to which the avatar will be transported to
     private ElementBlackHole attachedBlackHole;
 
 	public ElementBlackHole(int gridX, int gridY, Color elementColor) {

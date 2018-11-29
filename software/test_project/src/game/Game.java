@@ -111,6 +111,7 @@ public class Game {
 		if(inputManager.getKeyResult()[3]) {avatar.move(( +setup.getNewEntitySpeed() ), 0);}
 		//Exits when escape is pressed
 		if(inputManager.getKeyResult()[4]) {System.exit(0);}
+		//Switches between the game and the build mode
 		if(inputManager.getKeyResult()[5]) { Main.MODE = 0; }
 		if(inputManager.getKeyResult()[6]) { Main.MODE = 1; }
 
@@ -133,7 +134,8 @@ public class Game {
                 if(element.getMapType() == MapType.PLASMA_BALL || element.getMapType() == MapType.ENEMY) {
                     element.update();
                     // Because of the grid element system we have to check if the elements don't collide on the grid level
-                    if(Math.abs(element.getX()  - avatar.getX()) < 16 && Math.abs(element.getY()  - avatar.getY()) < 16) {
+                    if(Math.abs(element.getX()  - avatar.getX()) < Constants.MAP_ELEMENT_SIZE
+                            && Math.abs(element.getY()  - avatar.getY()) < Constants.MAP_ELEMENT_SIZE) {
                         this.restart();
                     }
                 }

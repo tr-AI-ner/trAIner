@@ -17,6 +17,7 @@ public class Avatar extends Entity {
 	private Setup setup;
 	private Game game;
 	private ElementBlackHole currentlyTouched;
+	//Store the starting position of the Avatar so that we can reset it easily
 	private int sourceX,sourceY;
 
 	public Avatar(int x, int y, int width, int height, Color color) {
@@ -103,9 +104,7 @@ public class Avatar extends Entity {
 
 
     /**
-     *  Check if avatar entered a Black Hole
-     *  if so returns true
-     * @return
+     * @return whether the avatar is inside or touching the black hole
      */
     private boolean blackHoled(){
         for (MapElement element: game.getMapElements()){
@@ -119,14 +118,11 @@ public class Avatar extends Entity {
                 return true;
             }
         }
-        // no collision detected
         return false;
     }
 
 	/**
-	 *  Check if avatar entered a Black Hole
-	 *  if so returns true
-	 * @return
+	 * @return if the avatar is touching the finish block
 	 */
 	private boolean finished(){
 		for (MapElement element: game.getMapElements()){
@@ -139,14 +135,11 @@ public class Avatar extends Entity {
 				return true;
 			}
 		}
-		// no collision detected
 		return false;
 	}
 
 	/**
-	 *  checks if avatar collides with another map-element,
-	 *  if so returns true
-	 * @return
+	 * @return if avatar collides with another map-element
 	 */
 	private boolean collidingWithMapElement(){
 		for (MapElement element: game.getMapElements()){
@@ -160,13 +153,12 @@ public class Avatar extends Entity {
 				)
 				return true;
 		}
-		// no collision detected
 		return false;
 	}
 
 	/**
 	 * draws the avatar
-	 * 
+	 *
 	 * @param graphics
 	 */
 	public void draw(Graphics graphics){
@@ -181,20 +173,25 @@ public class Avatar extends Entity {
 		g2d.drawRect(getMapX(), getMapY(), getWidth(), getHeight());
 		g2d.setStroke(new BasicStroke(1));
 	}
-	
-	
-	
+
+
+    /**
+     * resets the avatar position to the starting position
+     */
+    public void reset() {
+        setX(sourceX);
+        setY(sourceY);
+        toMoveX=sourceX;
+        toMoveY=sourceY;
+    }
+
+
 	public void setSetup(Setup setup){
 		this.setup = setup;
 	}
 	public void setGame(Game game){
 		this.game = game;
 	}
-	public void reset() {
-		setX(sourceX);
-		setY(sourceY);
-		toMoveX=sourceX;
-		toMoveY=sourceY;
-	}
+
 
 }

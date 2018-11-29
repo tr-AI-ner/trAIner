@@ -100,9 +100,16 @@ public abstract class MapElement extends Entity {
 				", height: "+getHeight();
 	}
 
-
+    /**
+     *  Update the position of the dynamic element
+     */
 	public void update(){}
+
+    /**
+     * Reset the dynamic element to their starting position
+     */
 	public void reset() {}
+
 	public int getGridX() {
 		return gridX;
 	}
