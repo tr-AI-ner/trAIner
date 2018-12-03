@@ -1,6 +1,5 @@
 package game;
 
-import java.awt.Color;
 import java.util.ArrayList;
 
 import custom_objects.Avatar;
@@ -11,23 +10,23 @@ import functionality.GraphicsManager;
 import functionality.InputManager;
 import functionality.Setup;
 import map_builder.*;
-import mapsaver.MapSaver;
-
-import static functionality.Constants.MAP_ELEMENT_SIZE;
+import map_saver.MapSaverLoader;
 
 public class Game {
-	
+
 	private GraphicsManager graphicsManager;
 	private InputManager inputManager;
 	private Clock clock; // Clock (time manager)
 	Setup setup;
-	Map map;
+	private Map map;
 	
 	Avatar avatar;
 	ArrayList<Entity> entities = new ArrayList<>();
 	ArrayList<MapElement> mapElements;
 	ElementWall theGreatWall;
 	ElementBall enemy;
+	MapSaverLoader mapSaverLoader;
+
 
 	public Game(GraphicsManager gm){
 		this.graphicsManager = gm;
@@ -35,7 +34,8 @@ public class Game {
 		this.inputManager = gm.getInputManager();
 		this.setup = gm.getSetup();
 		this.map = gm.getMap();
-		
+
+
 		entities = new ArrayList<>();
 
 		avatar = new Avatar(Constants.AVATAR_START_X,Constants.AVATAR_START_Y,
@@ -50,7 +50,8 @@ public class Game {
 		entities.add(avatar);
 		
 		mapElements = new ArrayList<>();
-		DrawMap("map_02",mapElements);
+
+		mapSaverLoader = new MapSaverLoader(this);
 
 //		theGreatWall = new ElementWall(100, 100, 50, 20, new Color(0, 255, 0));
 		theGreatWall = new ElementWall(15, 15, Constants.COLOR_WALL);
@@ -59,6 +60,7 @@ public class Game {
 		mapElements.add(theGreatWall);
 		// add all map-elements to entities
 		entities.addAll(mapElements);
+	//	saveMap("map_03");
 	}
 	
 	public void run(){
@@ -84,40 +86,15 @@ public class Game {
 		if(inputManager.getKeyResult()[3]) {avatar.move(( +setup.getNewEntitySpeed() ), 0);}
 		//Exits when escape is pressed
 		if(inputManager.getKeyResult()[4]) {System.exit(0);}
-		
-		//check for mouse dragging
-//		if(inputManager.getIsMousePressed() && inputManager.getIsMouseDragged()){
-//			System.out.println("mouse pressed at x: "+inputManager.getMousePressedX()+", y: "
-//					+inputManager.getMousePressedY());
-//		}
-		if(inputManager.getIsMousePressed() && inputManager.getIsMouseDragged()){
-			//TODO: change this
-			int width = mapElements.get(0).getWidth();
-			int height = mapElements.get(0).getHeight();
-			mapElements.get(0).move(inputManager.getMouseDraggedX() - (width / 2), 
-					inputManager.getMouseDraggedY() - (height / 2));
-			
-			//look if mouse clicked on a map-element & on which
-//			int index = -1;
-//			
-//			int counter = 0;
-//			for (MapElement e: mapElements){
-//				if (e.mousePressedInRange(inputManager.getMousePressedX(), inputManager.getMousePressedY())){
-//					index = counter;
-//					break;
-//				}
-//				counter++;
-//			}
-//			
-//			// if index was found, move the element 
-//			if (index >= 0){
-//				System.out.println("mouse dragged at x: "+inputManager.getMouseDraggedX()+", y: "
-//					+inputManager.getMouseDraggedY());
-//			mapElements.get(index).move(inputManager.getMouseDraggedX(), inputManager.getMouseDraggedY());
-//			}
+		if (inputManager.isMouseClicked()  && graphicsManager.getTopBar().getSaveButton().contains(inputManager.getMouseClickedX(), inputManager.getMouseClickedY()) ) {
+             mapSaverLoader.saveButtonLogic();
 		}
+        if (inputManager.isMouseClicked() && graphicsManager.getTopBar().getLoadButton().contains(inputManager.getMouseClickedX(), inputManager.getMouseClickedY()) ) {
+				mapSaverLoader.loadButtonLogic();
+            }
 	}
-	
+
+
 	private void updateState(){
 		
 	}
@@ -133,22 +110,14 @@ public class Game {
 		//swap buffers to make changes visible
 		graphicsManager.redraw();
 	}
-	
-	
-	public ArrayList<MapElement> getMapElements(){
-		return mapElements;
-	}
-	
 
-	public  static void DrawMap(String mapFileName, ArrayList<MapElement> mapElements) {
-		char[][] map = MapSaver.readMap(mapFileName);
-		for (int col = 0; col < Constants.WINDOW_MAP_WIDTH / MAP_ELEMENT_SIZE; col += 1) {
-			for (int row = 0; row < Constants.WINDOW_MAP_HEIGHT / MAP_ELEMENT_SIZE; row += 1) {
-				if (map[col][row] == MapType.WALL.representation()) {
-					ElementWall newWall = new ElementWall(col, row, new Color(0, 255, 0));
-					mapElements.add(newWall);
-				}
-			}
-		}
-	}
+
+	public ArrayList<MapElement> getMapElements(){return mapElements;}
+	public void setMapElements(ArrayList<MapElement> mapElements){this.mapElements=mapElements;}
+	public Avatar getAvatar(){return avatar;}
+	public ArrayList<Entity> getEntities(){return entities;}
+    public Map getMap() { return map; }
+    public GraphicsManager getGraphicsManager(){return graphicsManager;}
+
+
 }

@@ -95,6 +95,10 @@ public class Map {
 			}
 		}
 	}
+
+	public char[][]  getMapArr(){
+		return map;
+	}
 	
 
 }

@@ -76,10 +76,7 @@ public class GraphicsManager extends JPanel {
 		this.addMouseListener(inputManager);
 		this.addMouseMotionListener(inputManager);
 
-		Button rb = new Button("Go");
-		rb.setBackground(Color.yellow);
 
-		frame.add(rb);
 		imageBuffer = graphicsConf.createCompatibleImage(this.getWidth(), this.getHeight());
 		graphics = imageBuffer.getGraphics();
 
@@ -166,5 +163,7 @@ public class GraphicsManager extends JPanel {
 	public BottomBar getBottomBar(){return bottomBar;}
 	public RightBar getRightBar(){return rightBar;}
 
-
+	public JFrame getFrame(){
+		return frame;
+	}
 }

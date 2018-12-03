@@ -1,23 +1,20 @@
 package functionality;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
+import java.awt.*;
 
-public class InputManager implements KeyListener, MouseListener, MouseMotionListener {
+public class InputManager extends Component implements KeyListener, MouseListener, MouseMotionListener {
 
 	// everything a user can press on keyboard or mouse	
 	private int mousePressedX, mousePressedY, mouseMovedX, mouseMovedY, mouseButton;
-	private int mouseDraggedX, mouseDraggedY;
+	private int mouseClickedX, mouseClickedY, buttonClicked;
 	private char keyPressed;
 
 	private char secondKeyPressed;
 	private boolean isSecondKeyEvent;
 
 	// if Mouse was clicked, Key was pressed or Mouse is still hold down
-	private boolean isMouseEvent, isKeyEvent, isMousePressed, isMouseDragged; 
+	private boolean isMouseEvent, isKeyEvent, isMousePressed, isMouseDragged, isMouseClicked;
 	
 	//boolean array to "save" keys
 	private boolean[] keyArray = new boolean[100]; 
@@ -34,7 +31,9 @@ public class InputManager implements KeyListener, MouseListener, MouseMotionList
 		mousePressedY  = evt.getY();
 		mouseButton    = evt.getButton();
 		isMousePressed = true;
-	}  
+	}
+
+
 
 	@Override
 	public void mouseReleased(MouseEvent evt){ 
@@ -48,12 +47,8 @@ public class InputManager implements KeyListener, MouseListener, MouseMotionList
 	}
 
 	@Override
-	public void mouseDragged(MouseEvent evt){ 
-		isMouseEvent   = true;
-		mouseDraggedX=evt.getX();
-		mouseDraggedY=evt.getY();
-		isMouseDragged = true;
-	}
+	public void mouseDragged(MouseEvent evt){
+}
 
 	//if the key is being pressed sets the respective key to true
 	//i.e. when w is being pressed sets keyArray[0] to true, which is up
@@ -90,7 +85,12 @@ public class InputManager implements KeyListener, MouseListener, MouseMotionList
 	@Override
 	public void mouseExited(MouseEvent evt){}
 	@Override
-	public void mouseClicked(MouseEvent evt){}
+	public void mouseClicked(MouseEvent evt){
+        isMouseClicked   = true;
+        mouseClickedX=evt.getX();
+        mouseClickedY=evt.getY();
+        buttonClicked = evt.getButton();
+	}
 
 	@Override
 	public void keyTyped(KeyEvent evt){}	
@@ -104,8 +104,8 @@ public class InputManager implements KeyListener, MouseListener, MouseMotionList
 	public int getMousePressedY(){return mousePressedY;}
 	public int getMouseMovedX(){return mouseMovedX;}
 	public int getMouseMovedY(){return mouseMovedY;}
-	public int getMouseDraggedX(){return mouseDraggedX;}
-	public int getMouseDraggedY(){return mouseDraggedY;}
+	public int getMouseClickedX(){return mouseClickedX;}
+	public int getMouseClickedY(){return mouseClickedY;}
 	public int getMouseButton(){return mouseButton;}
 
 	public char getKeyPressed(){return keyPressed;}
@@ -130,5 +130,14 @@ public class InputManager implements KeyListener, MouseListener, MouseMotionList
 	public void updateLastMouseProcessTime() {
 		this.lastMouseProcessTime = System.currentTimeMillis();
 	}
-	
+
+	public boolean isMouseClicked() {
+		return isMouseClicked;
+	}
+
+	public void setMouseClicked(boolean mouseClicked) {
+		isMouseClicked = mouseClicked;
+	}
+
+	public int getButtonClicked(){return buttonClicked;}
 }
