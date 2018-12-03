@@ -1,0 +1,252 @@
+/*
+ * source: https://zeroturnaround.com/rebellabs/dont-test-blindly-the-right-methods-for-unit-testing-your-java-apps/ 
+ *
+ *
+ * you should NOT write units tests for:
+ *
+ *   1. Other framework libraries (you should assume they work correctly)
+ *   2. The database (you should assume it works correctly when it is available)
+ *   3. Other external resources (again you assume they work correctly when available)
+ *   4. Really trivial code (like getters and setters for example)
+ *   5. Code that has non deterministic results (Think Thread order or random numbers)
+ *   6. Code that deals only with UI (e.g. Swing toolkit, Wicket)
+ *
+ *
+ *
+ * What if the “business logic” part ends up being thousands of lines of code? Where do you start?
+ * you should prioritize things a bit and just write tests for the following:
+ *
+ *   1. Core code that is accessed by a lot of other modules
+ *   2. Code that seems to gather a lot of bugs
+ *   3. Code that changes by multiple different developers (often to accommodate new requirements)
+ *
+ *
+ */
+
+
+------------------- JUnit Usage and Idioms -------------------
+//source: https://github.com/junit-team/junit4/wiki
+
+    - Assertions - your bread and butter for unit testing 
+        ++++ imports ++++
+            import org.junit.Test;
+            import static org.junit.Assert.*;
+
+        ++++ examples ++++
+        @Test
+        public void testAssertEquals() {
+            assertEquals("failure - strings are not equal", "text", "text");
+        }
+
+        Other possibilities:
+            assertArrayEquals("output string", expectedArray[], actualArray[]);
+            assertFalse("failure - should be false", false);
+            assertTrue("failure - should be true", true);
+            assertNotNull("should not be null", new Object());
+            assertNotSame("should not be same Object", new Object(), new Object());
+            assertNull("should be null", null);
+            assertSame("should be same", aNumber, aNumber);
+            - assertThat([value], [matcher statement]):
+                assertThat("albumen", both(containsString("a")).and(containsString("b")));
+                assertThat(Arrays.asList("one", "two", "three"), hasItems("one", "three"));
+                assertThat(Arrays.asList(new String[] { "fun", "ban", "net" }), everyItem(containsString("n")));
+
+
+    - Test Runners - how tests should be executed
+
+    - Aggregating tests in Suites - how to combine multiple related tests into a test suite
+
+
+    - Test Execution Order - specifying what order to run unit tests
+        ++++ imports ++++
+        import org.junit.FixMethodOrder;
+        import org.junit.Test;
+        import org.junit.runners.MethodSorters;
+
+        ++++ examples ++++
+        @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+        public class TestMethodOrder {
+            @Test
+            public void testA() {
+                System.out.println("first");
+            }
+            @Test
+            public void testB() {
+                System.out.println("second");
+            }
+            @Test
+            public void testC() {
+                System.out.println("third");
+            }
+        }
+
+
+    - Exception Testing - how to specify expected exceptions in unit tests
+        ++++ examples ++++
+        @Test(expected = IndexOutOfBoundsException.class) 
+        public void empty() { 
+             new ArrayList<Object>().get(0); 
+        }
+
+
+    - Matchers and assertThat - how to use Hamcrest matchers and more descriptive assertions
+
+
+    - Ignoring Tests - how to disable test methods or classes
+        ++++ example ++++
+        @Ignore("Test is ignored as a demonstration")
+        @Test
+        public void testSame() {
+            assertThat(1, is(1));
+        }
+
+
+    - Timeout for Tests - how to specify maximum execution times for tests
+        ++++ example ++++
+        @Test(timeout=1000) //in milli-seconds
+        public void testWithTimeout() {
+            //...
+        }
+
+
+    - Parameterized Tests - writing tests that can be executed multiple times with different parameter values
+        ++++ imports ++++
+        import static org.junit.Assert.assertEquals;
+        import java.util.Arrays;
+        import java.util.Collection;
+        import org.junit.Test;
+        import org.junit.runner.RunWith;
+        import org.junit.runners.Parameterized;
+        import org.junit.runners.Parameterized.Parameters;
+
+        ++++ example ++++
+        @RunWith(Parameterized.class)
+        public class FibonacciTest {
+            @Parameters
+            public static Collection<Object[]> data() {
+                return Arrays.asList(new Object[][] {     
+                         { 0, 0 }, { 1, 1 }, { 2, 1 }, { 3, 2 }, { 4, 3 }, { 5, 5 }, { 6, 8 }  
+                   });
+            }
+
+            private int fInput, fExpected;
+
+            public FibonacciTest(int input, int expected) {
+                this.fInput = input;
+                this.fExpected = expected;
+            }
+
+            @Test
+            public void test() {
+                assertEquals(fExpected, Fibonacci.compute(fInput));
+            }
+        }
+        public class Fibonacci {
+            public static int compute(int n) {
+                int result = 0;
+                
+                if (n <= 1)
+                    result = n; 
+                else
+                    result = compute(n - 1) + compute(n - 2); 
+                
+                return result;
+            }
+        }
+
+
+    - Assumptions with Assume - similar to assertions, but without making tests fail
+        ++++ imports ++++
+        import static org.junit.Assume.*;
+
+        ++++ example ++++
+        @Test public void correctBehaviorWhenFilenameIsNull() {
+           assumeTrue(bugFixed("13356"));  // bugFixed is not included in JUnit
+           assertThat(parse(null), is(new NullDocument()));
+        }
+
+
+    - Rules - stop extending abstract test classes and start writing test rules
+        ++++ imports ++++
+        import org.junit.*;
+
+        ++++ example ++++
+        public class NameRuleTest {
+            @Rule
+            public final TestName name = new TestName();
+          
+            @Test
+            public void testA() {
+                assertEquals("testA", name.getMethodName());
+            }
+          
+            @Test
+            public void testB() {
+                assertEquals("testB", name.getMethodName());
+            }
+        }
+
+        Other possibilities:
+            @Rule public final TemporaryFolder folder = new TemporaryFolder();
+            @Rule public final ExternalResource resource = new ExternalResource() {...}
+            @Rule public final ErrorCollector collector = new ErrorCollector();
+            @Rule public final Verifier collector = new Verifier() {...}
+            @Rule public final TestRule watchman = new TestWatcher() {...}
+            @Rule public final TestRule globalTimeout = Timeout.millis(20);
+            @Rule public final ExpectedException thrown = ExpectedException.none();
+
+
+    - Theories - write tests that are more like scientific experiments using randomly generated data
+        ++++ example ++++
+        @Theory
+        public void multiplyIsInverseOfDivideWithInlineDataPoints(
+                @TestedOn(ints = {0, 5, 10}) int amount,
+                @TestedOn(ints = {0, 1, 2}) int m
+        ) {
+            assumeThat(m, not(0));
+            assertThat(new Dollar(amount).times(m).divideBy(m).getAmount(), is(amount));
+        }
+
+
+    - Test Fixtures - specify set up and clean up methods on a per-method and per-class basis
+        // Examples of fixtures:
+        //      Preparation of input data and setup/creation of fake or mock objects
+        //      Loading a database with a specific, known set of data
+        //      Copying a specific known set of files creating a test fixture will create a set of objects initialized to certain states.
+
+        // There are four fixture annotations: two for class-level fixtures and two for method-level ones. 
+        // At the class level, you have @BeforeClass and @AfterClass, 
+        // and at the method (or test) level, you have @Before and @After
+        ++++ example ++++
+        @Before
+        public void setUp() {
+            this.println("@Before setUp");
+            this.myManagedResource = new ManagedResource();
+        }
+        @After
+        public void tearDown() throws IOException {
+            this.println("@After tearDown");
+            this.myManagedResource.close();
+            this.myManagedResource = null;
+        }
+
+        @Test
+        public void test1() {
+            this.println("@Test test1()");
+        }
+
+
+    - Categories - group your tests together for easier test filtering
+
+    - Use with Maven - how to use JUnit with your Maven build
+    - Use with Gradle - how to use JUnit with your Gradle build
+
+    - Multithreaded code and Concurrency - basic ideas behind testing concurrent code
+        ++++ example ++++
+        public static void assertConcurrent(final String message, final List<? extends Runnable> runnables, final int maxTimeoutSeconds) 
+            throws InterruptedException {...}
+
+
+
+
+
