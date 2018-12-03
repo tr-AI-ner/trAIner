@@ -234,6 +234,8 @@ public class Game {
                 }
                 this.currentLifecycle++;
             }else{
+                System.out.println(this.currentLifecycle);
+                System.out.println(this.maxNrOfMoves);
                 this.currentLifecycle = 0;
                 this.pop.calculateFitness();
                 this.pop.selection();
