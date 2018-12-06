@@ -31,7 +31,9 @@ public class MapSaverLoader {
      * @param mapFileName
      */
     public void loadMap(String mapFileName){//, ArrayList<MapElement> mapElements) {
-
+        ElementBlackHole frontHole=new ElementBlackHole(0,0, Constants.COLOR_BLACK_HOLE);
+        ElementBlackHole backHole;
+        boolean firstHole=true;
         char[][] map = MapReader.readMap(mapFileName);
         game.resetMapElements();
         game.resetEntities();
@@ -46,21 +48,31 @@ public class MapSaverLoader {
                     game.getMapElements().add(newStart);
                 }
                 else if (map[col][row] == MapType.FINISH.representation())	{
-                    //  ElementFinish newFinish = new ElementFinish(col, row, functionality.Constants.COLOR_MAP_FINISH);
-                    //mapElements.add(newFinish);
+                    ElementFinish newFinish = new ElementFinish(col, row, functionality.Constants.COLOR_MAP_FINISH);
+                    game.getMapElements().add(newFinish);
                 }
 
                 else if (map[col][row] == MapType.BLACK_HOLE.representation())	{
-                    ElementBlackHole newHole = new ElementBlackHole(col, row, Constants.COLOR_BLACK_HOLE);
-                    game.getMapElements().add(newHole);
+                    if(firstHole){
+                        frontHole=new ElementBlackHole(col, row, Constants.COLOR_BLACK_HOLE);
+                        firstHole=false;
+                    }
+                    else{
+                        backHole=new ElementBlackHole(col, row, Constants.COLOR_BLACK_HOLE);
+                        frontHole.setAttachedBlackHole(backHole);
+                        backHole.setAttachedBlackHole(frontHole);
+                        game.getMapElements().add(frontHole);
+                        game.getMapElements().add(backHole);
+                        firstHole=true;
+                    }
                 }
                 else if (map[col][row] == MapType.ENEMY.representation())	{
                         ElementEnemy newEnemy = new ElementEnemy(col, row, functionality.Constants.COLOR_ENEMY);
                         game.getMapElements().add(newEnemy);
                 }
                 else if (map[col][row] == MapType.WATER.representation())	{
-                    //   ElementWater newWater = new ElementWater(col, row,  functionality.Constants.COLOR_WATER);
-                    //	mapElements.add(newWater);
+                     ElementWater newWater = new ElementWater(col, row,  functionality.Constants.COLOR_WATER);
+                     game.getMapElements().add(newWater);
                 }
 
                 else if (map[col][row] == MapType.LASER.representation())	{
