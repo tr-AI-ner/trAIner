@@ -1,14 +1,16 @@
 package ui;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.GradientPaint;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import java.awt.*;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import java.io.IOException;
+import java.nio.Buffer;
 
+import com.sun.corba.se.impl.orbutil.graph.Graph;
+import com.sun.tools.javac.code.Attribute;
 import functionality.Constants;
+import functionality.InputManager;
 import functionality.Setup;
 
 /**
@@ -22,11 +24,47 @@ import functionality.Setup;
 public class BottomBar extends UIElement {
 	
 	int copyrightFontSize = 10;
+	int plusX = Constants.WINDOW_MAP_MARGIN + 600;
+	int minusX = Constants.WINDOW_MAP_X0 + 632;
+	int plusY = getY() + 18;
+	int minusY = getY() + 18;
+	int widthRect = 22;
+	int heightRect = 18;
+	int playX = Constants.WINDOW_MAP_MARGIN + 360;
+	int playY = getY() + 15;
+	int pauseX = Constants.WINDOW_MAP_X0 + 410;
+	int pauseY = getY() + 15;
+	int widthImg = 30;
+	int heightImg = 26;
+
+	public Rectangle plusButton = new Rectangle(plusX, plusY, widthRect, heightRect );
+	public Rectangle minusButton = new Rectangle(minusX, minusY ,widthRect, heightRect);
+	public Rectangle playButton = new Rectangle(playX, playY, widthImg, heightImg);
+	public Rectangle pauseButton = new Rectangle(pauseX, pauseY, widthImg, heightImg);
+
+
+	int fontSize = 12;
+	Font font = new Font(Constants.DEFAULT_FONT, Font.BOLD, fontSize);
+	Font fontX = new Font(Constants.DEFAULT_FONT, Font.BOLD, 8);
+
+	int speedUp = 1;
+	BufferedImage playImg;
+	BufferedImage pauseImg;
 
 	public BottomBar(int x, int y, int width, int height, Color backgroundColor, Setup setup) {
 		super(x, y, width, height, backgroundColor, setup);
+
+		try {
+			playImg = ImageIO.read(getClass().getResourceAsStream("/play-button.png"));
+
+			pauseImg = ImageIO.read(getClass().getResourceAsStream("/pause-2.png"));
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+
 	}
-	
 	/**
 	 * draw bottom-bar with background & other UI elements
 	 * 
@@ -35,7 +73,11 @@ public class BottomBar extends UIElement {
 	public void draw(Graphics graphics) {
 		drawBackground(graphics);
 		drawCopyright(graphics);
-		
+		drawPlayButton(graphics);
+		drawPauseButton(graphics);
+		drawPlusButton(graphics);
+		drawMinusButton(graphics);
+		drawSpeedString(graphics);
 		//draw other UI-elements here...
 	}
 	
@@ -76,4 +118,105 @@ public class BottomBar extends UIElement {
 		graphics.drawString(Constants.COPYRIGHT, copyX, copyY);
 	}
 
+
+	private void drawSpeedString(Graphics graphics){
+		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
+		graphics.setFont(fontX);
+
+		int copyX = Constants.WINDOW_MAP_MARGIN + 584;
+		int copyY = getY() + 33;
+		int speed = this.getSpeedUp();
+
+		graphics.drawString(speed + "x", copyX, copyY);
+	}
+
+	private void drawPlayButton(Graphics graphics){
+		//Color playColor = new Color(value, 0, 0);
+		graphics.setColor(Constants.COLOR_BACKGROUND);
+
+		int copyX = Constants.WINDOW_MAP_MARGIN;
+		int copyY = getY();
+
+
+
+		//graphics.drawRect(copyX + 410, copyY + 20,22,18);
+		graphics.drawRect(playX, playY, widthImg, heightImg);
+		graphics.drawImage(playImg, copyX + 360, copyY + 15, 30, 26, null);
+
+
+	}
+
+	private void drawPauseButton(Graphics graphics){
+		graphics.setColor(Constants.COLOR_BACKGROUND);
+
+		int copyX = Constants.WINDOW_MAP_MARGIN;
+		int copyY = getY();
+
+		//Graphics g2d = pauseImg.getGraphics();
+
+		graphics.drawRect(pauseX, pauseY, widthImg, heightImg);
+		graphics.drawImage(pauseImg, copyX + 410, copyY + 15, 30, 26, null);
+
+
+
+	}
+
+	private void drawPlusButton(Graphics graphics){
+
+		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
+		graphics.setFont(font);
+		String s = "+";
+		int copyX = Constants.WINDOW_MAP_MARGIN;
+		int copyY = getY();
+
+		graphics.drawString("SpeedX :", copyX + 530, copyY + 33);
+
+		graphics.drawRect(plusX, plusY, widthRect, heightRect );
+		//graphics.drawRect(plusX, plusY, widthRect + 1, heightRect );
+		graphics.drawString(s, copyX + 608, copyY + 31);
+		//graphics.fillRect(copyX + 550, copyY + 19 , 22, 18);
+
+
+	}
+
+	private void drawMinusButton(Graphics graphics){
+
+		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
+		graphics.setFont(font);
+		//graphics.BasicStroke(6f);
+		String s = "-";
+		int copyX = Constants.WINDOW_MAP_MARGIN;
+		int copyY = getY();
+
+		graphics.drawRect(minusX, minusY ,widthRect, heightRect);
+		//graphics.drawRect(minusX, minusY ,widthRect + 1, heightRect);
+
+		graphics.drawString(s,copyX + 641, copyY + 31);
+
+	}
+
+	public Rectangle getPlusButton() {
+		return plusButton;
+	}
+
+	public Rectangle getMinusButton() {
+		return minusButton;
+	}
+
+	public int getSpeedUp(){
+		return speedUp;
+	}
+
+	public int setSpeedUp(int speed){
+		return  speedUp = speed;
+	}
+
+	public Rectangle getPlayButton(){
+		return playButton;
+	}
+
+	public Rectangle getPauseButton(){
+		return pauseButton;
+	}
 }
+

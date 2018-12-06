@@ -1,10 +1,6 @@
 package ui;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.util.ArrayList;
 
 import functionality.Constants;
@@ -43,7 +39,26 @@ public class RightBar extends UIElement {
 	 * 			- plasma ball
 	 * 		
 	 */
-	
+
+	int populationSize = 0;
+	int mutationRate = 0;
+	int noOfMoves = 0;
+	int increaseGeneration = 0;
+
+	int rightPlusX = Constants.WINDOW_MAP_X0 + 1000;
+	int rightMinusX = Constants.WINDOW_MAP_X0;
+	int rightPlusY = getY();
+	int rightMinusY = getY();
+	int width = 22;
+	int height = 18;
+
+	public Rectangle plusButton = new Rectangle(rightPlusX, rightPlusX, width, height);
+	public Rectangle minusButton = new Rectangle(rightMinusX, rightMinusY, width, height);
+//	public Rectangle plusButton = new Rectangle(rightPlusX, rightMinusX, width, height);
+//	public Rectangle plusButton = new Rectangle(rightPlusX, rightMinusX, width, height);
+
+
+
 	// list of the static map elements that should be shown in map-building-mode
 	private MapElement[] staticMapElements = new MapElement[]{
 			new ElementStart(0, 0, Constants.COLOR_ACCENT),
@@ -86,7 +101,10 @@ public class RightBar extends UIElement {
 	@Override
 	public void draw(Graphics graphics) {
 		drawBackground(graphics);
-		
+		drawPopulationSize(graphics);
+		drawMutationRate(graphics);
+		drawNoOfMoves(graphics);
+		drawIncreaseGeneration(graphics);
 		//TODO: this boolean should be globally
 		boolean mapBuildingMode = true;
 		
@@ -127,22 +145,22 @@ public class RightBar extends UIElement {
 		counter++;
 		// draw static list
 		for (int i=0; i<staticNames.length; i++){
-			drawMapElementListItem(graphics, getX(), getY()+(counter*listItemHeight), 
+			drawMapElementListItem(graphics, getX(), getY()+(counter*listItemHeight),
 					listItemHeight, staticMapElements[i], staticNames[i]);
 			counter++;
 		}
 		// draw header 'dynamic'
-		drawMapElementListItem(graphics, getX(), getY()+(counter*listItemHeight), 
+		drawMapElementListItem(graphics, getX(), getY()+(counter*listItemHeight),
 				listItemHeight, null, headers[1]);
 		counter++;
 		// draw dynamic list
 		for (int i=0; i<dynamicNames.length; i++){
-			drawMapElementListItem(graphics, getX(), getY()+(counter*listItemHeight), 
+			drawMapElementListItem(graphics, getX(), getY()+(counter*listItemHeight),
 					listItemHeight, dynamicMapElements[i], dynamicNames[i]);
 			counter++;
 		}
 	}
-	
+
 	/**
 	 * 
 	 * draws a single list item for the map-builder-mode
@@ -154,30 +172,30 @@ public class RightBar extends UIElement {
 	 * @param element		-	the element that should be shown by the list item (if null, it's a header)
 	 * @param name			-	the name that should be shown for the list item
 	 */
-	private void drawMapElementListItem(Graphics graphics, int itemX, int itemY, int itemHeight, 
+	private void drawMapElementListItem(Graphics graphics, int itemX, int itemY, int itemHeight,
 			MapElement element, String name){
-		
+
 		// if null, then it's a header
 		if (element == null){
 			int textIndent = 15;
-			
+
 			//draw background
 			graphics.setColor(Constants.COLOR_RIGHT_BAR_HEADER);
 			graphics.fillRect(itemX, itemY, Constants.WINDOW_RIGHT_BAR_WIDTH, itemHeight);
 			//draw text
 			graphics.setColor(Constants.COLOR_AVATAR_WHITE);
 			graphics.setFont(font);
-			
+
 			// Determine the Y coordinate for the text (note we add the ascent, as in java 2d 0 is top of the screen)
 		    int theY = itemY + ((itemHeight - graphics.getFontMetrics(font).getHeight()) / 2) + graphics.getFontMetrics(font).getAscent();
 		    graphics.drawString(name, itemX+textIndent, theY);
-		    
+
 		} else {
 			//TODO: these variables should be added to Constants
 			int elementIndent = 15;
 			int elementWidth = 20;
 			int textIndent = 50;
-			
+
 			//draw background
 			graphics.setColor(Constants.COLOR_MAP_LAND);
 			graphics.fillRect(itemX, itemY, Constants.WINDOW_RIGHT_BAR_WIDTH, itemHeight);
@@ -189,11 +207,82 @@ public class RightBar extends UIElement {
 			int theY = itemY + ((itemHeight - graphics.getFontMetrics(font).getHeight()) / 2) + graphics.getFontMetrics(font).getAscent();
 			graphics.drawString(name, itemX+textIndent, theY);
 		}
-		
+
 		// draw separator line at bottom of item
 		graphics.setColor(Constants.COLOR_RIGHT_BAR_HEADER);
 		// -1 due to stroke width of line
 		graphics.drawLine(itemX, itemY+itemHeight-1, itemX+Constants.WINDOW_RIGHT_BAR_WIDTH, itemY+itemHeight-1);
 	}
 
+	public void drawPopulationSize(Graphics graphics){
+
+		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
+		graphics.setFont(font);
+
+		String s = "Population Size: ";
+		String plus = " + ";
+		String minus = " - ";
+		int copyX = Constants.WINDOW_MAP_MARGIN;
+		int copyY = getY();
+
+
+		graphics.drawRect(rightMinusX, rightMinusY, width, height);
+		graphics.drawRect(rightPlusX, rightPlusY, width, height);
+
+	}
+
+	public void drawMutationRate(Graphics graphics){
+		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
+
+		graphics.setFont(font);
+		String s = "Mutation Rate:";
+
+		String plus = " + ";
+		String minus = " - ";
+		int copyX = Constants.WINDOW_MAP_MARGIN;
+		int copyY = getY();
+
+
+		graphics.drawRect(rightMinusX, rightMinusY, width, height);
+		graphics.drawRect(rightPlusX, rightPlusY, width, height);
+
+	}
+
+
+	public void drawNoOfMoves(Graphics graphics){
+		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
+
+		graphics.setFont(font);
+		String s = "No of Moves: ";
+
+		String plus = " + ";
+		String minus = " - ";
+		int copyX = Constants.WINDOW_MAP_MARGIN;
+		int copyY = getY();
+
+
+
+		graphics.drawRect(rightMinusX, rightMinusY, width, height);
+		graphics.drawRect(rightPlusX, rightPlusY, width, height);
+
+
+
+	}
+
+	public void drawIncreaseGeneration(Graphics graphics){
+
+		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
+
+		graphics.setFont(font);
+		String s = "Increase Generation: ";
+
+		String plus = " + ";
+		String minus = " - ";
+		int copyX = Constants.WINDOW_MAP_MARGIN;
+		int copyY = getY();
+
+
+		graphics.drawRect(rightMinusX, rightMinusY, width, height);
+		graphics.drawRect(rightPlusX, rightPlusY, width, height);
+	}
 }

@@ -70,6 +70,7 @@ public class Game {
 		}
 	}
 
+
 	// process User Input
 	private void processUserInput() {
 		//moves in the desired direction
@@ -79,19 +80,74 @@ public class Game {
 		if(inputManager.getKeyResult()[3]) {avatar.move(( +setup.getNewEntitySpeed() ), 0);}
 		//Exits when escape is pressed
 		if(inputManager.getKeyResult()[4]) {System.exit(0);}
-		
 		//check for mouse dragging
 //		if(inputManager.getIsMousePressed() && inputManager.getIsMouseDragged()){
 //			System.out.println("mouse pressed at x: "+inputManager.getMousePressedX()+", y: "
 //					+inputManager.getMousePressedY());
 //		}
+
+//		speed up
+		if(inputManager.getIsMousePressed()&& graphicsManager.getBottomBar().getPlusButton().contains(inputManager.getMouseClickedX(),inputManager.getMouseClickedY())){
+
+			System.out.println("Plus Button Clicked");
+			int getUp = graphicsManager.getBottomBar().getSpeedUp();
+
+			if (getUp >= 1 && getUp < 10) {
+				graphicsManager.getBottomBar().setSpeedUp(getUp + 1);
+			}
+			else
+				graphicsManager.getBottomBar().setSpeedUp(getUp);
+
+
+
+			inputManager.setMouseClicked(false);
+
+
+		}
+//		speed down
+		if(inputManager.getIsMousePressed()&& graphicsManager.getBottomBar().getMinusButton().contains(inputManager.getMouseClickedX(),inputManager.getMouseClickedY())){
+
+			System.out.println("Minus Button Clicked");
+			int getDown = graphicsManager.getBottomBar().getSpeedUp();
+
+			if (getDown > 1) {
+				graphicsManager.getBottomBar().setSpeedUp(getDown - 1);
+			}
+
+			inputManager.setMouseClicked(false);
+
+		}
+
+// 		Play Button
+
+		if(inputManager.getIsMousePressed()&& graphicsManager.getBottomBar().getPlayButton().contains(inputManager.getMouseClickedX(),inputManager.getMouseClickedY())){
+
+			System.out.println("Play Button Clicked");
+			// The game starts playing
+			inputManager.setMouseClicked(false);
+//
+
+		}
+
+// 		Pause Button
+
+		if(inputManager.getIsMousePressed()&& graphicsManager.getBottomBar().getPauseButton().contains(inputManager.getMouseClickedX(),inputManager.getMouseClickedY())){
+
+			System.out.println("Pause Button Clicked");
+			//The game pauses
+			inputManager.setMouseClicked(false);
+			System.exit(0);
+//
+
+		}
+
 		if(inputManager.getIsMousePressed() && inputManager.getIsMouseDragged()){
 			//TODO: change this
 			int width = mapElements.get(0).getWidth();
 			int height = mapElements.get(0).getHeight();
 			mapElements.get(0).move(inputManager.getMouseDraggedX() - (width / 2), 
 					inputManager.getMouseDraggedY() - (height / 2));
-			
+
 			//look if mouse clicked on a map-element & on which
 //			int index = -1;
 //			
@@ -110,7 +166,12 @@ public class Game {
 //					+inputManager.getMouseDraggedY());
 //			mapElements.get(index).move(inputManager.getMouseDraggedX(), inputManager.getMouseDraggedY());
 //			}
+
+
+			//look to see if the bottom bar elements are clicked
 		}
+
+
 	}
 	
 	private void updateState(){
