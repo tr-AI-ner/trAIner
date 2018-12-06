@@ -11,8 +11,10 @@
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
+.idea/
 
 .DS_Store
+
 
 # Generated files
 .idea/**/contentModel.xml
