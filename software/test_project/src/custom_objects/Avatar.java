@@ -142,7 +142,7 @@ public class Avatar extends Entity {
 	 * @return if avatar collides with another map-element
 	 */
 	private boolean collidingWithMapElement(){
-		for (MapElement element: game.getMapElements()){
+        for (MapElement element: game.getMapElements()){
 			if (toMoveX+getWidth() >= element.getX() 
 					&& toMoveX <= (element.getX()+element.getWidth())
 					&& (toMoveY+getHeight() >= element.getY()

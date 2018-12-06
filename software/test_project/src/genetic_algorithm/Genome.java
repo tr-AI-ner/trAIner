@@ -148,6 +148,7 @@ public class Genome {
     public Genome crossover(Genome mate){
         int [][]child = new int[this.maxNrOfMoves][2];
         Random rand = new Random();
+        System.out.println("max moves: "+this.maxNrOfMoves);
         int crossover = rand.nextInt(this.maxNrOfMoves);
         for(int i = 0; i<this.maxNrOfMoves;i++){
             if(i > crossover){
@@ -176,5 +177,8 @@ public class Genome {
      */
     public int[][] getGenes(){
         return this.gene;
+    }
+    public int getMaxNrOfMoves(){
+        return this.maxNrOfMoves;
     }
 }

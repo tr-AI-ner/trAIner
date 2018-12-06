@@ -230,4 +230,8 @@ public class Individual extends Avatar {
     public void setGenome(Genome genome) {
         this.genome = genome;
     }
+    
+    public int getMaxNrOfMoves() {
+        return maxNrOfMoves;
+    }
 }

@@ -117,7 +117,7 @@ public class Game {
             this.inputManager = gm.getInputManager();
             this.setup = gm.getSetup();
             this.map = gm.getMap();
-            this.maxNrOfMoves = 800;
+            this.maxNrOfMoves = 200;
 
             entities = new ArrayList<>();
             this.populationSize = 10;
@@ -126,9 +126,10 @@ public class Game {
             this.pop = new Population(this.populationSize, this.mutationRate, this.maxNrOfMoves);
             this.currentLifecycle = 0;
             for(int i = 0; i < populationSize; i++){
+                pop.getIndividual(i).setGame(this);
                 Individual ind = pop.getIndividual(i);
                 ind.setSetup(setup);
-                ind.setGame(this);
+                //ind.setGame(this);
                 entities.add(ind);
             }
 
@@ -227,20 +228,21 @@ public class Game {
      */
     private void gameLoop(boolean ai_playing){
         if(this.clock.frameShouldChange()){
+            System.out.println("from main moves: " + this.maxNrOfMoves + "/" + this.currentLifecycle);
+//		System.out.println("Map Element size: " + mapElements.size());
             if(this.currentLifecycle < this.maxNrOfMoves){
                 this.pop.live(currentLifecycle);
                 if(this.pop.reachedGoal() && (this.currentLifecycle < this.recordtime)){
-                this.recordtime = this.currentLifecycle;
+                    this.recordtime = this.currentLifecycle;
                 }
                 this.currentLifecycle++;
             }else{
-                System.out.println(this.currentLifecycle);
-                System.out.println(this.maxNrOfMoves);
                 this.currentLifecycle = 0;
                 this.pop.calculateFitness();
                 this.pop.selection();
-                this.pop.reproduction();
+                this.pop.reproduction(this);
             } 
+            this.updateState();
             this.redrawAll();
         }
     }

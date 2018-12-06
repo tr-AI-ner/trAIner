@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 import functionality.Constants;
+import game.Game;
 
 /**
  * Class representing the population of the genetic algorithm, holding an array of 
@@ -151,6 +152,7 @@ public class Population {
                 gene_pool.add(this.population[i]);
             }
         }
+        System.out.println("Selecting da shiat");
 
     }
     
@@ -160,19 +162,20 @@ public class Population {
      * population, after that start a new generation
      *
      */
-    public void reproduction() {
+    public void reproduction(Game game) {
         Random rand = new Random();
         for(int i = 0; i < this.population.length; i++){
             Individual father = this.gene_pool.get(rand.nextInt(this.gene_pool.size()));
             Individual mother  =  this.gene_pool.get(rand.nextInt(this.gene_pool.size()));
             Genome dadsGenes = father.getGenome();
             Genome momsGenes = mother.getGenome();
-
+            System.out.println("GenePool size: "+this.gene_pool.size());
+            System.out.println("i: "+ i +":::"+"father moves / genes " + father.getMaxNrOfMoves()+ "/" + dadsGenes.getMaxNrOfMoves() + "  mother " + mother.getMaxNrOfMoves() + "/" + momsGenes.getMaxNrOfMoves()); 
             Genome child = momsGenes.crossover(dadsGenes);
 
             child.mutateGene(this.mutationRate);
             this.population[i] = new Individual(this.def_x, this.def_y, this.def_width, this.def_height, this.color, child);
-
+            this.population[i].setGame(game);
         }
         this.currentGeneration++;
     }
