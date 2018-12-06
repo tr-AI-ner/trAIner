@@ -33,8 +33,8 @@ public class MapSaverLoader {
     public void loadMap(String mapFileName){//, ArrayList<MapElement> mapElements) {
 
         char[][] map = MapReader.readMap(mapFileName);
-        game.getMapElements().clear();
-        game.getEntities().clear();
+        game.resetMapElements();
+        game.resetEntities();
         for (int col = 0; col < Constants.WINDOW_MAP_WIDTH / MAP_ELEMENT_SIZE; col += 1) {
             for (int row = 0; row < Constants.WINDOW_MAP_HEIGHT / MAP_ELEMENT_SIZE; row += 1) {
                 if (map[col][row] == MapType.WALL.representation()) {
@@ -55,8 +55,8 @@ public class MapSaverLoader {
                     game.getMapElements().add(newHole);
                 }
                 else if (map[col][row] == MapType.ENEMY.representation())	{
-                    //    ElementEnemy newEnemy = new ElementEnemy(col, row, functionality.Constants.COLOR_ENEMY);
-                    //	mapElements.add(newEnemy);
+                        ElementEnemy newEnemy = new ElementEnemy(col, row, functionality.Constants.COLOR_ENEMY);
+                        game.getMapElements().add(newEnemy);
                 }
                 else if (map[col][row] == MapType.WATER.representation())	{
                     //   ElementWater newWater = new ElementWater(col, row,  functionality.Constants.COLOR_WATER);

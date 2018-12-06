@@ -12,6 +12,15 @@
 .idea/**/dictionaries
 .idea/**/shelf
 
+# java class files
+*.class
+
+# unnecessary files that created when opening up a file (on Mac)
+._*
+
+# ignore swp files
+*.swp
+
 .DS_Store
 
 # Generated files

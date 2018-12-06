@@ -12,6 +12,7 @@ import functionality.Setup;
 import map_builder.*;
 import map_saver.MapSaverLoader;
 
+
 public class Game {
 
 	private GraphicsManager graphicsManager;
@@ -21,12 +22,18 @@ public class Game {
 	private Map map;
 	
 	Avatar avatar;
-	ArrayList<Entity> entities = new ArrayList<>();
+	ArrayList<Entity> entities;
 	ArrayList<MapElement> mapElements;
 	ElementWall theGreatWall;
-	ElementBall enemy;
 	MapSaverLoader mapSaverLoader;
 
+
+	ElementPlasmaBall ball;
+    ElementEnemy theEnemy;
+	ElementBlackHole blackHole;
+    ElementBlackHole blackHole2;
+	ElementStart start;
+	ElementFinish finish;
 
 	public Game(GraphicsManager gm){
 		this.graphicsManager = gm;
@@ -38,11 +45,11 @@ public class Game {
 
 		entities = new ArrayList<>();
 
-		avatar = new Avatar(Constants.AVATAR_START_X,Constants.AVATAR_START_Y,
+
+		//TODO set the avatar to appear on the start block
+		avatar = new Avatar(33 * Constants.MAP_ELEMENT_SIZE,33 * Constants.MAP_ELEMENT_SIZE,
 				Constants.AVATAR_WIDTH, Constants.AVATAR_HEIGHT,
-				Constants.COLOR_AVATAR_RED
-				//r, g, b
-//				new Color(255, 0, 0)
+				Constants.COLOR_AVATAR_BLUE
 				);
 		avatar.setSetup(setup);
 		avatar.setGame(this);
@@ -53,11 +60,39 @@ public class Game {
 
 		mapSaverLoader = new MapSaverLoader(this);
 
-//		theGreatWall = new ElementWall(100, 100, 50, 20, new Color(0, 255, 0));
-		theGreatWall = new ElementWall(15, 15, Constants.COLOR_WALL);
-		enemy = new ElementBall(6,6,Constants.COLOR_PLASMA_BALL);
-		mapElements.add(enemy);
-		mapElements.add(theGreatWall);
+		start = new ElementStart(33,33,Constants.COLOR_MAP_START);
+        finish = new ElementFinish(50,12,Constants.COLOR_MAP_FINISH);
+
+		for(int i = 0; i < 36; i++) {
+            theGreatWall = new ElementWall(15, i, Constants.COLOR_WALL);
+            if(i != 30 && i != 31)  mapElements.add(theGreatWall);
+        }
+        for(int i = 0; i < 36; i++) {
+            theGreatWall = new ElementWall(43, i, Constants.COLOR_WALL);
+            mapElements.add(theGreatWall);
+        }
+
+		ball = new ElementPlasmaBall(13,7,Constants.COLOR_PLASMA_BALL);
+
+        theEnemy = new ElementEnemy(30, 30, Constants.COLOR_ENEMY);
+
+        blackHole = new ElementBlackHole(52,2,Constants.COLOR_BLACK_HOLE);
+        blackHole2 = new ElementBlackHole(4,
+                25,
+                       Constants.COLOR_BLACK_HOLE);
+
+
+        blackHole.setAttachedBlackHole(blackHole2);
+        blackHole2.setAttachedBlackHole(blackHole);
+
+
+        mapElements.add(start);
+        mapElements.add(finish);
+		mapElements.add(ball);
+        mapElements.add(theEnemy);
+        mapElements.add(blackHole);
+        mapElements.add(blackHole2);
+
 		// add all map-elements to entities
 		entities.addAll(mapElements);
 	//	saveMap("map_03");
@@ -92,11 +127,42 @@ public class Game {
         if (inputManager.isMouseClicked() && graphicsManager.getTopBar().getLoadButton().contains(inputManager.getMouseClickedX(), inputManager.getMouseClickedY()) ) {
 				mapSaverLoader.loadButtonLogic();
             }
+		//Switches between the game and the build mode
+		if(inputManager.getKeyResult()[5]) { Main.MODE = 0; }
+		if(inputManager.getKeyResult()[6]) { Main.MODE = 1; }
 	}
 
 
+
+
+
+
+    /**
+     * Restart the game by resetting the enemies to their original positions. This is needed so that the game is
+     * consistent every time
+     */
+	public void restart() {
+        for (MapElement element: this.getMapElements()){
+            element.reset();
+        }
+        avatar.reset();
+    }
+
+
 	private void updateState(){
-		
+		if(Main.MODE == 0 || Main.MODE == 2) {
+            for (MapElement element: this.getMapElements()){
+                if(element.getMapType() == MapType.PLASMA_BALL || element.getMapType() == MapType.ENEMY) {
+                    element.update();
+                    // Because of the grid element system we have to check if the elements don't collide on the grid level
+                    if(Math.abs(element.getX()  - avatar.getX()) < Constants.MAP_ELEMENT_SIZE
+                            && Math.abs(element.getY()  - avatar.getY()) < Constants.MAP_ELEMENT_SIZE) {
+                        this.restart();
+                    }
+                }
+            }
+        }
+        map.updateEntitiesInMap(entities);
 	}
 	
 	private void redrawAll(){
@@ -104,7 +170,6 @@ public class Game {
 		graphicsManager.clear();
 		
 		// draw all entities
-//		graphicsManager.draw(entities);
 		graphicsManager.drawMap(entities);
 		
 		//swap buffers to make changes visible
@@ -112,12 +177,27 @@ public class Game {
 	}
 
 
-	public ArrayList<MapElement> getMapElements(){return mapElements;}
+
+
 	public void setMapElements(ArrayList<MapElement> mapElements){this.mapElements=mapElements;}
 	public Avatar getAvatar(){return avatar;}
 	public ArrayList<Entity> getEntities(){return entities;}
+
+    public void resetEntities(){this.entities=new ArrayList<>();}
+	public void resetMapElements(){this.mapElements=new ArrayList<>();}
+
     public Map getMap() { return map; }
     public GraphicsManager getGraphicsManager(){return graphicsManager;}
 
 
+
+	
+	public ArrayList<MapElement> getMapElements(){
+		return mapElements;
+	}
+
+	public ElementStart getStart() {
+		return start;
+	}
 }
+
