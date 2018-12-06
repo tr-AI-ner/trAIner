@@ -24,10 +24,10 @@ import static org.junit.Assert.assertEquals;
 
 public class GameTest {
 
-    //Game game;
-    //GraphicsManager gm;
-    //InputManager inputManager;
-    //private Map map;
+    Game game;
+    GraphicsManager gm;
+    InputManager inputManager;
+    private Map map;
 
     boolean theFuck;
 
@@ -35,12 +35,12 @@ public class GameTest {
     public void setup(){
         System.out.println("Setting up GameTest...");
 
-        Map map;// = new Map();
-        //map = new Map();
-        //this.inputManager = new InputManager();
-        //this.map = new Map();
-        //this.gm = new GraphicsManager(inputManager, map);
-        //this.game = new Game(gm);
+//        Map map = new Map();
+//        map = new Map();
+        this.inputManager = new InputManager();
+        this.map = new Map();
+        this.gm = new GraphicsManager(inputManager, map);
+        this.game = new Game(gm);
     }
 
 

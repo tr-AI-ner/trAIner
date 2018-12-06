@@ -27,22 +27,25 @@ public class Tester {
         boolean noErrors = true;
 
         // sample code for testing
+//        Result result = JUnitCore.runClasses(
+//            //custom_objects package
+//            AvatarTest.class, EntityTest.class,
+//            //functionality package
+//            ClockTest.class, GraphicsManagerTest.class,
+//            InputManagerTest.class, SetupTest.class,
+//            //game package
+//            GameTest.class, MainTest.class,
+//            //map_builder package
+//            ElementBallTest.class, ElementBlackHoleTest.class, ElementEnemyTest.class,
+//            ElementFinishTest.class, ElementLandTest.class, ElementLaserTest.class,
+//            ElementPlasmaBallTest.class, ElementStartTest.class, ElementWallTest.class,
+//            ElementWaterTest.class, MapElementTest.class, MapTest.class,
+//            //ui package
+//            BottomBarTest.class, CustomSliderTest.class, RightBarTest.class, TopBarTest.class,
+//            UIElementTest.class
+//        );
         Result result = JUnitCore.runClasses(
-            //custom_objects package
-            AvatarTest.class, EntityTest.class,
-            //functionality package
-            ClockTest.class, GraphicsManagerTest.class,
-            InputManagerTest.class, SetupTest.class,
-            //game package
-            GameTest.class, MainTest.class,
-            //map_builder package
-            ElementBallTest.class, ElementBlackHoleTest.class, ElementEnemyTest.class,
-            ElementFinishTest.class, ElementLandTest.class, ElementLaserTest.class,
-            ElementPlasmaBallTest.class, ElementStartTest.class, ElementWallTest.class,
-            ElementWaterTest.class, MapElementTest.class, MapTest.class,
-            //ui package
-            BottomBarTest.class, CustomSliderTest.class, RightBarTest.class, TopBarTest.class,
-            UIElementTest.class
+        		AllTests.class
         );
         for (Failure failure : result.getFailures()) {
             System.out.println(failure.toString());
