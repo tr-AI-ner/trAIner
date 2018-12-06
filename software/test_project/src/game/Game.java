@@ -105,18 +105,84 @@ public class Game {
 	// process User Input
 	private void processUserInput() {
 		//moves in the desired direction
-		if(inputManager.getKeyResult()[0]) {avatar.move(0, ( -setup.getNewEntitySpeed() ));}
-		if(inputManager.getKeyResult()[1]) {avatar.move(0, ( +setup.getNewEntitySpeed() ));}
-		if(inputManager.getKeyResult()[2]) {avatar.move(( -setup.getNewEntitySpeed() ), 0);}
-		if(inputManager.getKeyResult()[3]) {avatar.move(( +setup.getNewEntitySpeed() ), 0);}
+		if (inputManager.getKeyResult()[0]) {
+			avatar.move(0, (-setup.getNewEntitySpeed()));
+		}
+		if (inputManager.getKeyResult()[1]) {
+			avatar.move(0, (+setup.getNewEntitySpeed()));
+		}
+		if (inputManager.getKeyResult()[2]) {
+			avatar.move((-setup.getNewEntitySpeed()), 0);
+		}
+		if (inputManager.getKeyResult()[3]) {
+			avatar.move((+setup.getNewEntitySpeed()), 0);
+		}
 		//Exits when escape is pressed
-		if(inputManager.getKeyResult()[4]) {System.exit(0);}
+		if (inputManager.getKeyResult()[4]) {
+			System.exit(0);
+		}
 		//Switches between the game and the build mode
-		if(inputManager.getKeyResult()[5]) { Main.MODE = 0; }
-		if(inputManager.getKeyResult()[6]) { Main.MODE = 1; }
+		if (inputManager.getKeyResult()[5]) {
+			Main.MODE = 0;
+		}
+		if (inputManager.getKeyResult()[6]) {
+			Main.MODE = 1;
+		}
+
+		//		speed up
+		if (inputManager.getIsMousePressed() && graphicsManager.getBottomBar().getPlusButton().contains(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
+
+			System.out.println("Plus Button Clicked");
+			int getUp = graphicsManager.getBottomBar().getSpeedUp();
+
+			if (getUp >= 1 && getUp < 10) {
+				graphicsManager.getBottomBar().setSpeedUp(getUp + 1);
+			} else
+				graphicsManager.getBottomBar().setSpeedUp(getUp);
+
+
+			inputManager.setMouseClicked(false);
+
+
+		}
+//		speed down
+		if (inputManager.getIsMousePressed() && graphicsManager.getBottomBar().getMinusButton().contains(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
+
+			System.out.println("Minus Button Clicked");
+			int getDown = graphicsManager.getBottomBar().getSpeedUp();
+
+			if (getDown > 1) {
+				graphicsManager.getBottomBar().setSpeedUp(getDown - 1);
+			}
+
+			inputManager.setMouseClicked(false);
+
+		}
+
+// 		Play Button
+
+		if (inputManager.getIsMousePressed() && graphicsManager.getBottomBar().getPlayButton().contains(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
+
+			System.out.println("Play Button Clicked");
+			// The game starts playing
+			inputManager.setMouseClicked(false);
+//
+
+		}
+
+// 		Pause Button
+
+		if (inputManager.getIsMousePressed() && graphicsManager.getBottomBar().getPauseButton().contains(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
+
+			System.out.println("Pause Button Clicked");
+			//The game pauses
+			inputManager.setMouseClicked(false);
+			System.exit(0);
+//
+
+		}
 
 	}
-
     /**
      * Restart the game by resetting the enemies to their original positions. This is needed so that the game is
      * consistent every time

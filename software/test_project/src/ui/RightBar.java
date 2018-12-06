@@ -1,10 +1,6 @@
 package ui;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.util.ArrayList;
 
 import javax.swing.JSlider;
@@ -49,9 +45,25 @@ public class RightBar extends UIElement {
 	 */
 	
 //	private GraphicsManager graphicsManager;
-	
+
+
+	int populationSize = 1;
+	int mutationRate = 1;
+	int noOfMoves = 1;
+	int increaseGeneration = 1;
+
+	int rightPlusX = Constants.WINDOW_MAP_X0 + 1000;
+	int rightMinusX = Constants.WINDOW_MAP_X0;
+	int rightPlusY = getY();
+	int rightMinusY = getY();
+	int width = 22;
+	int height = 18;
+
+	public Rectangle plusButton = new Rectangle(rightPlusX, rightPlusX, width, height);
+	public Rectangle minusButton = new Rectangle(rightMinusX, rightMinusY, width, height);
+
 	private String[] gameParameters = new String[]{
-			"Population Size","Number Of Moves","Mutation Rate","Number Of Generations"
+			"Population Size: ","Number Of Moves: ","Mutation Rate: ","Number Of Generations: "
 	};
 	private CustomSlider[] sliders;
 	
@@ -80,19 +92,12 @@ public class RightBar extends UIElement {
 	
 	// font for list items & headers text
 	int fontSize = 16;
+	Font fontx = new Font(Constants.DEFAULT_FONT, Font.BOLD, fontSize);
 	Font font = new Font(Constants.DEFAULT_FONT, Font.PLAIN, fontSize);
 
 	
 	public RightBar(int x, int y, int width, int height, Color backgroundColor, Setup setup) {
 		super(x, y, width, height, backgroundColor, setup);
-		
-		int sliderWidth = 170, sliderHeight = 5;
-		
-		sliders = new CustomSlider[]{
-				new CustomSlider(getX()+(getWidth()/2)-(sliderWidth/2), 
-						getY()+150, 
-						sliderWidth, sliderHeight, getBackgroundColor(), getSetup())
-		};
 	}
 	
 	/**
@@ -106,13 +111,20 @@ public class RightBar extends UIElement {
 	public void draw(Graphics graphics) {
 		drawBackground(graphics);
 
-		
-		// decide whether to draw list with map-elements or configurations for AI game-play 
-		if (Main.MODE == 1){
-			drawMapBuilderList(graphics);
-		} else {
-			drawGamePlayList(graphics);
+		// decide whether to draw list with map-elements or configurations for AI game-play
+		switch (Main.MODE){
+			case 0:
+				for (int para = 0; para < gameParameters.length; para++) {
+					drawParameter(graphics, para, (para * 70) + 100);
+				}
+				break;
+			case 1:
+				drawMapBuilderList(graphics);
+				break;
+			default:
+				break;
 		}
+
 	}
 	
 	/**
@@ -123,28 +135,7 @@ public class RightBar extends UIElement {
 		graphics.setColor(getBackgroundColor());
 		graphics.fillRect(getX(), getY(), getWidth(), getHeight());
 	}
-	
-	/**
-	 * TODO: draw everything that is needed for the game-play mode
-	 * @param graphics
-	 */
-	private void drawGamePlayList(Graphics graphics){
-		//parameters: no_of_moves, population_size, mutation_rate, no_of_generations
-		
-//		int sliderWidth = 170, sliderHeight = 5;
-//		JSlider slider = new JSlider(JSlider.HORIZONTAL, 0, 50, 25);
-//		graphicsManager.setLayout(null);
-//		graphicsManager.add(slider);
-//		
-//		slider.setBounds(getX()+(getWidth()/2)-(sliderWidth/2), 
-//				getY()+150, 
-//				sliderWidth, 10);
-		
-		for (int i=0; i<sliders.length; i++){
-			sliders[i].draw(graphics);
-		}
-		
-	}
+
 	
 	/**
 	 * draws the map-builder-list, according to design specifications
@@ -227,7 +218,36 @@ public class RightBar extends UIElement {
 		// -1 due to stroke width of line
 		graphics.drawLine(itemX, itemY+itemHeight-1, itemX+Constants.WINDOW_RIGHT_BAR_WIDTH, itemY+itemHeight-1);
 	}
-	
+
+	public void drawParameter(Graphics graphics, int type, int y ){
+//		Type: 0 = Population Size , 1 = NUmber of Moves, 2 = Mutation Rate, 3 = Number of generations
+
+
+		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
+		graphics.setFont(fontx);
+
+		int y1 = y + 10;
+		String s = gameParameters[type];
+		String plus = " + ";
+		String minus = " - ";
+		int x1 = 1100, x2 = 1190;
+		int xString = 1090;
+
+		graphics.drawString(s, xString, y );
+		graphics.drawString(minus, x1 + 3,y1 + 14);
+		graphics.drawString(plus, x2 + 3, y1 + 14);
+		graphics.drawRect(x1, y1 , width, height);
+		graphics.drawRect(x2, y1 , width, height);
+        graphics.drawString(populationSize + "x", 1145, y1 + 14);
+
+//        graphics.drawString(mutationRate + "x", 1145, y1 + 14);
+////
+//       graphics.drawString(noOfMoves + "x", 1145, y1 + 14);
+////
+//        graphics.drawString(increaseGeneration + "x", 1145, y1);
+
+	}
+
 //	public void setGraphicsManager(GraphicsManager gm){
 //		this.graphicsManager = gm;
 //	}
