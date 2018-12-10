@@ -106,6 +106,10 @@ public class Map {
 			}
 		}
 	}
+
+	public char[][]  getMapArr(){
+		return map;
+	}
 	
 	private Color getMapElementColor(char element){
 		return MapType.getTypeFromChar(element).getTypeColor();

@@ -7,8 +7,12 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.Rectangle2D;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.geom.RoundRectangle2D;
 
 import functionality.Constants;
+import functionality.FontLoader;
 import functionality.Setup;
 
 import ui.UIElement;
@@ -23,12 +27,35 @@ import ui.UIElement;
  *
  */
 public class TopBar extends UIElement {
-	
-	int fontSize = 16;
-	Font font = new Font(Constants.DEFAULT_FONT, Font.PLAIN, fontSize);
 
-	public TopBar(int x, int y, int width, int height, Color backgroundColor, Setup setup) {
+    //TODO: these should be moved to Constants
+	int buttonSaveX = 360, buttonSaveY =35;
+	int buttonLoadX = 280, buttonLoadY =35;
+	int buttonOffsetX=15, buttonOffsetY=20;
+    // arch width and height of rounded corner of a button
+	int buttonArchWH = 30;
+	int buttonWidth = 70, buttonHeight =30;
+
+	int mapNameX=100;
+
+	int fontSize = 16;
+    Font font = new Font(Constants.DEFAULT_FONT, Font.PLAIN, fontSize);
+	//Font font = FontLoader.getFont("ChakraPetch-SemiBold.ttf"); //TODO: not laoding for everybody
+	String mapName;
+
+	public RoundRectangle2D saveButton = new RoundRectangle2D.Float(
+                buttonSaveX-buttonOffsetX, buttonSaveY-buttonOffsetY,
+			    buttonWidth, buttonHeight, buttonArchWH, buttonArchWH
+            );
+	public RoundRectangle2D loadButton = new RoundRectangle2D.Float(
+                buttonLoadX-buttonOffsetX,
+                buttonLoadY-buttonOffsetY,
+                buttonWidth,buttonHeight,buttonArchWH,buttonArchWH
+            );
+
+	public TopBar(int x, int y, int width, int height, Color backgroundColor, Setup setup, String mapName) {
 		super(x, y, width, height, backgroundColor, setup);
+		this.mapName = mapName;
 	}
 	
 	/**
@@ -42,7 +69,12 @@ public class TopBar extends UIElement {
 		drawGameName(graphics);
 		
 		drawSeparator(graphics);
-		
+
+		drawMapName(graphics);
+
+		drawLoadButton(graphics);
+
+		drawSaveButton(graphics);
 		//draw other UI-elements here...
 	}
 	
@@ -83,13 +115,59 @@ public class TopBar extends UIElement {
 		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
 		graphics.setFont(font);
 		
-		int copyX = Constants.WINDOW_MAP_MARGIN / 2;
+		int gameNameX = Constants.WINDOW_MAP_MARGIN / 2;
 		// Determine the Y coordinate for the text (note we add the ascent, as in java 2d 0 is top of the screen)
-	    int copyY = getY() + ((getHeight() - graphics.getFontMetrics(font).getHeight()) / 2) 
+	    int gameNameY = getY() + ((getHeight() - graphics.getFontMetrics(font).getHeight()) / 2)
 	    		+ graphics.getFontMetrics(font).getAscent();
-		graphics.drawString(Constants.GAME_NAME, copyX, copyY);
+		graphics.drawString(Constants.GAME_NAME, gameNameX, gameNameY);
 	}
-	
+
+	/**
+	 * draw the time right of the seperator
+	 *
+	 * @param graphics
+	 */
+	private void drawMapName(Graphics graphics){
+		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
+		graphics.setFont(font);
+
+		// Determine the Y coordinate for the text (note we add the ascent, as in java 2d 0 is top of the screen)
+		int mapNameY = getY() + ((getHeight() - graphics.getFontMetrics(font).getHeight()) / 2)
+				+ graphics.getFontMetrics(font).getAscent();
+		graphics.drawString("Map name: " + mapName, mapNameX, mapNameY);
+	}
+
+	/**
+	 * draw the time right of the seperator
+	 *
+	 * @param graphics
+	 */
+	private void drawSaveButton(Graphics graphics){
+		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
+		graphics.setFont(font);
+
+		// Determine the Y coordinate for the text (note we add the ascent, as in java 2d 0 is top of the screen)
+		buttonSaveY= getY() + ((getHeight() - graphics.getFontMetrics(font).getHeight()) / 2)
+				+ graphics.getFontMetrics(font).getAscent();
+		graphics.drawString("SAVE", buttonSaveX, buttonSaveY);
+		graphics.drawRoundRect(buttonSaveX-buttonOffsetX,buttonSaveY-buttonOffsetY,buttonWidth,buttonHeight,buttonArchWH,buttonArchWH);
+	}
+
+	/**
+	 * draw the time right of the seperator
+	 *
+	 * @param graphics
+	 */
+	private void drawLoadButton(Graphics graphics){
+		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
+		graphics.setFont(font);
+		// Determine the Y coordinate for the text (note we add the ascent, as in java 2d 0 is top of the screen)
+		buttonLoadY = getY() + ((getHeight() - graphics.getFontMetrics(font).getHeight()) / 2)
+				+ graphics.getFontMetrics(font).getAscent();
+		graphics.drawString("LOAD", buttonLoadX, buttonLoadY);
+		graphics.drawRoundRect(buttonLoadX-buttonOffsetX,buttonLoadY-buttonOffsetY,buttonWidth,buttonHeight,buttonArchWH,buttonArchWH);
+	}
+
 	/**
 	 * draw the separator line at the top-bar (to the right of the game name)
 	 * 
@@ -104,4 +182,20 @@ public class TopBar extends UIElement {
 		graphics.drawLine(x1, y1, x1, y2);
 	}
 
+    public boolean isSaveButtonClicked(int mouseClickedX, int mouseClickedY){
+        return saveButton.contains(mouseClickedX, mouseClickedY);
+    }
+    
+    public boolean isLoadButtonClicked(int mouseClickedX, int mouseClickedY){
+        return loadButton.contains(mouseClickedX, mouseClickedY);
+    }
+
+    public RoundRectangle2D getSaveButton() {
+        return saveButton;
+    }
+
+    public RoundRectangle2D getLoadButton() {
+        return loadButton;
+    }
 }
+

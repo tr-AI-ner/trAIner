@@ -122,7 +122,6 @@ public abstract class Entity {
 	public void setType(EntityType type) {
 		this.type = type;
 	}
-	
-	
+
 	
 }

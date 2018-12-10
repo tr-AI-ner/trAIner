@@ -1,11 +1,17 @@
 package functionality;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsEnvironment;
-import java.awt.image.BufferedImage;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -58,7 +64,7 @@ public class GraphicsManager extends JPanel {
 		frame.setSize(setup.getFrameWidth(),setup.getFrameHeight());
 		if(setup.getFullScreen()) { frame.setUndecorated(true); }
 		frame.pack();
-		frame.setAlwaysOnTop(true);
+		//frame.setAlwaysOnTop(true); -> doesn't work with fileChooser for map-loading/saving
 		//center window on host PC
 		frame.setLocationRelativeTo(null);
 		frame.setResizable(false);
@@ -123,7 +129,7 @@ public class GraphicsManager extends JPanel {
 	 */
 	private void setupToolbars(){
 		topBar = new TopBar(0, 0, setup.getFrameWidth()+12, Constants.WINDOW_HEADER_HEIGHT, 
-				Constants.COLOR_HEADER_1, setup);
+				Constants.COLOR_HEADER_1, setup,"map name"); // TODO change with the loaded map name
 		
 		bottomBar = new BottomBar(0, 
 				Constants.WINDOW_HEADER_HEIGHT+(Constants.WINDOW_MAP_MARGIN*2)+Constants.WINDOW_MAP_HEIGHT, 
@@ -156,5 +162,7 @@ public class GraphicsManager extends JPanel {
 	public BottomBar getBottomBar(){return bottomBar;}
 	public RightBar getRightBar(){return rightBar;}
 
-
+	public JFrame getFrame(){
+		return frame;
+	}
 }
