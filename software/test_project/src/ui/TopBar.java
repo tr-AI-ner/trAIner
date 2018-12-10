@@ -27,31 +27,31 @@ import ui.UIElement;
  *
  */
 public class TopBar extends UIElement {
-	int buttonSaveX = 360;
-	int buttonSaveY =35;
 
-	int buttonLoadX = 280;
-	int buttonLoadY =35;
-
-	int buttonOffsetX=15;
-	int buttonOffsetY=20;
-	// arch width and height of rounded button
+    //TODO: these should be moved to Constants
+	int buttonSaveX = 360, buttonSaveY =35;
+	int buttonLoadX = 280, buttonLoadY =35;
+	int buttonOffsetX=15, buttonOffsetY=20;
+    // arch width and height of rounded corner of a button
 	int buttonArchWH = 30;
-	int buttonWidth = 70;
-	int buttonHeight =30;
+	int buttonWidth = 70, buttonHeight =30;
 
 	int mapNameX=100;
 
 	int fontSize = 16;
-	public RoundRectangle2D saveButton= new RoundRectangle2D.Float(buttonSaveX-buttonOffsetX,
-																	buttonSaveY-buttonOffsetY,
-													buttonWidth,buttonHeight,buttonArchWH,buttonArchWH);
-	public RoundRectangle2D loadButton= new RoundRectangle2D.Float(buttonLoadX-buttonOffsetX,
-																	buttonLoadY-buttonOffsetY,
-													buttonWidth,buttonHeight,buttonArchWH,buttonArchWH);
-
-	Font font = FontLoader.getFont("ChakraPetch-SemiBold.ttf");
+    Font font = new Font(Constants.DEFAULT_FONT, Font.PLAIN, fontSize);
+	//Font font = FontLoader.getFont("ChakraPetch-SemiBold.ttf"); //TODO: not laoding for everybody
 	String mapName;
+
+	public RoundRectangle2D saveButton = new RoundRectangle2D.Float(
+                buttonSaveX-buttonOffsetX, buttonSaveY-buttonOffsetY,
+			    buttonWidth, buttonHeight, buttonArchWH, buttonArchWH
+            );
+	public RoundRectangle2D loadButton = new RoundRectangle2D.Float(
+                buttonLoadX-buttonOffsetX,
+                buttonLoadY-buttonOffsetY,
+                buttonWidth,buttonHeight,buttonArchWH,buttonArchWH
+            );
 
 	public TopBar(int x, int y, int width, int height, Color backgroundColor, Setup setup, String mapName) {
 		super(x, y, width, height, backgroundColor, setup);
@@ -136,6 +136,7 @@ public class TopBar extends UIElement {
 				+ graphics.getFontMetrics(font).getAscent();
 		graphics.drawString("Map name: " + mapName, mapNameX, mapNameY);
 	}
+
 	/**
 	 * draw the time right of the seperator
 	 *
@@ -151,6 +152,7 @@ public class TopBar extends UIElement {
 		graphics.drawString("SAVE", buttonSaveX, buttonSaveY);
 		graphics.drawRoundRect(buttonSaveX-buttonOffsetX,buttonSaveY-buttonOffsetY,buttonWidth,buttonHeight,buttonArchWH,buttonArchWH);
 	}
+
 	/**
 	 * draw the time right of the seperator
 	 *
@@ -178,19 +180,6 @@ public class TopBar extends UIElement {
 		int y1 = Constants.WINDOW_HEADER_HEIGHT / 3;
 		int y2 = Constants.WINDOW_HEADER_HEIGHT - (y1);
 		graphics.drawLine(x1, y1, x1, y2);
-	}
-
-	public void mouseClicked(MouseEvent e) {
-
-		//if my x and y point represent the upper left corner
-		int rectX =0 ;
-		int rectY =0;
-		int rectWidth =1000;
-		int rectHeight = 1000;
-		if (e.getX() > rectX && e.getX() < rectX + rectWidth
-				&& e.getY() > rectY && e.getY() < rectY + rectHeight) {
-			System.out.println("YES");
-		}
 	}
 
     public boolean isSaveButtonClicked(int mouseClickedX, int mouseClickedY){

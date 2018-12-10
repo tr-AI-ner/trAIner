@@ -64,7 +64,7 @@ public class GraphicsManager extends JPanel {
 		frame.setSize(setup.getFrameWidth(),setup.getFrameHeight());
 		if(setup.getFullScreen()) { frame.setUndecorated(true); }
 		frame.pack();
-		frame.setAlwaysOnTop(true);
+		//frame.setAlwaysOnTop(true); -> doesn't work with fileChooser for map-loading/saving
 		//center window on host PC
 		frame.setLocationRelativeTo(null);
 		frame.setResizable(false);
