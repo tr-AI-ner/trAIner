@@ -25,8 +25,8 @@ public class Game {
 	ArrayList<Entity> entities;
 	ArrayList<MapElement> mapElements;
 	ElementWall theGreatWall;
-	MapSaverLoader mapSaverLoader;
 
+	MapSaverLoader mapSaverLoader;
 
 	ElementPlasmaBall ball;
     ElementEnemy theEnemy;
@@ -95,7 +95,6 @@ public class Game {
 
 		// add all map-elements to entities
 		entities.addAll(mapElements);
-	//	saveMap("map_03");
 	}
 	
 	public void run(){
@@ -121,21 +120,20 @@ public class Game {
 		if(inputManager.getKeyResult()[3]) {avatar.move(( +setup.getNewEntitySpeed() ), 0);}
 		//Exits when escape is pressed
 		if(inputManager.getKeyResult()[4]) {System.exit(0);}
-		if (inputManager.isMouseClicked()  && graphicsManager.getTopBar().getSaveButton().contains(inputManager.getMouseClickedX(), inputManager.getMouseClickedY()) ) {
-             mapSaverLoader.saveButtonLogic();
-		}
-        if (inputManager.isMouseClicked() && graphicsManager.getTopBar().getLoadButton().contains(inputManager.getMouseClickedX(), inputManager.getMouseClickedY()) ) {
-				mapSaverLoader.loadButtonLogic();
-            }
+
+        // check if user clicked on save button
+        if (inputManager.isMouseClicked()  && graphicsManager.getTopBar().isSaveButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())){
+            mapSaverLoader.saveButtonLogic();
+        }
+        //check if user clicked on load button
+        if (inputManager.isMouseClicked()  && graphicsManager.getTopBar().isLoadButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())){
+            mapSaverLoader.loadButtonLogic();
+        }
+
 		//Switches between the game and the build mode
 		if(inputManager.getKeyResult()[5]) { Main.MODE = 0; }
 		if(inputManager.getKeyResult()[6]) { Main.MODE = 1; }
 	}
-
-
-
-
-
 
     /**
      * Restart the game by resetting the enemies to their original positions. This is needed so that the game is
@@ -148,7 +146,10 @@ public class Game {
         avatar.reset();
     }
 
-
+    /**
+     * Moves all dynamic map elements
+     *
+     */
 	private void updateState(){
 		if(Main.MODE == 0 || Main.MODE == 2) {
             for (MapElement element: this.getMapElements()){
@@ -164,7 +165,11 @@ public class Game {
         }
         map.updateEntitiesInMap(entities);
 	}
-	
+
+    /**
+     * redraws the full window
+     *
+     */
 	private void redrawAll(){
 		//clear full window
 		graphicsManager.clear();
@@ -176,28 +181,17 @@ public class Game {
 		graphicsManager.redraw();
 	}
 
-
-
-
-	public void setMapElements(ArrayList<MapElement> mapElements){this.mapElements=mapElements;}
 	public Avatar getAvatar(){return avatar;}
 	public ArrayList<Entity> getEntities(){return entities;}
 
-    public void resetEntities(){this.entities=new ArrayList<>();}
-	public void resetMapElements(){this.mapElements=new ArrayList<>();}
+    public void resetEntities(){this.entities = new ArrayList<>();}
 
     public Map getMap() { return map; }
     public GraphicsManager getGraphicsManager(){return graphicsManager;}
 
+	public void setMapElements(ArrayList<MapElement> mapElements){this.mapElements=mapElements;}
+	public void resetMapElements(){this.mapElements = new ArrayList<>();}
+	public ArrayList<MapElement> getMapElements(){return mapElements;}
 
-
-	
-	public ArrayList<MapElement> getMapElements(){
-		return mapElements;
-	}
-
-	public ElementStart getStart() {
-		return start;
-	}
+	public ElementStart getStart() {return start;}
 }
-

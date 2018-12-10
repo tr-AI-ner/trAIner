@@ -7,7 +7,7 @@ public class InputManager extends Component implements KeyListener, MouseListene
 
 	// everything a user can press on keyboard or mouse	
 	private int mousePressedX, mousePressedY, mouseMovedX, mouseMovedY, mouseButton;
-	private int mouseClickedX, mouseClickedY, buttonClicked;
+	private int mouseClickedX, mouseClickedY, mouseButtonClicked;
 	private char keyPressed;
 
 	private char secondKeyPressed;
@@ -33,8 +33,6 @@ public class InputManager extends Component implements KeyListener, MouseListene
 		isMousePressed = true;
 	}
 
-
-
 	@Override
 	public void mouseReleased(MouseEvent evt){ 
 		isMousePressed = false;
@@ -47,8 +45,7 @@ public class InputManager extends Component implements KeyListener, MouseListene
 	}
 
 	@Override
-	public void mouseDragged(MouseEvent evt){
-}
+	public void mouseDragged(MouseEvent evt){}
 
 	/**
 	 * if the key is being pressed sets the respective key to true
@@ -94,7 +91,7 @@ public class InputManager extends Component implements KeyListener, MouseListene
         isMouseClicked   = true;
         mouseClickedX=evt.getX();
         mouseClickedY=evt.getY();
-        buttonClicked = evt.getButton();
+        mouseButtonClicked = evt.getButton();
 	}
 
 	@Override
@@ -142,5 +139,5 @@ public class InputManager extends Component implements KeyListener, MouseListene
 		isMouseClicked = mouseClicked;
 	}
 
-	public int getButtonClicked(){return buttonClicked;}
+	public int getMouseButtonClicked(){return mouseButtonClicked;}
 }

@@ -76,7 +76,6 @@ public class GraphicsManager extends JPanel {
 		this.addMouseListener(inputManager);
 		this.addMouseMotionListener(inputManager);
 
-
 		imageBuffer = graphicsConf.createCompatibleImage(this.getWidth(), this.getHeight());
 		graphics = imageBuffer.getGraphics();
 
@@ -130,7 +129,7 @@ public class GraphicsManager extends JPanel {
 	 */
 	private void setupToolbars(){
 		topBar = new TopBar(0, 0, setup.getFrameWidth()+12, Constants.WINDOW_HEADER_HEIGHT, 
-				Constants.COLOR_HEADER_1, setup,"Lööps"); // TODO change with the loaded map name
+				Constants.COLOR_HEADER_1, setup,"map name"); // TODO change with the loaded map name
 		
 		bottomBar = new BottomBar(0, 
 				Constants.WINDOW_HEADER_HEIGHT+(Constants.WINDOW_MAP_MARGIN*2)+Constants.WINDOW_MAP_HEIGHT, 

@@ -193,6 +193,14 @@ public class TopBar extends UIElement {
 		}
 	}
 
+    public boolean isSaveButtonClicked(int mouseClickedX, int mouseClickedY){
+        return saveButton.contains(mouseClickedX, mouseClickedY);
+    }
+    
+    public boolean isLoadButtonClicked(int mouseClickedX, int mouseClickedY){
+        return loadButton.contains(mouseClickedX, mouseClickedY);
+    }
+
     public RoundRectangle2D getSaveButton() {
         return saveButton;
     }
