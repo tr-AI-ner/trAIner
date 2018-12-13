@@ -1,6 +1,7 @@
 package functionality;
 
 import java.awt.Color;
+import java.awt.geom.RoundRectangle2D;
 
 public final class Constants {
 
@@ -72,4 +73,19 @@ public final class Constants {
 	public static final String DEFAULT_FONT = "Helvetica";
 
 	
+	
+	
+//Load and Save Button
+	public static final int BUTTON_SAVE_X = 360; 
+	public static final int BUTTON_LOAD_X = 280;
+	public static final int BUTTON_SAVE_Y = 35;
+	public static final int BUTTON_LOAD_Y = 35;
+	public static final int BUTTON_OFFSET_X = 15;
+	public static final int BUTTON_OFFSET_Y = 20;
+	
+	public static final int BUTTON_ARCH_WH = 30;
+	public static final int BUTTON_WIDTH = 70;
+	public static final int BUTTON_HEIGHT = 30;
+	
+
 }

@@ -54,6 +54,7 @@ public class MapSaverLoader {
         boolean firstHole=true;
         //char[][] map = MapReader.readMap(mapFileName);
         char[][] map = readMap(mapFileName);
+        game.getGraphicsManager().getTopBar().setMapName(editMapName(mapFileName));
         game.resetMapElements();
         game.resetEntities();
         for (int col = 0; col < Constants.WINDOW_MAP_WIDTH / MAP_ELEMENT_SIZE; col += 1) {
@@ -208,6 +209,10 @@ public class MapSaverLoader {
         }
     }
 
+    public String editMapName(String mapName) {
+    	mapName=mapName.substring(0,mapName.length()-4);
+    	return mapName;
+    }
     /**
      * edits filename
      * @param filename
@@ -305,6 +310,20 @@ public class MapSaverLoader {
             }
         }
     }
+    /**
+     * returns True if SAVE button was clicked
+     * @return
+     */
+    public boolean saveButtonClicked() {
+    	return game.getGraphicsManager().getTopBar().getSaveButton().contains(game.getGraphicsManager().getInputManager().getMouseClickedX(), game.getGraphicsManager().getInputManager().getMouseClickedY());
+    }
 
+    /**
+     * returns True if LOAD button was clicked
+     * @return 
+     */
+    public boolean loadButtonClicked() {
+    	return game.getGraphicsManager().getTopBar().getLoadButton().contains(game.getGraphicsManager().getInputManager().getMouseClickedX(), game.getGraphicsManager().getInputManager().getMouseClickedY());
+    }
 
 }

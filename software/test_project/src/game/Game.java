@@ -122,11 +122,11 @@ public class Game {
 		if(inputManager.getKeyResult()[4]) {System.exit(0);}
 
         // check if user clicked on save button
-        if (inputManager.isMouseClicked()  && graphicsManager.getTopBar().isSaveButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())){
+        if (inputManager.isMouseClicked()  && mapSaverLoader.saveButtonClicked()){
             mapSaverLoader.saveButtonLogic();
         }
         //check if user clicked on load button
-        if (inputManager.isMouseClicked()  && graphicsManager.getTopBar().isLoadButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())){
+        if (inputManager.isMouseClicked()  && mapSaverLoader.loadButtonClicked()){
             mapSaverLoader.loadButtonLogic();
         }
 
