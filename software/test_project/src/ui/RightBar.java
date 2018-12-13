@@ -1,7 +1,9 @@
 package ui;
 
 import java.awt.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.swing.JSlider;
 
@@ -47,25 +49,32 @@ public class RightBar extends UIElement {
 //	private GraphicsManager graphicsManager;
 
 
+	/**
+	 * Genetic Algorithm parameters
+	 * @param populationSize
+	 * @param mutationRate
+	 * @param noOfMoves
+	 * @param increaseGeneration
+	 */
 	int populationSize = 1;
 	int mutationRate = 1;
 	int noOfMoves = 1;
 	int increaseGeneration = 1;
 
-	int rightPlusX = Constants.WINDOW_MAP_X0 + 1000;
-	int rightMinusX = Constants.WINDOW_MAP_X0;
-	int rightPlusY = getY();
-	int rightMinusY = getY();
+
+	// Height and width of the buttons
 	int width = 22;
 	int height = 18;
 
-	public Rectangle plusButton = new Rectangle(rightPlusX, rightPlusX, width, height);
-	public Rectangle minusButton = new Rectangle(rightMinusX, rightMinusY, width, height);
+	// Array to create to rectangles
+	int positionArray [][]= new int[8][2] ;
+
+	// To create the all the buttons
+	private Rectangle[] allButtons = new Rectangle[8];
 
 	private String[] gameParameters = new String[]{
 			"Population Size: ","Number Of Moves: ","Mutation Rate: ","Number Of Generations: "
 	};
-	private CustomSlider[] sliders;
 	
 	// list of the static map elements that should be shown in map-building-mode
 	private MapElement[] staticMapElements = new MapElement[]{
@@ -92,12 +101,42 @@ public class RightBar extends UIElement {
 	
 	// font for list items & headers text
 	int fontSize = 16;
-	Font fontx = new Font(Constants.DEFAULT_FONT, Font.BOLD, fontSize);
 	Font font = new Font(Constants.DEFAULT_FONT, Font.PLAIN, fontSize);
 
+	// font for all Genetic Algorithm parameters
+	Font fontx = new Font(Constants.DEFAULT_FONT, Font.BOLD, fontSize);
 	
 	public RightBar(int x, int y, int width, int height, Color backgroundColor, Setup setup) {
 		super(x, y, width, height, backgroundColor, setup);
+
+		int minusButtonX = 1100, plusButtonX = 1190;
+		//(para * 70) + 100)
+		int buttonY = 100;
+
+		// Loop for creating all the buttons
+		for(int i = 0; i < positionArray.length; i++){
+			if (i % 2 == 0){
+				positionArray[i][0] = minusButtonX;
+				positionArray[i][1] = buttonY;
+
+			}
+			else
+			{
+				positionArray[i][0] = plusButtonX;
+				positionArray[i][1] = buttonY;
+				buttonY += 70;
+			}
+
+		}
+		System.out.println(Arrays.deepToString(positionArray));
+
+		// creates all GA paramenter rectangles
+		for(int btn = 0; btn < allButtons.length; btn++) {
+			allButtons[btn] = new Rectangle(positionArray[btn][0], positionArray[btn][1], width, height);
+		}
+
+		System.out.println(Arrays.deepToString(allButtons));
+
 	}
 	
 	/**
@@ -110,7 +149,8 @@ public class RightBar extends UIElement {
 	@Override
 	public void draw(Graphics graphics) {
 		drawBackground(graphics);
-
+		drawGAvariable(graphics);
+		drawNumberOfTriesString(graphics);
 		// decide whether to draw list with map-elements or configurations for AI game-play
 		switch (Main.MODE){
 			case 0:
@@ -219,37 +259,115 @@ public class RightBar extends UIElement {
 		graphics.drawLine(itemX, itemY+itemHeight-1, itemX+Constants.WINDOW_RIGHT_BAR_WIDTH, itemY+itemHeight-1);
 	}
 
+	// Genetic algorithm variable Strings
+
+	public void drawGAvariable(Graphics graphics){
+		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
+		graphics.setFont(fontx);
+
+		graphics.drawString(populationSize + "x", 1145,   128);
+		graphics.drawString(mutationRate + "x", 1145,  198);
+		graphics.drawString(noOfMoves + "x", 1145,  268);
+		graphics.drawString(increaseGeneration + "x", 1145,  338);
+
+	}
+
+	public void drawNumberOfTriesString(Graphics graphics){
+		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
+		graphics.setFont(fontx);
+		String numberOfTries = "Number of Tries:";
+		graphics.drawString(numberOfTries, 1090, 404);
+
+	}
+
 	public void drawParameter(Graphics graphics, int type, int y ){
 //		Type: 0 = Population Size , 1 = NUmber of Moves, 2 = Mutation Rate, 3 = Number of generations
-
 
 		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
 		graphics.setFont(fontx);
 
-		int y1 = y + 10;
+		int yValue = y + 14;
 		String s = gameParameters[type];
-		String plus = " + ";
-		String minus = " - ";
-		int x1 = 1100, x2 = 1190;
+		String plus = "+";
+		String minus = " -";
+		int minusButtonX = 1100, plusButtonX = 1190;
+
 		int xString = 1090;
-
 		graphics.drawString(s, xString, y );
-		graphics.drawString(minus, x1 + 3,y1 + 14);
-		graphics.drawString(plus, x2 + 3, y1 + 14);
-		graphics.drawRect(x1, y1 , width, height);
-		graphics.drawRect(x2, y1 , width, height);
-        graphics.drawString(populationSize + "x", 1145, y1 + 14);
-
-//        graphics.drawString(mutationRate + "x", 1145, y1 + 14);
-////
-//       graphics.drawString(noOfMoves + "x", 1145, y1 + 14);
-////
-//        graphics.drawString(increaseGeneration + "x", 1145, y1);
+		graphics.drawString(minus, minusButtonX + 4,yValue + 14);
+		graphics.drawString(plus, plusButtonX + 5, yValue + 14);
+		graphics.drawRect(minusButtonX, yValue , width, height);
+		graphics.drawRect(plusButtonX, yValue , width, height);
 
 	}
 
-//	public void setGraphicsManager(GraphicsManager gm){
-//		this.graphicsManager = gm;
-//	}
+	// Getters setters for all GA parameters
+	public int getPopulationSize() {
+		return populationSize;
+	}
+
+	public int getMutationRate() {
+		return mutationRate;
+	}
+
+	public int getNoOfMoves() {
+		return noOfMoves;
+	}
+
+	public int getIncreaseGeneration() {
+		return increaseGeneration;
+	}
+
+	public void setPopulationSize(int populationSize) {
+		this.populationSize = populationSize;
+	}
+
+	public void setMutationRate(int mutationRate) {
+		this.mutationRate = mutationRate;
+	}
+
+	public void setNoOfMoves(int noOfMoves) {
+		this.noOfMoves = noOfMoves;
+	}
+
+	public void setIncreaseGeneration(int increaseGeneration) {
+		this.increaseGeneration = increaseGeneration;
+	}
+
+
+	// to return if the buttons clicked
+
+	public boolean isSizeMinusButtonClicked(int mouseClickedX, int mouseClickedY) {
+		return allButtons[0].contains(mouseClickedX, mouseClickedY);
+	}
+
+	public boolean isSizePlusButtonClicked(int mouseClickedX, int mouseClickedY) {
+		return allButtons[1].contains(mouseClickedX, mouseClickedY);
+	}
+
+	public boolean isMoveMinusButtonClicked(int mouseClickedX, int mouseClickedY) {
+		return allButtons[2].contains(mouseClickedX, mouseClickedY);
+	}
+
+	public boolean isMovePlusButtonClicked(int mouseClickedX, int mouseClickedY) {
+		return allButtons[3].contains(mouseClickedX, mouseClickedY);
+	}
+
+	public boolean isRateMinusButtonClicked(int mouseClickedX, int mouseClickedY) {
+		return allButtons[4].contains(mouseClickedX, mouseClickedY);
+	}
+
+	public boolean isRatePlusButtonClicked(int mouseClickedX, int mouseClickedY) {
+		return allButtons[5].contains(mouseClickedX, mouseClickedY);
+	}
+
+	public boolean isGenerationMinusButtonClicked(int mouseClickedX, int mouseClickedY) {
+		return allButtons[6].contains(mouseClickedX, mouseClickedY);
+	}
+
+	public boolean isGenerationPlusButtonClicked(int mouseClickedX, int mouseClickedY) {
+		return allButtons[7].contains(mouseClickedX, mouseClickedY);
+	}
+
 
 }

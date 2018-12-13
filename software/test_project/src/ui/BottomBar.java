@@ -22,29 +22,33 @@ public class BottomBar extends UIElement {
 	
 	int copyrightFontSize = 10;
 
-	int plusX = Constants.WINDOW_MAP_MARGIN + 630;
-	int minusX = Constants.WINDOW_MAP_X0 + 662;
-	int plusY = getY() + 18;
-	int minusY = getY() + 18;
+	int plusButtonX = Constants.WINDOW_MAP_MARGIN + 610;
+	int minusButtonX = Constants.WINDOW_MAP_X0 + 685;
+	int plusButtonY = getY() + 18;
+	int minusButtonY = getY() + 18;
+
 	int widthRect = 22;
 	int heightRect = 18;
-	int playX = Constants.WINDOW_MAP_MARGIN + 360;
-	int playY = getY() + 15;
-	int pauseX = Constants.WINDOW_MAP_X0 + 410;
-	int pauseY = getY() + 15;
-	int widthImg = 30;
-	int heightImg = 26;
+    int widthImg = 30;
+    int heightImg = 26;
 
-	public Rectangle plusButton = new Rectangle(plusX, plusY, widthRect, heightRect );
-	public Rectangle minusButton = new Rectangle(minusX, minusY ,widthRect, heightRect);
-	public Rectangle playButton = new Rectangle(playX, playY, widthImg, heightImg);
-	public Rectangle pauseButton = new Rectangle(pauseX, pauseY, widthImg, heightImg);
+    int playButtonX = Constants.WINDOW_MAP_MARGIN + 360;
+	int playButtonY = getY() + 15;
+	int pauseButtonX = Constants.WINDOW_MAP_X0 + 410;
+	int pauseButtonY = getY() + 15;
+
+
+	public Rectangle speedPlusButton = new Rectangle(plusButtonX, plusButtonY, widthRect, heightRect );
+	public Rectangle speedMinusButton = new Rectangle(minusButtonX, minusButtonY ,widthRect, heightRect);
+	public Rectangle playButton = new Rectangle(playButtonX, playButtonY, widthImg, heightImg);
+	public Rectangle pauseButton = new Rectangle(pauseButtonX, pauseButtonY, widthImg, heightImg);
 
 	int fontSize = 16;
 	Font font = new Font(Constants.DEFAULT_FONT, Font.BOLD, fontSize);
-	Font fontX = new Font(Constants.DEFAULT_FONT, Font.BOLD, 16);
 
+	// Variable for increasing speed
 	int speedUp = 1;
+
 	BufferedImage playImg;
 	BufferedImage pauseImg;
 
@@ -52,10 +56,13 @@ public class BottomBar extends UIElement {
 	public BottomBar(int x, int y, int width, int height, Color backgroundColor, Setup setup) {
 		super(x, y, width, height, backgroundColor, setup);
 
+    /**
+    *	Getting two images for Pause and Play Button
+    */
 		try {
-			playImg = ImageIO.read(getClass().getResourceAsStream("/play-right-arrow-control-circular-button.png"));
+			playImg = ImageIO.read(getClass().getResourceAsStream("/p.png"));
 
-			pauseImg = ImageIO.read(getClass().getResourceAsStream("/pause-button-circle.png"));
+			pauseImg = ImageIO.read(getClass().getResourceAsStream("/pau.png"));
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -115,88 +122,76 @@ public class BottomBar extends UIElement {
 		int copyY = getY() + (getHeight()/2) + (copyrightFontSize/2);
 		graphics.drawString(Constants.COPYRIGHT, copyX, copyY);
 	}
+
+	// Draws speed variable with an string
 	private void drawSpeedString(Graphics graphics){
 		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
-		graphics.setFont(fontX);
+		graphics.setFont(font);
 
-		int copyX = Constants.WINDOW_MAP_MARGIN + 598;
-		int copyY = getY() + 33;
+		int speedXvalue = Constants.WINDOW_MAP_MARGIN + 650;
+		int speedYvalue = getY() + 33;
 		int speed = this.getSpeedUp();
 
-		graphics.drawString(speed + "x", copyX, copyY);
+        graphics.drawString("SpeedX: ", Constants.WINDOW_MAP_X0 + 530, getY() + 33);
+		graphics.drawString(speed + "x", speedXvalue, speedYvalue);
 	}
 
+	// Draws an play button
 	private void drawPlayButton(Graphics graphics){
-		//Color playColor = new Color(value, 0, 0);
 		graphics.setColor(Constants.COLOR_BACKGROUND);
 
-		int copyX = Constants.WINDOW_MAP_MARGIN;
-		int copyY = getY();
+		int imgPlayX = Constants.WINDOW_MAP_MARGIN + 360;
+		int imgPlayY = getY() + 15;
 
-
-
-		//graphics.drawRect(copyX + 410, copyY + 20,22,18);
-		graphics.drawRect(playX, playY, widthImg, heightImg);
-		graphics.drawImage(playImg, copyX + 360, copyY + 15, 30, 26, null);
-
+		graphics.drawRect(plusButtonX, playButtonY, widthImg, heightImg);
+		graphics.drawImage(playImg, imgPlayX, imgPlayY, widthImg, heightImg, null);
 
 	}
-
+	// Draws an pause button
 	private void drawPauseButton(Graphics graphics){
 		graphics.setColor(Constants.COLOR_BACKGROUND);
 
-		int copyX = Constants.WINDOW_MAP_MARGIN;
-		int copyY = getY();
+		int imgPauseX = Constants.WINDOW_MAP_MARGIN + 410;
+		int imgPauseY = getY() + 15;
 
-		//Graphics g2d = pauseImg.getGraphics();
-
-		graphics.drawRect(pauseX, pauseY, widthImg, heightImg);
-		graphics.drawImage(pauseImg, copyX + 410, copyY + 15, 30, 26, null);
-
-
+		graphics.drawRect(pauseButtonX, pauseButtonY, widthImg, heightImg);
+		graphics.drawImage(pauseImg, imgPauseX, imgPauseY, widthImg, heightImg, null);
 
 	}
-
-	private void drawPlusButton(Graphics graphics){
-
-		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
-		graphics.setFont(font);
-		String s = "+";
-		int copyX = Constants.WINDOW_MAP_MARGIN;
-		int copyY = getY();
-
-		graphics.drawString("SpeedX: ", copyX + 530, copyY + 33);
-
-		graphics.drawRect(plusX , plusY, widthRect, heightRect );
-		//graphics.drawRect(plusX, plusY, widthRect + 1, heightRect );
-		graphics.drawString(s, copyX + 638, copyY + 32);
-		//graphics.fillRect(copyX + 550, copyY + 19 , 22, 18);
-
-
-	}
-
+	// Draws an minus button
 	private void drawMinusButton(Graphics graphics){
-
 		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
 		graphics.setFont(font);
-		//graphics.BasicStroke(6f);
+
 		String s = "-";
-		int copyX = Constants.WINDOW_MAP_MARGIN;
-		int copyY = getY();
+		int minusStringX = Constants.WINDOW_MAP_MARGIN + 618;
+		int minusStringY = getY() + 32;
 
-		graphics.drawRect(minusX , minusY ,widthRect, heightRect);
-		//graphics.drawRect(minusX, minusY ,widthRect + 1, heightRect);
+		graphics.drawRect(minusButtonX , minusButtonY, widthRect, heightRect );
+		graphics.drawString(s, minusStringX, minusStringY);
+	}
 
-		graphics.drawString(s,copyX + 671, copyY + 32);
+
+	// Draws an plus button
+	private void drawPlusButton(Graphics graphics){
+		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
+		graphics.setFont(font);
+
+		String s = "+";
+		int plusStringX = Constants.WINDOW_MAP_MARGIN + 692;
+		int plusStringY = getY() + 32;
+
+		graphics.drawRect(plusButtonX , plusButtonY ,widthRect, heightRect);
+		graphics.drawString(s,plusStringX, plusStringY);
 
 	}
 
-	public Rectangle getPlusButton() {
-		return plusButton;
+	public boolean isSpeedPlusButtonClicked(int mouseClickedX, int mouseClickedY){
+	    return speedPlusButton.contains(mouseClickedX,mouseClickedY);
 	}
 
-	public Rectangle getMinusButton() {
-		return minusButton;
+	public boolean isSpeedMinusButtonClicked(int mouseClickedX, int mouseClickedY){
+		return speedMinusButton.contains(mouseClickedX, mouseClickedY);
 	}
 
 	public int getSpeedUp(){
@@ -207,13 +202,11 @@ public class BottomBar extends UIElement {
 		return  speedUp = speed;
 	}
 
-	public Rectangle getPlayButton(){
-		return playButton;
-	}
+	public boolean isPlayButtonClicked(int mouseClickedX, int mouseClickedY){
+	    return playButton.contains(mouseClickedX, mouseClickedY);
+    }
 
-	public Rectangle getPauseButton(){
-		return pauseButton;
-	}
-
-
+    public boolean isPauseButtonClicked(int mouseClickedX, int mouseClickedY){
+        return pauseButton.contains(mouseClickedX, mouseClickedY);
+    }
 }

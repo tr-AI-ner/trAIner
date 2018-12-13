@@ -129,24 +129,17 @@ public class Game {
 			Main.MODE = 1;
 		}
 
-		//		speed up
-		if (inputManager.getIsMousePressed() && graphicsManager.getBottomBar().getPlusButton().contains(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
 
-			System.out.println("Plus Button Clicked");
-			int getUp = graphicsManager.getBottomBar().getSpeedUp();
-
-			if (getUp >= 1 && getUp < 10) {
-				graphicsManager.getBottomBar().setSpeedUp(getUp + 1);
-			} else
-				graphicsManager.getBottomBar().setSpeedUp(getUp);
+		/**
+		 * All buttons on the Bottom and Right bar
+		 *
+		 */
 
 
-			inputManager.setMouseClicked(false);
+		// Minus Button to decrease the speed between 1 to 10
 
-
-		}
-//		speed down
-		if (inputManager.getIsMousePressed() && graphicsManager.getBottomBar().getMinusButton().contains(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
+		if (inputManager.isMouseClicked()
+				&& graphicsManager.getBottomBar().isSpeedPlusButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
 
 			System.out.println("Minus Button Clicked");
 			int getDown = graphicsManager.getBottomBar().getSpeedUp();
@@ -159,29 +152,155 @@ public class Game {
 
 		}
 
-// 		Play Button
+		// Plus Button to increase the speed between 1 to 10
 
-		if (inputManager.getIsMousePressed() && graphicsManager.getBottomBar().getPlayButton().contains(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
+		else if (inputManager.isMouseClicked()
+				&& graphicsManager.getBottomBar().isSpeedMinusButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
+
+			System.out.println("Plus Button Clicked");
+			int getUp = graphicsManager.getBottomBar().getSpeedUp();
+
+			if (getUp >= 1 && getUp < 10) {
+				graphicsManager.getBottomBar().setSpeedUp(getUp + 1);
+			} else
+				graphicsManager.getBottomBar().setSpeedUp(getUp);
+
+			inputManager.setMouseClicked(false);
+
+		}
+
+		// 	Play Button to play the game
+
+		else if (inputManager.isMouseClicked()
+				&& graphicsManager.getBottomBar().isPlayButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
 
 			System.out.println("Play Button Clicked");
-			// The game starts playing
 			inputManager.setMouseClicked(false);
-//
-
 		}
 
-// 		Pause Button
+		//  Pause Button to pause the game
 
-		if (inputManager.getIsMousePressed() && graphicsManager.getBottomBar().getPauseButton().contains(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
+		else if (inputManager.isMouseClicked()
+				&& graphicsManager.getBottomBar().isPauseButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
 
 			System.out.println("Pause Button Clicked");
-			//The game pauses
 			inputManager.setMouseClicked(false);
 			System.exit(0);
-//
 
 		}
 
+		// To decrease the population size
+		else if(inputManager.isMouseClicked()
+				&& graphicsManager.getRightBar().isSizeMinusButtonClicked(inputManager.getMouseClickedX(),inputManager.getMouseClickedY())){
+			System.out.println("Size minus was clicked");
+
+			int sizeMinusPopulation = graphicsManager.getRightBar().getPopulationSize();
+			if (sizeMinusPopulation > 1) {
+				graphicsManager.getRightBar().setPopulationSize(sizeMinusPopulation - 1);
+			}
+
+			inputManager.setMouseClicked(false);
+		}
+
+		// To increase the population size
+		else if(inputManager.isMouseClicked()
+				&& graphicsManager.getRightBar().isSizePlusButtonClicked(inputManager.getMouseClickedX(),inputManager.getMouseClickedY())){
+			System.out.println("Size plus was clicked");
+
+			int sizePlusPopulation = graphicsManager.getRightBar().getPopulationSize();
+
+
+			if (sizePlusPopulation >= 1 && sizePlusPopulation < 10) {
+				graphicsManager.getRightBar().setPopulationSize(sizePlusPopulation + 1);
+			} else
+				graphicsManager.getRightBar().setPopulationSize(sizePlusPopulation);
+
+			inputManager.setMouseClicked(false);
+		}
+
+		// To decrease the number of moves
+		else if(inputManager.isMouseClicked()
+				&& graphicsManager.getRightBar().isMoveMinusButtonClicked(inputManager.getMouseClickedX(),inputManager.getMouseClickedY())){
+			System.out.println("Move minus was clicked");
+
+			int moveMinus = graphicsManager.getRightBar().getNoOfMoves();
+			if (moveMinus > 1) {
+				graphicsManager.getRightBar().setNoOfMoves(moveMinus - 1);
+			}
+
+			inputManager.setMouseClicked(false);
+		}
+
+		// To increase the number of moves
+		else if(inputManager.isMouseClicked()
+				&& graphicsManager.getRightBar().isMovePlusButtonClicked(inputManager.getMouseClickedX(),inputManager.getMouseClickedY())){
+			System.out.println("Move plus was clicked");
+
+			int movePlus = graphicsManager.getRightBar().getNoOfMoves();
+
+			if (movePlus >= 1 && movePlus < 10) {
+				graphicsManager.getRightBar().setNoOfMoves(movePlus + 1);
+			} else
+				graphicsManager.getRightBar().setNoOfMoves(movePlus);
+
+			inputManager.setMouseClicked(false);
+		}
+
+		// To decrease the generation size
+		else if(inputManager.isMouseClicked()
+				&& graphicsManager.getRightBar().isGenerationMinusButtonClicked(inputManager.getMouseClickedX(),inputManager.getMouseClickedY())){
+			System.out.println("Generation minus was clicked");
+
+			int generationMinus = graphicsManager.getRightBar().getIncreaseGeneration();
+			if (generationMinus > 1) {
+				graphicsManager.getRightBar().setIncreaseGeneration(generationMinus - 1);
+			}
+
+			inputManager.setMouseClicked(false);
+		}
+
+		// To increase the generation size
+		else if(inputManager.isMouseClicked()
+				&& graphicsManager.getRightBar().isGenerationPlusButtonClicked(inputManager.getMouseClickedX(),inputManager.getMouseClickedY())){
+			System.out.println("Generation plus was clicked");
+
+			int generationPlus = graphicsManager.getRightBar().getNoOfMoves();
+
+			if (generationPlus >= 1 && generationPlus < 10) {
+				graphicsManager.getRightBar().setIncreaseGeneration(generationPlus + 1);
+			} else
+				graphicsManager.getRightBar().setIncreaseGeneration(generationPlus);
+
+			inputManager.setMouseClicked(false);
+		}
+
+		// To decrease the mutation rate
+		else if(inputManager.isMouseClicked()
+				&& graphicsManager.getRightBar().isRateMinusButtonClicked(inputManager.getMouseClickedX(),inputManager.getMouseClickedY())){
+			System.out.println("Rate minus was clicked");
+
+			int rateMinus = graphicsManager.getRightBar().getMutationRate();
+			if (rateMinus > 1) {
+				graphicsManager.getRightBar().setMutationRate(rateMinus - 1);
+			}
+
+			inputManager.setMouseClicked(false);
+		}
+
+		// To increase the mutation rate
+		else if(inputManager.isMouseClicked()
+				&& graphicsManager.getRightBar().isRatePlusButtonClicked(inputManager.getMouseClickedX(),inputManager.getMouseClickedY())){
+			System.out.println("Rate plus was clicked");
+
+			int ratePlus = graphicsManager.getRightBar().getNoOfMoves();
+
+			if (ratePlus >= 1 && ratePlus < 10) {
+				graphicsManager.getRightBar().setMutationRate(ratePlus + 1);
+			} else
+				graphicsManager.getRightBar().setMutationRate(ratePlus);
+
+			inputManager.setMouseClicked(false);
+		}
 	}
     /**
      * Restart the game by resetting the enemies to their original positions. This is needed so that the game is
