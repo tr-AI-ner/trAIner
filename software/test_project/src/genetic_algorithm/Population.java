@@ -28,7 +28,6 @@ public class Population {
     // maximum number of possible moves for one individual to make in
     // one generation
     int maxNrOfMoves;
-   
 
     //defaults
     //
@@ -45,6 +44,9 @@ public class Population {
 
     Color color = Constants.COLOR_AVATAR_RED;
 
+    // current game
+    Game game;
+
     /**
      * Constructor for the population object
      *
@@ -52,15 +54,17 @@ public class Population {
      * @param mutationRate      float   probability of mutation of a gene
      * @param maxNrOfMoves      int     maximum number of possible moves of an individual in one generation
      */
-    public Population(int populationSize, float mutationRate, int maxNrOfMoves) {
+    public Population(int populationSize, float mutationRate, int maxNrOfMoves, Game game) {
         this.populationSize = populationSize;
         this.mutationRate = mutationRate;
         this.population = new Individual[populationSize];
         this.currentGeneration = 0;
         this.maxNrOfMoves = maxNrOfMoves;
         this.gene_pool = new ArrayList<>();
+        this.game = game;
         for (int i = 0; i < population.length; i++) {
             population[i] = new Individual(def_x+i, def_y+i, def_width, def_height, color, this.maxNrOfMoves);
+            population[i].setGame(game);
         }
     }
     
@@ -80,7 +84,6 @@ public class Population {
             }
         }
         return population[most_fit_index];
-
     }
     
     /**
@@ -190,6 +193,13 @@ public class Population {
         return xScaled;
     }
 
+    public void resetDaShiat(){
+        this.maxNrOfMoves = game.getMaxNrOfMoves();
+        for(int i = 0; i < this.population.length; i++){
+            this.population[i].setMaxNrOfMoves(game.getMaxNrOfMoves());
+        }
+    }
+    
     /**
      * getters and setters
      *

@@ -68,6 +68,7 @@ public class Individual extends Avatar {
     public Individual(int x, int y, int width, int height, Color color, Genome genome){
         super(x, y, width, height, color);
         this.genome = genome;
+        this.maxNrOfMoves = genome.getMaxNrOfMoves();
     }
 
     /**
@@ -233,5 +234,9 @@ public class Individual extends Avatar {
     
     public int getMaxNrOfMoves() {
         return maxNrOfMoves;
+    }
+
+    public void setMaxNrOfMoves(int num){
+        this.maxNrOfMoves = num;
     }
 }

@@ -123,13 +123,11 @@ public class Game {
             this.populationSize = 10;
             this.mutationRate = (float) 0.2;
 
-            this.pop = new Population(this.populationSize, this.mutationRate, this.maxNrOfMoves);
+            this.pop = new Population(this.populationSize, this.mutationRate, this.maxNrOfMoves, this);
             this.currentLifecycle = 0;
             for(int i = 0; i < populationSize; i++){
-                pop.getIndividual(i).setGame(this);
                 Individual ind = pop.getIndividual(i);
                 ind.setSetup(setup);
-                //ind.setGame(this);
                 entities.add(ind);
             }
 
@@ -168,7 +166,7 @@ public class Game {
             this.populationSize = populationSize;
             this.mutationRate = mutationRate;
 
-            this.pop = new Population(this.populationSize, this.mutationRate, this.maxNrOfMoves);
+            this.pop = new Population(this.populationSize, this.mutationRate, this.maxNrOfMoves, this);
             this.currentLifecycle = 0;
 
             for(int i = 0; i < populationSize; i++){
@@ -238,6 +236,7 @@ public class Game {
                 this.currentLifecycle++;
             }else{
                 this.currentLifecycle = 0;
+                this.pop.resetDaShiat();
                 this.pop.calculateFitness();
                 this.pop.selection();
                 this.pop.reproduction(this);
@@ -311,5 +310,9 @@ public class Game {
 	public ElementStart getStart() {
 		return start;
 	}
+
+    public int getMaxNrOfMoves(){
+        return this.maxNrOfMoves;
+    }
 }
 

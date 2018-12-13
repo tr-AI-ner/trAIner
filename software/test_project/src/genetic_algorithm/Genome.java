@@ -37,8 +37,9 @@ public class Genome {
     /**
      * Copy constructor
      */
-    public Genome(int[][] gene){
+    public Genome(int[][] gene, int moves){
         this.gene = gene;
+        this.maxNrOfMoves = moves;
     }
     
     /**
@@ -158,7 +159,7 @@ public class Genome {
                 child[i] = mate.gene[i];
             }
         }
-        Genome newGenes = new Genome(child);
+        Genome newGenes = new Genome(child, this.maxNrOfMoves);
         return newGenes;
     }
 
