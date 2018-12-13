@@ -5,7 +5,10 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
+import java.awt.geom.RoundRectangle2D;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JSlider;
 
@@ -82,7 +85,10 @@ public class RightBar extends UIElement {
 	int fontSize = 16;
 	Font font = new Font(Constants.DEFAULT_FONT, Font.PLAIN, fontSize);
 
-	
+	// rectangles of map items
+    List<Rectangle2D> itemList = new ArrayList<>();
+
+
 	public RightBar(int x, int y, int width, int height, Color backgroundColor, Setup setup) {
 		super(x, y, width, height, backgroundColor, setup);
 		
@@ -105,8 +111,6 @@ public class RightBar extends UIElement {
 	@Override
 	public void draw(Graphics graphics) {
 		drawBackground(graphics);
-
-		
 		// decide whether to draw list with map-elements or configurations for AI game-play 
 		if (Main.MODE == 1){
 			drawMapBuilderList(graphics);
@@ -187,49 +191,61 @@ public class RightBar extends UIElement {
 	 */
 	private void drawMapElementListItem(Graphics graphics, int itemX, int itemY, int itemHeight, 
 			MapElement element, String name){
-		
+		Graphics2D g2d = (Graphics2D)graphics;
 		// if null, then it's a header
 		if (element == null){
 			int textIndent = 15;
 			
 			//draw background
-			graphics.setColor(Constants.COLOR_RIGHT_BAR_HEADER);
-			graphics.fillRect(itemX, itemY, Constants.WINDOW_RIGHT_BAR_WIDTH, itemHeight);
+			g2d.setColor(Constants.COLOR_RIGHT_BAR_HEADER);
+			g2d.fillRect(itemX, itemY, Constants.WINDOW_RIGHT_BAR_WIDTH, itemHeight);
 			//draw text
-			graphics.setColor(Constants.COLOR_AVATAR_WHITE);
-			graphics.setFont(font);
+			g2d.setColor(Constants.COLOR_AVATAR_WHITE);
+			g2d.setFont(font);
 			
 			// Determine the Y coordinate for the text (note we add the ascent, as in java 2d 0 is top of the screen)
-		    int theY = itemY + ((itemHeight - graphics.getFontMetrics(font).getHeight()) / 2) + graphics.getFontMetrics(font).getAscent();
-		    graphics.drawString(name, itemX+textIndent, theY);
+		    int theY = itemY + ((itemHeight - g2d.getFontMetrics(font).getHeight()) / 2) + g2d.getFontMetrics(font).getAscent();
+			g2d.drawString(name, itemX+textIndent, theY);
 		    
 		} else {
 			//TODO: these variables should be added to Constants
 			int elementIndent = 15;
 			int elementWidth = 20;
 			int textIndent = 50;
-			
+			int x = itemX+elementIndent;
+			int y = itemY + (itemHeight/2) - (elementWidth/2);
+
 			//draw background
-			graphics.setColor(Constants.COLOR_MAP_LAND);
-			graphics.fillRect(itemX, itemY, Constants.WINDOW_RIGHT_BAR_WIDTH, itemHeight);
+			g2d.setColor(Constants.COLOR_MAP_LAND);
+			g2d.fillRect(itemX, itemY, Constants.WINDOW_RIGHT_BAR_WIDTH, itemHeight);
+            //Need to extend to a custom object to add the element type so that we could check which element is clicked
+			Rectangle2D tempRect = new Rectangle2D.Float(itemX, itemY, Constants.WINDOW_RIGHT_BAR_WIDTH, itemHeight);
+            //Add sidebar elements to a list
+            itemList.add(tempRect);
+
 			//draw item
-			graphics.setColor(element.getColor());
-			graphics.fillRect(itemX+elementIndent, itemY + (itemHeight/2) - (elementWidth/2), elementWidth, elementWidth);
+			g2d.setColor(element.getColor());
+			g2d.fillRect(x, y, elementWidth, elementWidth);
+			//draw border
+			Color color = new Color(element.getColor().getRed(),element.getColor().getGreen(),element.getColor().getBlue(),85);
+			g2d.setColor(color);
+			g2d.setStroke(new BasicStroke(5));
+            g2d.drawRect(x, y, elementWidth, elementWidth);
+            g2d.setStroke(new BasicStroke(1));
 			//draw text
-			graphics.setFont(font);
-			graphics.setColor(Constants.COLOR_AVATAR_WHITE);
-			int theY = itemY + ((itemHeight - graphics.getFontMetrics(font).getHeight()) / 2) + graphics.getFontMetrics(font).getAscent();
-			graphics.drawString(name, itemX+textIndent, theY);
+			g2d.setFont(font);
+			g2d.setColor(Constants.COLOR_AVATAR_WHITE);
+			int theY = itemY + ((itemHeight - graphics.getFontMetrics(font).getHeight()) / 2) + g2d.getFontMetrics(font).getAscent();
+			g2d.drawString(name, itemX+textIndent, theY);
 		}
 		
 		// draw separator line at bottom of item
-		graphics.setColor(Constants.COLOR_RIGHT_BAR_HEADER);
+		g2d.setColor(Constants.COLOR_RIGHT_BAR_HEADER);
 		// -1 due to stroke width of line
-		graphics.drawLine(itemX, itemY+itemHeight-1, itemX+Constants.WINDOW_RIGHT_BAR_WIDTH, itemY+itemHeight-1);
+		g2d.drawLine(itemX, itemY+itemHeight-1, itemX+Constants.WINDOW_RIGHT_BAR_WIDTH, itemY+itemHeight-1);
 	}
-	
-//	public void setGraphicsManager(GraphicsManager gm){
-//		this.graphicsManager = gm;
-//	}
 
+    public List<Rectangle2D> getItemList() {
+        return itemList;
+    }
 }
