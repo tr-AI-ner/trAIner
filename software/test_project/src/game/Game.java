@@ -1,7 +1,7 @@
 package game;
-
+import java.lang.InterruptedException;
 import java.util.ArrayList;
-
+import java.util.concurrent.TimeUnit;
 import genetic_algorithm.Individual;
 import genetic_algorithm.Population;
 import custom_objects.Avatar;
@@ -120,7 +120,7 @@ public class Game {
             this.maxNrOfMoves = 200;
 
             entities = new ArrayList<>();
-            this.populationSize = 10;
+            this.populationSize = 2;
             this.mutationRate = (float) 0.2;
 
             this.pop = new Population(this.populationSize, this.mutationRate, this.maxNrOfMoves, this);
@@ -224,26 +224,36 @@ public class Game {
      *
      * @param ai_playing true if ai is playing
      */
-    private void gameLoop(boolean ai_playing){
-        if(this.clock.frameShouldChange()){
-            System.out.println("from main moves: " + this.maxNrOfMoves + "/" + this.currentLifecycle);
-//		System.out.println("Map Element size: " + mapElements.size());
-            if(this.currentLifecycle < this.maxNrOfMoves){
-                this.pop.live(currentLifecycle);
-                if(this.pop.reachedGoal() && (this.currentLifecycle < this.recordtime)){
-                    this.recordtime = this.currentLifecycle;
-                }
-                this.currentLifecycle++;
-            }else{
-                this.currentLifecycle = 0;
-                this.pop.resetDaShiat();
-                this.pop.calculateFitness();
-                this.pop.selection();
-                this.pop.reproduction(this);
-            } 
-            this.updateState();
-            this.redrawAll();
+    private void gameLoop(boolean ai_playing) {
+        try 
+        {
+                
+            if(this.clock.frameShouldChange()){
+                if(this.currentLifecycle < this.maxNrOfMoves){
+                    this.pop.live(currentLifecycle);
+                    if(this.pop.reachedGoal() && (this.currentLifecycle < this.recordtime)){
+                        this.recordtime = this.currentLifecycle;
+                    }
+                    this.currentLifecycle++;
+                }else{
+                    System.out.println("Generation Ended\n");
+                    this.pop.resetDaShiat();
+                    this.currentLifecycle = 0;
+                    this.pop.calculateFitness();
+                    this.pop.selection();
+                    this.pop.reproduction(this);
+                    Thread.sleep(000);
+
+                } 
+                this.updateState();
+                this.redrawAll();
+            }
         }
+            catch(InterruptedException ex)
+            {
+                Thread.currentThread().interrupt();
+            }
+        
     }
 
     /**

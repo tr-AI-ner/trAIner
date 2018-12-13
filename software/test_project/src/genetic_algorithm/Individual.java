@@ -1,5 +1,6 @@
 package genetic_algorithm;
 
+import java.lang.Math;
 import custom_objects.Avatar;
 import java.util.Random;
 import java.awt.*;
@@ -106,8 +107,10 @@ public class Individual extends Avatar {
      */
     private int[] getRandomDirection() {
         int[] direction = new int[2];
-        Random rand = new Random();
-        int random_nr = rand.nextInt(8);
+        // Random rand = new Random();
+        //int random_nr = rand.nextInt(8);
+        int random_nr = (int)(Math.random() * 8 + 1);
+
         switch (random_nr) {
             case 0:
                 //runter

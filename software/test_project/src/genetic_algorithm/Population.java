@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.Random;
 import functionality.Constants;
 import game.Game;
-
+import java.lang.Math;
 /**
  * Class representing the population of the genetic algorithm, holding an array of 
  * individuals; population also performs selection and reproduction
@@ -155,8 +155,6 @@ public class Population {
                 gene_pool.add(this.population[i]);
             }
         }
-        System.out.println("Selecting da shiat");
-
     }
     
     /**
@@ -168,17 +166,18 @@ public class Population {
     public void reproduction(Game game) {
         Random rand = new Random();
         for(int i = 0; i < this.population.length; i++){
-            Individual father = this.gene_pool.get(rand.nextInt(this.gene_pool.size()));
-            Individual mother  =  this.gene_pool.get(rand.nextInt(this.gene_pool.size()));
+            Individual father = this.gene_pool.get((int)(Math.random() * this.gene_pool.size() + 1));
+            Individual mother = this.gene_pool.get((int)(Math.random() * this.gene_pool.size() + 1));
             Genome dadsGenes = father.getGenome();
             Genome momsGenes = mother.getGenome();
-            System.out.println("GenePool size: "+this.gene_pool.size());
-            System.out.println("i: "+ i +":::"+"father moves / genes " + father.getMaxNrOfMoves()+ "/" + dadsGenes.getMaxNrOfMoves() + "  mother " + mother.getMaxNrOfMoves() + "/" + momsGenes.getMaxNrOfMoves()); 
+            //System.out.println("GenePool size: "+this.gene_pool.size());
+            //System.out.println("i: "+ i +":::"+"father moves / genes " + father.getMaxNrOfMoves()+ "/" + dadsGenes.getMaxNrOfMoves() + "  mother " + mother.getMaxNrOfMoves() + "/" + momsGenes.getMaxNrOfMoves()); 
             Genome child = momsGenes.crossover(dadsGenes);
 
             child.mutateGene(this.mutationRate);
-            this.population[i] = new Individual(this.def_x, this.def_y, this.def_width, this.def_height, this.color, child);
-            this.population[i].setGame(game);
+            this.population[i].setGenome(child);
+            // this.population[i] = new Individual(this.def_x, this.def_y, this.def_width, this.def_height, this.color, child);
+            // this.population[i].setGame(game);
         }
         this.currentGeneration++;
     }
@@ -197,6 +196,10 @@ public class Population {
         this.maxNrOfMoves = game.getMaxNrOfMoves();
         for(int i = 0; i < this.population.length; i++){
             this.population[i].setMaxNrOfMoves(game.getMaxNrOfMoves());
+            System.out.println(this.population[i].getX() + " / " + this.population[i].getY());
+            this.population[i].setX(this.population[i].getStart_pos()[0]);
+            this.population[i].setY(this.population[i].getStart_pos()[1]);
+            System.out.println(this.population[i].getX() + " / " + this.population[i].getY());
         }
     }
     
