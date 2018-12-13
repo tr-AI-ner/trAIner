@@ -5,8 +5,6 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import javax.swing.JSlider;
-
 import functionality.Constants;
 import functionality.GraphicsManager;
 import functionality.InputManager;
@@ -62,7 +60,10 @@ public class RightBar extends UIElement {
 
 	// Height and width of the buttons
 	int plusMinusButtonWidth = 22;
-	int plusMinusButtonHeight = 18;
+	//int plusMinusButtonHeight = 18;
+
+    int minusButtonX = 1100, plusButtonX = 1190;
+    int buttonStartY = 100;
 
     // offset so that the button is drawn beneath the string for each parameter
     int buttonOffsetY = 14;
@@ -71,6 +72,7 @@ public class RightBar extends UIElement {
 	int buttonsPositions [][]= new int[8][2];
 
 	// To create the all the buttons
+	//private Rectangle[] allButtons = new Rectangle[8];
 	private Rectangle[] allButtons = new Rectangle[8];
 
 	private String[] gameParameters = new String[]{
@@ -108,81 +110,94 @@ public class RightBar extends UIElement {
 	public RightBar(int x, int y, int width, int height, Color backgroundColor, Setup setup, InputManager inputManager) {
 		super(x, y, width, height, backgroundColor, setup, inputManager);
 
-		int minusButtonX = 1100, plusButtonX = 1190;
-		//(para * 70) + 100)
-		int buttonY = 100;
-
 		// Loop for creating all the buttons
 		for(int i = 0; i < buttonsPositions.length; i++){
 			if (i % 2 == 0){
 				buttonsPositions[i][0] = minusButtonX;
-				buttonsPositions[i][1] = buttonY;
+				buttonsPositions[i][1] = buttonStartY;
 
-			}
-			else
-			{
+			} else {
 				buttonsPositions[i][0] = plusButtonX;
-				buttonsPositions[i][1] = buttonY;
-				buttonY += 70;
+				buttonsPositions[i][1] = buttonStartY;
+				buttonStartY += 70;
 			}
-
 		}
-		//System.out.println(Arrays.deepToString(buttonsPositions));
 
 		// creates all GA paramenter rectangles
 		for(int btn = 0; btn < allButtons.length; btn++) {
-			allButtons[btn] = new Rectangle(buttonsPositions[btn][0], buttonsPositions[btn][1]+buttonOffsetY, plusMinusButtonWidth, plusMinusButtonHeight);
+			allButtons[btn] = new Rectangle(buttonsPositions[btn][0], buttonsPositions[btn][1]+buttonOffsetY, plusMinusButtonWidth, plusMinusButtonWidth);
 		}
-
-		//System.out.println(Arrays.deepToString(allButtons));
 
 	}
 
-    public void processParameterChanges(){
+    /**
+     * determine if user changed a parameter
+     *
+     * @return an int, where following indeces will represent following parameter changes
+     *          -1 will represent the exception case when nothing should be changed
+     *          0 - population size increase
+     *          1 - population size decrease
+     *          2 - number of moves increase
+     *          3 - number of moves decrease
+     *          4 - mutation rate increase
+     *          5 - mutation rate decrease
+     *          6 - number of generations increase
+     *          7 - number of generations decrease
+     */
+    public int getParameterChanges(){
         // only change parameters in game mode or if mouse is clicked
-        if(Main.MODE != 0 || !getInputManager().isMouseClicked()) return;
+        if(Main.MODE != 0 || !getInputManager().isMouseClicked()) return -1;
 
         //population size changes
         if(isSizeMinusButtonClicked(getInputManager().getMouseClickedX(), 
-                    getInputManager().getMouseClickedY()) /*&& populationSize > 1*/){
-            //System.out.println("Minus Button Clicked, pop size: "+populationSize);
-            System.out.println("minus pop");
-            if(populationSize > 1){
-                populationSize--;
-            }
-        } 
+                    getInputManager().getMouseClickedY()) && populationSize > 1){
+            populationSize--;
+            return 0;
+        }
         else if(isSizePlusButtonClicked(getInputManager().getMouseClickedX(), 
-                    getInputManager().getMouseClickedY()) /*&& populationSize <= Constants.MAX_POPULATION_SIZE*/){
-            //System.out.println("Plus Button Clicked, pop size: "+populationSize);
-            System.out.println("plus pop");
-            if(populationSize <= Constants.MAX_POPULATION_SIZE){
-                populationSize++;
-            }
-        } 
+                    getInputManager().getMouseClickedY()) 
+                && populationSize<=Constants.MAX_POPULATION_SIZE){
+            populationSize++;
+            return 1;
+        }
 
         //number of moves changes
         else if(isMoveMinusButtonClicked(getInputManager().getMouseClickedX(), 
-                    getInputManager().getMouseClickedY()) && noOfMoves > 1)
+                    getInputManager().getMouseClickedY()) && noOfMoves > 1){
             noOfMoves--;
+            return 2;
+        }
         else if(isMovePlusButtonClicked(getInputManager().getMouseClickedX(), 
-                    getInputManager().getMouseClickedY()) && noOfMoves <= Constants.MAX_NO_OF_MOVES)
+                    getInputManager().getMouseClickedY()) && noOfMoves <= Constants.MAX_NO_OF_MOVES){
             noOfMoves++;
+            return 3;
+        }
 
         // mutation rate changes
         else if(isRateMinusButtonClicked(getInputManager().getMouseClickedX(), 
-                    getInputManager().getMouseClickedY()) && mutationRate > 1)
+                    getInputManager().getMouseClickedY()) && mutationRate > 1){
             mutationRate--;
+            return 4;
+        }
         else if(isRatePlusButtonClicked(getInputManager().getMouseClickedX(), 
-                    getInputManager().getMouseClickedY()) && mutationRate <= Constants.MAX_MUTATION_RATE)
+                    getInputManager().getMouseClickedY()) && mutationRate <= Constants.MAX_MUTATION_RATE){
             mutationRate++;
+            return 5;
+        }
         
         //number of generations changes
         else if(isGenerationMinusButtonClicked(getInputManager().getMouseClickedX(), 
-                    getInputManager().getMouseClickedY()) &&  noOfGenerations > 1)
+                    getInputManager().getMouseClickedY()) &&  noOfGenerations > 1){
             noOfGenerations--;
+            return 6;
+        }
         else if(isGenerationPlusButtonClicked(getInputManager().getMouseClickedX(), 
-                    getInputManager().getMouseClickedY()) &&  noOfGenerations <= Constants.MAX_NO_OF_GENERATIONS)
+                    getInputManager().getMouseClickedY()) &&  noOfGenerations <= Constants.MAX_NO_OF_GENERATIONS){
             noOfGenerations++;
+            return 7;
+        }
+
+        return -1;
     }
 	
 	/**
@@ -202,7 +217,6 @@ public class RightBar extends UIElement {
 				for (int para = 0; para < gameParameters.length; para++) {
 					drawParameter(graphics, para, (para * 70) + 100);
 				}
-                drawGAvariable(graphics);
 				break;
 			case 1:
 				drawMapBuilderList(graphics);
@@ -305,19 +319,6 @@ public class RightBar extends UIElement {
 		graphics.drawLine(itemX, itemY+itemHeight-1, itemX+Constants.WINDOW_RIGHT_BAR_WIDTH, itemY+itemHeight-1);
 	}
 
-	// Genetic algorithm variable Strings
-
-	public void drawGAvariable(Graphics graphics){
-		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
-		graphics.setFont(font);
-
-		graphics.drawString(populationSize + "x", 1145,   128);
-		graphics.drawString(noOfMoves + "x", 1145,  198);
-		graphics.drawString(mutationRate + "x", 1145,  268);
-		graphics.drawString(noOfGenerations + "x", 1145,  338);
-
-	}
-
 	public void drawNumberOfTriesString(Graphics graphics){
 		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
 		graphics.setFont(font);
@@ -332,19 +333,40 @@ public class RightBar extends UIElement {
 		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
 		graphics.setFont(font);
 
-		int yValue = y + 14;
 		String s = gameParameters[type];
 		String plus = "+";
-		String minus = " -";
+		String minus = "-";
 		int minusButtonX = 1100, plusButtonX = 1190;
 
 		int xString = 1090;
 		graphics.drawString(s, xString, y );
-		graphics.drawString(minus, minusButtonX + 4,yValue + buttonOffsetY);
-		graphics.drawString(plus, plusButtonX + 5, yValue + buttonOffsetY);
-		graphics.drawRect(minusButtonX, y+buttonOffsetY, plusMinusButtonWidth, plusMinusButtonHeight);
-		graphics.drawRect(plusButtonX, y+buttonOffsetY, plusMinusButtonWidth, plusMinusButtonHeight);
 
+		int beautyFactor = (plusMinusButtonWidth/2) / 2;
+        graphics.drawString(minus, 
+                minusButtonX+((plusMinusButtonWidth/2) - (fontSize / 8)), 
+                (y+buttonOffsetY) + ((plusMinusButtonWidth/2)+beautyFactor));
+        graphics.drawString(plus, 
+                plusButtonX+((plusMinusButtonWidth/2) - 4), 
+                (y+buttonOffsetY) + ((plusMinusButtonWidth/2)+beautyFactor));
+        graphics.drawOval(minusButtonX, y+buttonOffsetY, plusMinusButtonWidth, plusMinusButtonWidth);
+        graphics.drawOval(plusButtonX, y+buttonOffsetY, plusMinusButtonWidth, plusMinusButtonWidth);
+
+        //draw the value of each parameter
+        int parameterX = (minusButtonX+plusButtonX) / 2 + (fontSize / 2);
+        switch (type){
+            case 0:
+                graphics.drawString(populationSize + "x", parameterX, 128);
+                break;
+            case 1: 
+                graphics.drawString(noOfMoves + "x", parameterX, 198);
+                break;
+            case 2:
+                graphics.drawString(mutationRate + "x", parameterX, 268);
+                break;
+            default: 
+                graphics.drawString(noOfGenerations + "x", parameterX, 338);
+                break;
+        }
 	}
 
 	// Getters setters for all GA parameters
@@ -382,7 +404,6 @@ public class RightBar extends UIElement {
 
 
 	// to return if the buttons clicked
-
 	public boolean isSizeMinusButtonClicked(int mouseClickedX, int mouseClickedY) {
 		return allButtons[0].contains(mouseClickedX, mouseClickedY);
 	}

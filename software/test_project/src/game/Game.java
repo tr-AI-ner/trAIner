@@ -141,8 +141,8 @@ public class Game {
             mapSaverLoader.loadButtonLogic();
         }
 
-        // check for parameter changes by user
-        graphicsManager.getRightBar().processParameterChanges();
+        // check for parameter changes by user and process them
+        processParameterChanges(graphicsManager.getRightBar().getParameterChanges());
 
 		/**
 		 * All buttons on the Bottom and Right bar
@@ -244,6 +244,36 @@ public class Game {
 		//swap buffers to make changes visible
 		graphicsManager.redraw();
 	}
+
+    /**
+     * process a parameter change when user clicked on a minus or plus button
+     * on the right bar
+     *
+     * TODO: implementation
+     */
+    private void processParameterChanges(int type){
+        //exit in case of exception case
+        if(type == -1) return;
+
+        switch (type){
+            case 0:
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+            case 5:
+                break;
+            case 6:
+                break;
+            default:
+                break;
+        }
+    }
 
 	public Avatar getAvatar(){return avatar;}
 	public ArrayList<Entity> getEntities(){return entities;}
