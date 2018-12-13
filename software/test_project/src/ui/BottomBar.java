@@ -44,7 +44,7 @@ public class BottomBar extends UIElement {
 	public Rectangle pauseButton = new Rectangle(pauseButtonX, pauseButtonY, widthImg, heightImg);
 
 	int fontSize = 16;
-	Font font = new Font(Constants.DEFAULT_FONT, Font.BOLD, fontSize);
+	Font font = new Font(Constants.DEFAULT_FONT, Font.PLAIN, fontSize);
 
 	// Variable for increasing speed
 	int speedUp = 1;
