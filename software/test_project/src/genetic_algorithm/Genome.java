@@ -2,11 +2,6 @@ package genetic_algorithm;
 
 import java.util.Random;
 
-/**
- * Class to represent a gene of an individual
- *
- * @author Lugges991: Lucas Mahler
- */
 public class Genome {
 /**
  * Class to represent a gene of an individual
@@ -149,7 +144,6 @@ public class Genome {
     public Genome crossover(Genome mate){
         int [][]child = new int[this.maxNrOfMoves][2];
         Random rand = new Random();
-        System.out.println("max moves: "+this.maxNrOfMoves);
         int crossover = rand.nextInt(this.maxNrOfMoves);
         for(int i = 0; i<this.maxNrOfMoves;i++){
             if(i > crossover){

@@ -24,7 +24,7 @@ public class Game {
 	private Map map;
 	
 	Avatar avatar;
-	ArrayList<Entity> entities;
+    public ArrayList<Entity> entities;
 	ArrayList<MapElement> mapElements;
 	ElementWall theGreatWall;
     Population pop;
@@ -234,35 +234,24 @@ public class Game {
      * @param ai_playing true if ai is playing
      */
     private void gameLoop(boolean ai_playing) {
-        try 
-        {
-                
-            if(this.clock.frameShouldChange()){
-                if(this.currentLifecycle < this.maxNrOfMoves){
-                    this.pop.live(currentLifecycle);
-                    if(this.pop.reachedGoal() && (this.currentLifecycle < this.recordtime)){
-                        this.recordtime = this.currentLifecycle;
-                    }
-                    this.currentLifecycle++;
-                }else{
-                    System.out.println("Generation Ended\n");
-                    this.pop.resetDaShiat();
-                    this.currentLifecycle = 0;
-                    this.pop.calculateFitness();
-                    this.pop.selection();
-                    this.pop.reproduction(this);
-                    Thread.sleep(000);
+        if(this.clock.frameShouldChange()){
+            if(this.currentLifecycle < this.maxNrOfMoves){
+                this.pop.live(currentLifecycle);
+                if(this.pop.reachedGoal() && (this.currentLifecycle < this.recordtime)){
+                    this.recordtime = this.currentLifecycle;
+                }
+                this.currentLifecycle++;
+            }else{
+                this.pop.resetDaShiat(this);
+                this.currentLifecycle = 0;
+                this.pop.calculateFitness();
+                this.pop.selection();
+                this.pop.reproduction(this);
 
-                } 
-                this.updateState();
-                this.redrawAll();
-            }
+            } 
+            this.updateState();
+            this.redrawAll();
         }
-            catch(InterruptedException ex)
-            {
-                Thread.currentThread().interrupt();
-            }
-        
     }
 
     /**

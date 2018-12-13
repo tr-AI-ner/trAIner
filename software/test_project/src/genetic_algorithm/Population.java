@@ -170,14 +170,11 @@ public class Population {
             Individual mother = this.gene_pool.get((int)(Math.random() * this.gene_pool.size() + 1));
             Genome dadsGenes = father.getGenome();
             Genome momsGenes = mother.getGenome();
-            //System.out.println("GenePool size: "+this.gene_pool.size());
-            //System.out.println("i: "+ i +":::"+"father moves / genes " + father.getMaxNrOfMoves()+ "/" + dadsGenes.getMaxNrOfMoves() + "  mother " + mother.getMaxNrOfMoves() + "/" + momsGenes.getMaxNrOfMoves()); 
             Genome child = momsGenes.crossover(dadsGenes);
 
             child.mutateGene(this.mutationRate);
             this.population[i].setGenome(child);
-            // this.population[i] = new Individual(this.def_x, this.def_y, this.def_width, this.def_height, this.color, child);
-            // this.population[i].setGame(game);
+            game.entities.add(this.population[i]);
         }
         this.currentGeneration++;
     }
@@ -192,14 +189,9 @@ public class Population {
         return xScaled;
     }
 
-    public void resetDaShiat(){
-        this.maxNrOfMoves = game.getMaxNrOfMoves();
+    public void resetDaShiat(Game game){
         for(int i = 0; i < this.population.length; i++){
-            this.population[i].setMaxNrOfMoves(game.getMaxNrOfMoves());
-            System.out.println(this.population[i].getX() + " / " + this.population[i].getY());
-            this.population[i].setX(this.population[i].getStart_pos()[0]);
-            this.population[i].setY(this.population[i].getStart_pos()[1]);
-            System.out.println(this.population[i].getX() + " / " + this.population[i].getY());
+            this.population[i].reset();
         }
     }
     
