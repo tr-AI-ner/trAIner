@@ -24,6 +24,7 @@ public class Main {
 //		game.init(gm, gm.getInputSystem()); // Initialize all variables in game, including the panel
 		
 		game.run(true);	// Run game :)
+
 	}
 	
 }

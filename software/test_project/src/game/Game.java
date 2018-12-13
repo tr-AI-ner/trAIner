@@ -12,14 +12,16 @@ import functionality.GraphicsManager;
 import functionality.InputManager;
 import functionality.Setup;
 import map_builder.*;
+import map_saver.MapSaverLoader;
+
 
 public class Game {
-	
+
 	private GraphicsManager graphicsManager;
 	private InputManager inputManager;
 	private Clock clock; // Clock (time manager)
 	Setup setup;
-	Map map;
+	private Map map;
 	
 	Avatar avatar;
 	ArrayList<Entity> entities;
@@ -38,6 +40,8 @@ public class Game {
     //least nr of steps to complete the map
     int recordtime;
 
+	MapSaverLoader mapSaverLoader;
+
 	ElementPlasmaBall ball;
     ElementEnemy theEnemy;
 	ElementBlackHole blackHole;
@@ -51,8 +55,10 @@ public class Game {
 		this.inputManager = gm.getInputManager();
 		this.setup = gm.getSetup();
 		this.map = gm.getMap();
-		
+
+
 		entities = new ArrayList<>();
+
 
 		//TODO set the avatar to appear on the start block
 		avatar = new Avatar(33 * Constants.MAP_ELEMENT_SIZE,33 * Constants.MAP_ELEMENT_SIZE,
@@ -65,6 +71,8 @@ public class Game {
 		entities.add(avatar);
 		
 		mapElements = new ArrayList<>();
+
+		mapSaverLoader = new MapSaverLoader(this);
 
 		start = new ElementStart(33,33,Constants.COLOR_MAP_START);
         finish = new ElementFinish(50,12,Constants.COLOR_MAP_FINISH);
@@ -98,6 +106,7 @@ public class Game {
         mapElements.add(theEnemy);
         mapElements.add(blackHole);
         mapElements.add(blackHole2);
+
 		// add all map-elements to entities
 		entities.addAll(mapElements);
 	}
@@ -268,10 +277,19 @@ public class Game {
 		if(inputManager.getKeyResult()[3]) {avatar.move(( +setup.getNewEntitySpeed() ), 0);}
 		//Exits when escape is pressed
 		if(inputManager.getKeyResult()[4]) {System.exit(0);}
+
+        // check if user clicked on save button
+        if (inputManager.isMouseClicked()  && graphicsManager.getTopBar().isSaveButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())){
+            mapSaverLoader.saveButtonLogic();
+        }
+        //check if user clicked on load button
+        if (inputManager.isMouseClicked()  && graphicsManager.getTopBar().isLoadButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())){
+            mapSaverLoader.loadButtonLogic();
+        }
+
 		//Switches between the game and the build mode
 		if(inputManager.getKeyResult()[5]) { Main.MODE = 0; }
 		if(inputManager.getKeyResult()[6]) { Main.MODE = 1; }
-
 	}
 
     /**
@@ -285,6 +303,10 @@ public class Game {
         avatar.reset();
     }
 
+    /**
+     * Moves all dynamic map elements
+     *
+     */
 	private void updateState(){
 		if(Main.MODE == 0 || Main.MODE == 2) {
             for (MapElement element: this.getMapElements()){
@@ -300,7 +322,11 @@ public class Game {
         }
         map.updateEntitiesInMap(entities);
 	}
-	
+
+    /**
+     * redraws the full window
+     *
+     */
 	private void redrawAll(){
 		//clear full window
 		graphicsManager.clear();
@@ -311,18 +337,19 @@ public class Game {
 		//swap buffers to make changes visible
 		graphicsManager.redraw();
 	}
-	
-	
-	public ArrayList<MapElement> getMapElements(){
-		return mapElements;
-	}
 
-	public ElementStart getStart() {
-		return start;
-	}
+	public Avatar getAvatar(){return avatar;}
+	public ArrayList<Entity> getEntities(){return entities;}
 
-    public int getMaxNrOfMoves(){
-        return this.maxNrOfMoves;
-    }
+    public void resetEntities(){this.entities = new ArrayList<>();}
+
+    public Map getMap() { return map; }
+    public GraphicsManager getGraphicsManager(){return graphicsManager;}
+
+	public void setMapElements(ArrayList<MapElement> mapElements){this.mapElements=mapElements;}
+	public void resetMapElements(){this.mapElements = new ArrayList<>();}
+	public ArrayList<MapElement> getMapElements(){return mapElements;}
+
+	public ElementStart getStart() {return start;}
 }
 
