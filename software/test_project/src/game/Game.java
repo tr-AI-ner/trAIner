@@ -1,5 +1,6 @@
 package game;
 
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 import custom_objects.Avatar;
@@ -133,6 +134,18 @@ public class Game {
 		//Switches between the game and the build mode
 		if(inputManager.getKeyResult()[5]) { Main.MODE = 0; }
 		if(inputManager.getKeyResult()[6]) { Main.MODE = 1; }
+		//Check for clicks on blocks
+        if (inputManager.isMouseClicked()) {
+            for (Rectangle2D item : graphicsManager.getRightBar().getItemList()) {
+                System.out.println(item.toString());
+                if (item.contains(inputManager.getMouseClickedX(), inputManager.getMouseClickedY()) ) {
+                    
+                    System.out.println("CONTAINS");
+                    inputManager.setMouseClicked(false);
+                }
+            }
+        }
+
 	}
 
     /**
