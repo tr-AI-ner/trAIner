@@ -166,8 +166,8 @@ public class Population {
     public void reproduction(Game game) {
         Random rand = new Random();
         for(int i = 0; i < this.population.length; i++){
-            Individual father = this.gene_pool.get((int)(Math.random() * this.gene_pool.size() + 1));
-            Individual mother = this.gene_pool.get((int)(Math.random() * this.gene_pool.size() + 1));
+            Individual father = this.gene_pool.get((int)(Math.random() * this.gene_pool.size() ));
+            Individual mother = this.gene_pool.get((int)(Math.random() * this.gene_pool.size() ));
             Genome dadsGenes = father.getGenome();
             Genome momsGenes = mother.getGenome();
             Genome child = momsGenes.crossover(dadsGenes);

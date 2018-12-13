@@ -78,6 +78,7 @@ public class Individual extends Avatar {
      *
      */
     public void calcFitness() {
+        this.calcDistance();
         this.fitness = Math.pow((1 / best_dist * nr_of_moves), 3);
         if (this.fin) {
             this.fitness = this.fitness * 2;
@@ -90,8 +91,10 @@ public class Individual extends Avatar {
      */
     public void calcDistance() {
         // calculate the distance of the vector d
-        double d = Math.pow((this.getX() - goal[0]), 2) - Math.pow((this.getX() - goal[0]), 2);
-
+        System.out.println(goal[0] + " / " + goal[1]);
+        System.out.println(getX()+ " / " + this.getX());
+        double d = Math.pow((this.getX() - goal[0]), 2) - Math.pow((this.getY() - goal[0]), 2);
+        System.out.println(d);
         if (d < this.best_dist) {
             this.best_dist = d;
         } else if (d == 0) {
@@ -100,63 +103,61 @@ public class Individual extends Avatar {
 
     }
 
+
     /**
      * randomly pick a direction
      *
-     * returns a array with the new direction as (x,y) 
+     * @return int[] array with the new direction x,y
      */
     private int[] getRandomDirection() {
         int[] direction = new int[2];
-        // Random rand = new Random();
-        //int random_nr = rand.nextInt(8);
-        int random_nr = (int)(Math.random() * 8 + 1);
-
+        Random rand = new Random();
+        int random_nr = rand.nextInt(8);
         switch (random_nr) {
             case 0:
-                //runter
+                //DOWN
                 direction[0] = 0;
                 direction[1] = speed;
                 break;
             case 1:
-                // rauf
-                direction[0] = speed;
-                direction[1] = speed;
+                //UP
+                direction[0] = 0;
+                direction[1] = -speed;
                 break;
             case 2:
-                // links
+                //RIGHT
                 direction[0] = speed;
                 direction[1] = 0;
                 break;
             case 3:
-                // rechts
-                direction[0] = speed;
-                direction[1] = -speed;
-                break;
-            case 4:
-                //runter links
-                direction[0] = 0;
-                direction[1] = -speed;
-                break;
-            case 5:
-                // rauf links
-                direction[0] = -speed;
-                direction[1] = -speed;
-                break;
-            case 6:
-                //runter rechts
+                //LEFT
                 direction[0] = -speed;
                 direction[1] = 0;
                 break;
-            case 7:
-                // rauf rechts
+            case 4:
+                //DOWN RIGHT
+                direction[0] = speed;
+                direction[1] = speed;
+                break;
+            case 5:
+                //DOWN LEFT
                 direction[0] = -speed;
                 direction[1] = speed;
+                break;
+            case 6:
+                //UP RIGHT 
+                direction[0] = speed;
+                direction[1] = -speed;
+                break;
+            case 7:
+                //UP LEFT
+                direction[0] = -speed;
+                direction[1] = -speed;
                 break;
 
         }
         return direction;
     }
- 
     /**
      * move the individual according to the next direction in the gene
      *

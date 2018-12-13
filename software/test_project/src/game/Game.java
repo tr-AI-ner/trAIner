@@ -39,6 +39,8 @@ public class Game {
     int currentLifecycle;
     //least nr of steps to complete the map
     int recordtime;
+    //max nr of generations
+    int maxGens;
 
 	MapSaverLoader mapSaverLoader;
 
@@ -126,11 +128,12 @@ public class Game {
             this.inputManager = gm.getInputManager();
             this.setup = gm.getSetup();
             this.map = gm.getMap();
-            this.maxNrOfMoves = 200;
+            this.maxNrOfMoves = 1800;
 
             entities = new ArrayList<>();
-            this.populationSize = 2;
-            this.mutationRate = (float) 0.2;
+            this.populationSize = 100;
+            this.mutationRate = (float) 0.01;
+            this.maxGens = 10;
 
             this.pop = new Population(this.populationSize, this.mutationRate, this.maxNrOfMoves, this);
             this.currentLifecycle = 0;

@@ -4,7 +4,7 @@ import java.awt.Color;
 
 public final class Constants {
 
-	public static final long FRAME_MINIMUM_MILLIS = 10;
+	public static final long FRAME_MINIMUM_MILLIS = 3;
 	
 	// basic window sizes
 	public static final int WINDOW_MAP_WIDTH = 1024; //1024 or 960

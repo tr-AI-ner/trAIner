@@ -60,44 +60,44 @@ public class Genome {
         int random_nr = rand.nextInt(8);
         switch (random_nr) {
             case 0:
-                //runter
+                //DOWN
                 direction[0] = 0;
                 direction[1] = speed;
                 break;
             case 1:
-                // rauf
-                direction[0] = speed;
-                direction[1] = speed;
+                //UP
+                direction[0] = 0;
+                direction[1] = -speed;
                 break;
             case 2:
-                // links
+                //RIGHT
                 direction[0] = speed;
                 direction[1] = 0;
                 break;
             case 3:
-                // rechts
-                direction[0] = speed;
-                direction[1] = -speed;
-                break;
-            case 4:
-                //runter links
-                direction[0] = speed;
-                direction[1] = -speed;
-                break;
-            case 5:
-                // rauf links
-                direction[0] = -speed;
-                direction[1] = -speed;
-                break;
-            case 6:
-                //runter rechts
+                //LEFT
                 direction[0] = -speed;
                 direction[1] = 0;
                 break;
-            case 7:
-                // rauf rechts
+            case 4:
+                //DOWN RIGHT
+                direction[0] = speed;
+                direction[1] = speed;
+                break;
+            case 5:
+                //DOWN LEFT
                 direction[0] = -speed;
                 direction[1] = speed;
+                break;
+            case 6:
+                //UP RIGHT 
+                direction[0] = speed;
+                direction[1] = -speed;
+                break;
+            case 7:
+                //UP LEFT
+                direction[0] = -speed;
+                direction[1] = -speed;
                 break;
 
         }
