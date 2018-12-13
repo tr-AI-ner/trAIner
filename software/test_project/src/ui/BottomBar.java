@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import functionality.Constants;
 import functionality.Setup;
+import functionality.InputManager;
 
 import javax.imageio.ImageIO;
 
@@ -53,8 +54,8 @@ public class BottomBar extends UIElement {
 	BufferedImage pauseImg;
 
 
-	public BottomBar(int x, int y, int width, int height, Color backgroundColor, Setup setup) {
-		super(x, y, width, height, backgroundColor, setup);
+	public BottomBar(int x, int y, int width, int height, Color backgroundColor, Setup setup, InputManager inputManager) {
+		super(x, y, width, height, backgroundColor, setup, inputManager);
 
     /**
     *	Getting two images for Pause and Play Button
@@ -64,7 +65,7 @@ public class BottomBar extends UIElement {
 
 			pauseImg = ImageIO.read(getClass().getResourceAsStream("/pauseicon.png"));
 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -144,8 +145,11 @@ public class BottomBar extends UIElement {
 		int imgPlayY = getY() + 15;
 
 		graphics.drawRect(plusButtonX, playButtonY, widthImg, heightImg);
-		graphics.drawImage(playImg, imgPlayX, imgPlayY, widthImg, heightImg, null);
-
+        try {
+		    graphics.drawImage(playImg, imgPlayX, imgPlayY, widthImg, heightImg, null);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
 	}
 	// Draws an pause button
 	private void drawPauseButton(Graphics graphics){
@@ -155,8 +159,11 @@ public class BottomBar extends UIElement {
 		int imgPauseY = getY() + 15;
 
 		graphics.drawRect(pauseButtonX, pauseButtonY, widthImg, heightImg);
-		graphics.drawImage(pauseImg, imgPauseX, imgPauseY, widthImg, heightImg, null);
-
+        try {
+            graphics.drawImage(pauseImg, imgPauseX, imgPauseY, widthImg, heightImg, null);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
 	}
 	// Draws an minus button
 	private void drawMinusButton(Graphics graphics){

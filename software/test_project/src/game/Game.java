@@ -10,19 +10,23 @@ import functionality.GraphicsManager;
 import functionality.InputManager;
 import functionality.Setup;
 import map_builder.*;
+import map_saver.MapSaverLoader;
+
 
 public class Game {
-	
+
 	private GraphicsManager graphicsManager;
 	private InputManager inputManager;
 	private Clock clock; // Clock (time manager)
 	Setup setup;
-	Map map;
+	private Map map;
 	
 	Avatar avatar;
 	ArrayList<Entity> entities;
 	ArrayList<MapElement> mapElements;
 	ElementWall theGreatWall;
+
+	MapSaverLoader mapSaverLoader;
 
 	ElementPlasmaBall ball;
     ElementEnemy theEnemy;
@@ -37,8 +41,10 @@ public class Game {
 		this.inputManager = gm.getInputManager();
 		this.setup = gm.getSetup();
 		this.map = gm.getMap();
-		
+
+
 		entities = new ArrayList<>();
+
 
 		//TODO set the avatar to appear on the start block
 		avatar = new Avatar(33 * Constants.MAP_ELEMENT_SIZE,33 * Constants.MAP_ELEMENT_SIZE,
@@ -51,6 +57,8 @@ public class Game {
 		entities.add(avatar);
 		
 		mapElements = new ArrayList<>();
+
+		mapSaverLoader = new MapSaverLoader(this);
 
 		start = new ElementStart(33,33,Constants.COLOR_MAP_START);
         finish = new ElementFinish(50,12,Constants.COLOR_MAP_FINISH);
@@ -84,6 +92,7 @@ public class Game {
         mapElements.add(theEnemy);
         mapElements.add(blackHole);
         mapElements.add(blackHole2);
+
 		// add all map-elements to entities
 		entities.addAll(mapElements);
 	}
@@ -118,26 +127,28 @@ public class Game {
 			avatar.move((+setup.getNewEntitySpeed()), 0);
 		}
 		//Exits when escape is pressed
-		if (inputManager.getKeyResult()[4]) {
-			System.exit(0);
-		}
+		if(inputManager.getKeyResult()[4]) {System.exit(0);}
 		//Switches between the game and the build mode
-		if (inputManager.getKeyResult()[5]) {
-			Main.MODE = 0;
-		}
-		if (inputManager.getKeyResult()[6]) {
-			Main.MODE = 1;
-		}
+		if(inputManager.getKeyResult()[5]) { Main.MODE = 0; }
+		if(inputManager.getKeyResult()[6]) { Main.MODE = 1; }
 
+        // check if user clicked on save button
+        if (inputManager.isMouseClicked()  && graphicsManager.getTopBar().isSaveButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())){
+            mapSaverLoader.saveButtonLogic();
+        }
+        //check if user clicked on load button
+        if (inputManager.isMouseClicked()  && graphicsManager.getTopBar().isLoadButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())){
+            mapSaverLoader.loadButtonLogic();
+        }
+
+        // check for parameter changes by user
+        graphicsManager.getRightBar().processParameterChanges();
 
 		/**
 		 * All buttons on the Bottom and Right bar
 		 *
 		 */
-
-
 		// Minus Button to decrease the speed between 1 to 10
-
 		if (inputManager.isMouseClicked()
 				&& graphicsManager.getBottomBar().isSpeedPlusButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
 
@@ -149,11 +160,9 @@ public class Game {
 			}
 
 			inputManager.setMouseClicked(false);
-
 		}
 
 		// Plus Button to increase the speed between 1 to 10
-
 		else if (inputManager.isMouseClicked()
 				&& graphicsManager.getBottomBar().isSpeedMinusButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
 
@@ -170,138 +179,26 @@ public class Game {
 		}
 
 		// 	Play Button to play the game
-
 		else if (inputManager.isMouseClicked()
 				&& graphicsManager.getBottomBar().isPlayButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
-
 			System.out.println("Play Button Clicked");
 			inputManager.setMouseClicked(false);
 		}
 
 		//  Pause Button to pause the game
-
 		else if (inputManager.isMouseClicked()
 				&& graphicsManager.getBottomBar().isPauseButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
-
 			System.out.println("Pause Button Clicked");
 			inputManager.setMouseClicked(false);
 			System.exit(0);
 
 		}
 
-		// To decrease the population size
-		else if(inputManager.isMouseClicked()
-				&& graphicsManager.getRightBar().isSizeMinusButtonClicked(inputManager.getMouseClickedX(),inputManager.getMouseClickedY())){
-			System.out.println("Size minus was clicked");
-
-			int sizeMinusPopulation = graphicsManager.getRightBar().getPopulationSize();
-			if (sizeMinusPopulation > 1) {
-				graphicsManager.getRightBar().setPopulationSize(sizeMinusPopulation - 1);
-			}
-
-			inputManager.setMouseClicked(false);
-		}
-
-		// To increase the population size
-		else if(inputManager.isMouseClicked()
-				&& graphicsManager.getRightBar().isSizePlusButtonClicked(inputManager.getMouseClickedX(),inputManager.getMouseClickedY())){
-			System.out.println("Size plus was clicked");
-
-			int sizePlusPopulation = graphicsManager.getRightBar().getPopulationSize();
+        inputManager.setMouseClicked(false);
 
 
-			if (sizePlusPopulation >= 1 && sizePlusPopulation < 10) {
-				graphicsManager.getRightBar().setPopulationSize(sizePlusPopulation + 1);
-			} else
-				graphicsManager.getRightBar().setPopulationSize(sizePlusPopulation);
-
-			inputManager.setMouseClicked(false);
-		}
-
-		// To decrease the number of moves
-		else if(inputManager.isMouseClicked()
-				&& graphicsManager.getRightBar().isMoveMinusButtonClicked(inputManager.getMouseClickedX(),inputManager.getMouseClickedY())){
-			System.out.println("Move minus was clicked");
-
-			int moveMinus = graphicsManager.getRightBar().getNoOfMoves();
-			if (moveMinus > 1) {
-				graphicsManager.getRightBar().setNoOfMoves(moveMinus - 1);
-			}
-
-			inputManager.setMouseClicked(false);
-		}
-
-		// To increase the number of moves
-		else if(inputManager.isMouseClicked()
-				&& graphicsManager.getRightBar().isMovePlusButtonClicked(inputManager.getMouseClickedX(),inputManager.getMouseClickedY())){
-			System.out.println("Move plus was clicked");
-
-			int movePlus = graphicsManager.getRightBar().getNoOfMoves();
-
-			if (movePlus >= 1 && movePlus < 10) {
-				graphicsManager.getRightBar().setNoOfMoves(movePlus + 1);
-			} else
-				graphicsManager.getRightBar().setNoOfMoves(movePlus);
-
-			inputManager.setMouseClicked(false);
-		}
-
-		// To decrease the generation size
-		else if(inputManager.isMouseClicked()
-				&& graphicsManager.getRightBar().isGenerationMinusButtonClicked(inputManager.getMouseClickedX(),inputManager.getMouseClickedY())){
-			System.out.println("Generation minus was clicked");
-
-			int generationMinus = graphicsManager.getRightBar().getIncreaseGeneration();
-			if (generationMinus > 1) {
-				graphicsManager.getRightBar().setIncreaseGeneration(generationMinus - 1);
-			}
-
-			inputManager.setMouseClicked(false);
-		}
-
-		// To increase the generation size
-		else if(inputManager.isMouseClicked()
-				&& graphicsManager.getRightBar().isGenerationPlusButtonClicked(inputManager.getMouseClickedX(),inputManager.getMouseClickedY())){
-			System.out.println("Generation plus was clicked");
-
-			int generationPlus = graphicsManager.getRightBar().getNoOfMoves();
-
-			if (generationPlus >= 1 && generationPlus < 10) {
-				graphicsManager.getRightBar().setIncreaseGeneration(generationPlus + 1);
-			} else
-				graphicsManager.getRightBar().setIncreaseGeneration(generationPlus);
-
-			inputManager.setMouseClicked(false);
-		}
-
-		// To decrease the mutation rate
-		else if(inputManager.isMouseClicked()
-				&& graphicsManager.getRightBar().isRateMinusButtonClicked(inputManager.getMouseClickedX(),inputManager.getMouseClickedY())){
-			System.out.println("Rate minus was clicked");
-
-			int rateMinus = graphicsManager.getRightBar().getMutationRate();
-			if (rateMinus > 1) {
-				graphicsManager.getRightBar().setMutationRate(rateMinus - 1);
-			}
-
-			inputManager.setMouseClicked(false);
-		}
-
-		// To increase the mutation rate
-		else if(inputManager.isMouseClicked()
-				&& graphicsManager.getRightBar().isRatePlusButtonClicked(inputManager.getMouseClickedX(),inputManager.getMouseClickedY())){
-			System.out.println("Rate plus was clicked");
-
-			int ratePlus = graphicsManager.getRightBar().getNoOfMoves();
-
-			if (ratePlus >= 1 && ratePlus < 10) {
-				graphicsManager.getRightBar().setMutationRate(ratePlus + 1);
-			} else
-				graphicsManager.getRightBar().setMutationRate(ratePlus);
-
-			inputManager.setMouseClicked(false);
-		}
 	}
+
     /**
      * Restart the game by resetting the enemies to their original positions. This is needed so that the game is
      * consistent every time
@@ -313,6 +210,10 @@ public class Game {
         avatar.reset();
     }
 
+    /**
+     * Moves all dynamic map elements
+     *
+     */
 	private void updateState(){
 		if(Main.MODE == 0 || Main.MODE == 2) {
             for (MapElement element: this.getMapElements()){
@@ -328,7 +229,11 @@ public class Game {
         }
         map.updateEntitiesInMap(entities);
 	}
-	
+
+    /**
+     * redraws the full window
+     *
+     */
 	private void redrawAll(){
 		//clear full window
 		graphicsManager.clear();
@@ -339,13 +244,18 @@ public class Game {
 		//swap buffers to make changes visible
 		graphicsManager.redraw();
 	}
-	
-	
-	public ArrayList<MapElement> getMapElements(){
-		return mapElements;
-	}
 
-	public ElementStart getStart() {
-		return start;
-	}
+	public Avatar getAvatar(){return avatar;}
+	public ArrayList<Entity> getEntities(){return entities;}
+
+    public void resetEntities(){this.entities = new ArrayList<>();}
+
+    public Map getMap() { return map; }
+    public GraphicsManager getGraphicsManager(){return graphicsManager;}
+
+	public void setMapElements(ArrayList<MapElement> mapElements){this.mapElements=mapElements;}
+	public void resetMapElements(){this.mapElements = new ArrayList<>();}
+	public ArrayList<MapElement> getMapElements(){return mapElements;}
+
+	public ElementStart getStart() {return start;}
 }

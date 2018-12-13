@@ -44,8 +44,8 @@ public final class Constants {
 	public static final Color COLOR_HEADER_1 = new Color(30,37,59); // #1E253B
 	public static final Color COLOR_HEADER_2 = new Color(42,50,77); // #2A324D
 	public static final Color COLOR_RIGHT_BAR_HEADER = new Color(44,47,81); // #2C2F51
-  //map elements colors
-  public static final Color COLOR_WALL = new Color(249,62,65); // #262847
+    //map elements colors
+    public static final Color COLOR_WALL = new Color(249,62,65); // #262847
 	public static final Color COLOR_FORCE_FIELD = new Color(64,186,245); // #1E253B
 	public static final Color COLOR_LASER = new Color(72,159,223); // #2A324D
 	public static final Color COLOR_PLASMA_BALL = new Color(240,100,73); // #343B62
@@ -71,5 +71,10 @@ public final class Constants {
 	public static final String GAME_NAME = "trAIner";
 	public static final String DEFAULT_FONT = "Helvetica";
 
+    // Genetic Algorithm parameters max
+    public static final int MAX_POPULATION_SIZE = 1000;
+    public static final int MAX_NO_OF_MOVES = 1000;
+    public static final int MAX_NO_OF_GENERATIONS = 1000;
+    public static final int MAX_MUTATION_RATE = 1000;
 	
 }
