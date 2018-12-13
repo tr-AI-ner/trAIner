@@ -60,9 +60,9 @@ public class BottomBar extends UIElement {
     *	Getting two images for Pause and Play Button
     */
 		try {
-			playImg = ImageIO.read(getClass().getResourceAsStream("/p.png"));
+			playImg = ImageIO.read(getClass().getResourceAsStream("/playicon.png"));
 
-			pauseImg = ImageIO.read(getClass().getResourceAsStream("/pau.png"));
+			pauseImg = ImageIO.read(getClass().getResourceAsStream("/pauseicon.png"));
 
 		} catch (IOException e) {
 			e.printStackTrace();

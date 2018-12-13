@@ -103,8 +103,6 @@ public class RightBar extends UIElement {
 	int fontSize = 16;
 	Font font = new Font(Constants.DEFAULT_FONT, Font.PLAIN, fontSize);
 
-	// font for all Genetic Algorithm parameters
-	Font fontx = new Font(Constants.DEFAULT_FONT, Font.BOLD, fontSize);
 	
 	public RightBar(int x, int y, int width, int height, Color backgroundColor, Setup setup) {
 		super(x, y, width, height, backgroundColor, setup);
@@ -263,7 +261,7 @@ public class RightBar extends UIElement {
 
 	public void drawGAvariable(Graphics graphics){
 		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
-		graphics.setFont(fontx);
+		graphics.setFont(font);
 
 		graphics.drawString(populationSize + "x", 1145,   128);
 		graphics.drawString(mutationRate + "x", 1145,  198);
@@ -274,7 +272,7 @@ public class RightBar extends UIElement {
 
 	public void drawNumberOfTriesString(Graphics graphics){
 		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
-		graphics.setFont(fontx);
+		graphics.setFont(font);
 		String numberOfTries = "Number of Tries:";
 		graphics.drawString(numberOfTries, 1090, 404);
 
@@ -284,7 +282,7 @@ public class RightBar extends UIElement {
 //		Type: 0 = Population Size , 1 = NUmber of Moves, 2 = Mutation Rate, 3 = Number of generations
 
 		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
-		graphics.setFont(fontx);
+		graphics.setFont(font);
 
 		int yValue = y + 14;
 		String s = gameParameters[type];
