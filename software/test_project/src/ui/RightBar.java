@@ -104,13 +104,9 @@ public class RightBar extends UIElement {
 						sliderWidth, sliderHeight, getBackgroundColor(), getSetup())
 		};
 
-        //getY()+(counter*listItemHeight)
-		//int y = itemY + (itemHeight/2) - (elementWidth/2);
-        //
         for (int rect=0; rect < elementsY.length; rect++){
             elementsY[rect] = getY()+(rect*listItemHeight);
         }
-        System.out.println(Arrays.toString(elementsY));
 	}
 
     /**

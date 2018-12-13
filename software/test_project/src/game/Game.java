@@ -36,6 +36,8 @@ public class Game {
 	ElementStart start;
 	ElementFinish finish;
 
+    private MapElement clickedMapElement = null;
+
 	public Game(GraphicsManager gm){
 		this.graphicsManager = gm;
 		this.clock = new Clock(); // Initialize clock
@@ -134,6 +136,7 @@ public class Game {
 		//Switches between the game and the build mode
 		if(inputManager.getKeyResult()[5]) { Main.MODE = 0; }
 		if(inputManager.getKeyResult()[6]) { Main.MODE = 1; }
+
 		//Check for clicks on blocks
         if (Main.MODE==1 && inputManager.isMouseClicked() 
                 && graphicsManager.getRightBar().isRightBarClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
@@ -141,10 +144,17 @@ public class Game {
                     inputManager.getMouseClickedX(), inputManager.getMouseClickedY());
             inputManager.setMouseClicked(false);
             if (clickedElement != null){
-                //TODO: do something when element gets clicked
+                this.clickedMapElement = clickedElement;
             }
         }
 
+        // check for right mouse button click
+        //System.out.println(inputManager.getMouseButton());
+        //System.out.println(inputManager.isMouseClicked());
+        if(inputManager.isMouseClicked() && inputManager.getMouseButton()==3){
+            this.clickedMapElement = null; 
+            inputManager.setMouseClicked(false);
+        }
 	}
 
     /**
@@ -189,6 +199,9 @@ public class Game {
 		// draw all entities
 		graphicsManager.drawMap(entities);
 		
+        // draw selected map element when in building mode
+        graphicsManager.drawBuilderElement(clickedMapElement);
+
 		//swap buffers to make changes visible
 		graphicsManager.redraw();
 	}

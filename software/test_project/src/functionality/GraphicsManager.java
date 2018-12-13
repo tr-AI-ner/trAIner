@@ -121,7 +121,31 @@ public class GraphicsManager extends JPanel {
 		//draw map
 		map.draw(graphics, entities);
 	}
-	
+
+    /**
+     * draws the selected map element from the right bar underneath the mouse
+     * if the game is in building mode
+     *
+     * @param selectedElement 
+     *
+     */
+    public void drawBuilderElement(MapElement selectedElement){
+        //int x = (gridX * Constants.MAP_ELEMENT_SIZE) + Constants.WINDOW_MAP_MARGIN;
+        //int y = (gridY*Constants.MAP_ELEMENT_SIZE) + Constants.WINDOW_MAP_MARGIN+Constants.WINDOW_HEADER_HEIGHT;
+
+        //System.out.println("x: "+inputManager.getMouseMovedX()+", y: "+inputManager.getMouseMovedY());
+        if (selectedElement != null){
+            //System.out.println("oldX: "+selectedElement.getX()+", oldY: "+selectedElement.getY());
+//            selectedElement.move(inputManager.getMouseMovedX(), inputManager.getMouseMovedY());
+            selectedElement.setX(inputManager.getMouseMovedX());
+            selectedElement.setY(inputManager.getMouseMovedY());
+//            selectedElement.setGridX(inputManager.getMouseMovedX());
+//            selectedElement.setGridY(inputManager.getMouseMovedY());
+            //System.out.println("newX: "+selectedElement.getX()+", newY: "+selectedElement.getY());
+            selectedElement.drawTemporary(graphics);
+        }
+    }
+
 	/**
 	 * initialize all 3 toolbars
 	 * (top-, bottom-, & right-bar)

@@ -137,6 +137,10 @@ public class InputManager extends Component implements KeyListener, MouseListene
 
 	public void setMouseClicked(boolean mouseClicked) {
 		isMouseClicked = mouseClicked;
+        //also reset the mouse button
+        if (mouseClicked==false){
+            mouseButton = 0;
+        }
 	}
 
 	public int getMouseButtonClicked(){return mouseButtonClicked;}

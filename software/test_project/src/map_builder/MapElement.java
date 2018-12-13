@@ -75,7 +75,25 @@ public abstract class MapElement extends Entity {
 
 	}
 
+    public void drawTemporary(Graphics graphics){
+        Graphics2D g2d = (Graphics2D)graphics;
+        int x = getX();
+        int y = getY();
 
+		// draw fill
+		g2d.setColor(getColor());
+        g2d.fillRect(x, y, getWidth(), getHeight());
+        //Border color is just the main color but with an alpha value
+        Color color = new Color(getColor().getRed(),getColor().getGreen(),getColor().getBlue(),85);
+        g2d.setColor(color);
+        g2d.setStroke(new BasicStroke(5));
+        g2d.drawRect(x, y, getWidth(), getHeight());
+        g2d.setStroke(new BasicStroke(1));
+		// draw border
+		// set custom color here with graphics.setColor(borderColor);
+        g2d.drawRect(x, y, getWidth(), getHeight());
+    
+    }
 
     /**
      *
