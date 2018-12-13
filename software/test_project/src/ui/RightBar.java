@@ -9,6 +9,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.*;
 
 import javax.swing.JSlider;
 
@@ -71,6 +72,9 @@ public class RightBar extends UIElement {
 			new ElementLaser(0, 0, Constants.COLOR_LASER),
 			new ElementPlasmaBall(0,0, Constants.COLOR_PLASMA_BALL)
 	}; 
+
+    // +2 due to headers
+    private int[] elementsY = new int[staticMapElements.length+dynamicMapElements.length+2];
 	
 	// string representations of the map elements
 	private String[] staticNames = new String[]{"Start", "Finish", "Wall", "Black Hole"};
@@ -99,8 +103,77 @@ public class RightBar extends UIElement {
 						getY()+150, 
 						sliderWidth, sliderHeight, getBackgroundColor(), getSetup())
 		};
+
+        //getY()+(counter*listItemHeight)
+		//int y = itemY + (itemHeight/2) - (elementWidth/2);
+        //
+        for (int rect=0; rect < elementsY.length; rect++){
+            elementsY[rect] = getY()+(rect*listItemHeight);
+        }
+        System.out.println(Arrays.toString(elementsY));
 	}
-	
+
+    /**
+     * gets which map element was clicked on with the mouse
+     * (if a header gets clicked it returns null)
+     *
+     * @param mouseClickedX
+     * @param mouseClickedY
+     * @return the clicked map element
+     *
+     */
+    public MapElement getSelectedElement(int mouseClickedX, int mouseClickedY){
+        // check for static header 
+        if (mouseClickedY >= elementsY[0] && mouseClickedY <= elementsY[0]+listItemHeight){
+            System.out.println("Static header clicked");
+            return null;
+        }
+        // check for dynamic header
+        else if (mouseClickedY >= elementsY[staticMapElements.length+1] && mouseClickedY <= elementsY[staticMapElements.length+1]+listItemHeight){
+            System.out.println("Dynamic header clicked");
+            return null;
+        } 
+        // otherwise check for elements
+        else {
+            boolean found = false;
+            // check for static elements
+            for(int stat=0; stat < staticMapElements.length; stat++){
+                if(mouseClickedY >= elementsY[stat+1] && mouseClickedY <= elementsY[stat+1]+listItemHeight){
+                    System.out.println(staticMapElements[stat].getMapType().name());
+                    found = true;
+                    return staticMapElements[stat];
+                    //break;
+                }
+            }
+            // check for dynamic elements
+            if(!found){
+                for(int dyn=0; dyn < dynamicMapElements.length; dyn++){
+                    if(mouseClickedY >= elementsY[staticMapElements.length+dyn+2] && mouseClickedY <= elementsY[staticMapElements.length+dyn+2]+listItemHeight){
+                        System.out.println(dynamicMapElements[dyn].getMapType().name());
+                        found = true;
+                        return dynamicMapElements[dyn];
+                        //break;
+                    }
+                }      
+            }
+        }
+        return null;
+
+    }
+
+    /**
+     * checks if mouse was clicked inside the right bar
+     *
+     * @param mouseClickedX
+     * @param mouseClickedY
+     * @return whether the bar was clicked
+     *
+     */
+    public boolean isRightBarClicked(int mouseClickedX, int mouseClickedY){
+        Rectangle2D rightBar = new Rectangle2D.Float(getX(), getY(), getWidth(), getHeight());
+        return rightBar.contains(mouseClickedX, mouseClickedY);
+    }
+
 	/**
 	 * overriding draw method for custom draw behavior:
 	 * 

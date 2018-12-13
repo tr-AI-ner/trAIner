@@ -135,14 +135,13 @@ public class Game {
 		if(inputManager.getKeyResult()[5]) { Main.MODE = 0; }
 		if(inputManager.getKeyResult()[6]) { Main.MODE = 1; }
 		//Check for clicks on blocks
-        if (inputManager.isMouseClicked()) {
-            for (Rectangle2D item : graphicsManager.getRightBar().getItemList()) {
-                System.out.println(item.toString());
-                if (item.contains(inputManager.getMouseClickedX(), inputManager.getMouseClickedY()) ) {
-                    
-                    System.out.println("CONTAINS");
-                    inputManager.setMouseClicked(false);
-                }
+        if (Main.MODE==1 && inputManager.isMouseClicked() 
+                && graphicsManager.getRightBar().isRightBarClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
+            MapElement clickedElement = graphicsManager.getRightBar().getSelectedElement(
+                    inputManager.getMouseClickedX(), inputManager.getMouseClickedY());
+            inputManager.setMouseClicked(false);
+            if (clickedElement != null){
+                //TODO: do something when element gets clicked
             }
         }
 
