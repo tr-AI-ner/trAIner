@@ -13,6 +13,7 @@ import java.awt.geom.RoundRectangle2D;
 
 import functionality.Constants;
 import functionality.FontLoader;
+import functionality.InputManager;
 import functionality.Setup;
 
 import ui.UIElement;
@@ -53,8 +54,8 @@ public class TopBar extends UIElement {
                 BUTTON_WIDTH,BUTTON_HEIGHT,BUTTON_ARCH_WH,BUTTON_ARCH_WH
             );
 
-	public TopBar(int x, int y, int width, int height, Color backgroundColor, Setup setup, String mapName) {
-		super(x, y, width, height, backgroundColor, setup);
+	public TopBar(int x, int y, int width, int height, Color backgroundColor, Setup setup, InputManager inputManager, String mapName) {
+		super(x, y, width, height, backgroundColor, setup, inputManager);
 		this.mapName = mapName;
 	}
 	

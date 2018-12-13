@@ -86,6 +86,9 @@ public class InputManager extends Component implements KeyListener, MouseListene
 	public void mouseEntered(MouseEvent evt){}
 	@Override
 	public void mouseExited(MouseEvent evt){}
+
+
+
 	@Override
 	public void mouseClicked(MouseEvent evt){
         isMouseClicked   = true;
@@ -119,7 +122,7 @@ public class InputManager extends Component implements KeyListener, MouseListene
 	public boolean getIsMouseDragged(){return isMouseDragged;}
 	public boolean getIsKeyEvent(){return isKeyEvent;}
 	public boolean getIsMousePressed(){return isMousePressed;}
-
+	
 	//a way to get the boolean array of keys
 	public boolean[] getKeyResult() {return keyArray;}
 	
@@ -131,10 +134,7 @@ public class InputManager extends Component implements KeyListener, MouseListene
 		this.lastMouseProcessTime = System.currentTimeMillis();
 	}
 
-	public boolean isMouseClicked() {
-		return isMouseClicked;
-	}
-
+	public boolean isMouseClicked() {return isMouseClicked;}
 	public void setMouseClicked(boolean mouseClicked) {
 		isMouseClicked = mouseClicked;
         //also reset the mouse button

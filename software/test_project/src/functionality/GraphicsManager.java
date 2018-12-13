@@ -153,19 +153,19 @@ public class GraphicsManager extends JPanel {
 	 */
 	private void setupToolbars(){
 		topBar = new TopBar(0, 0, setup.getFrameWidth()+12, Constants.WINDOW_HEADER_HEIGHT, 
-				Constants.COLOR_HEADER_1, setup,"map name"); // TODO change with the loaded map name
+				Constants.COLOR_HEADER_1, setup, inputManager, "map name"); // TODO change with the loaded map name
 		
 		bottomBar = new BottomBar(0, 
 				Constants.WINDOW_HEADER_HEIGHT+(Constants.WINDOW_MAP_MARGIN*2)+Constants.WINDOW_MAP_HEIGHT, 
 				setup.getFrameWidth()+12, 
 				Constants.WINDOW_HEADER_HEIGHT, 
-				Constants.COLOR_HEADER_1, setup);
+				Constants.COLOR_HEADER_1, setup, inputManager);
 		
 		rightBar = new RightBar((Constants.WINDOW_MAP_MARGIN*2)+Constants.WINDOW_MAP_WIDTH, 
 				Constants.WINDOW_HEADER_HEIGHT, 
 				Constants.WINDOW_RIGHT_BAR_WIDTH, 
 				Constants.WINDOW_RIGHT_BAR_HEIGHT, 
-				Constants.COLOR_MAP_LAND, setup);
+				Constants.COLOR_MAP_LAND, setup, inputManager);
 	}
 
 

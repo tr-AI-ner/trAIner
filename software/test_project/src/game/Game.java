@@ -117,12 +117,23 @@ public class Game {
 	// process User Input
 	private void processUserInput() {
 		//moves in the desired direction
-		if(inputManager.getKeyResult()[0]) {avatar.move(0, ( -setup.getNewEntitySpeed() ));}
-		if(inputManager.getKeyResult()[1]) {avatar.move(0, ( +setup.getNewEntitySpeed() ));}
-		if(inputManager.getKeyResult()[2]) {avatar.move(( -setup.getNewEntitySpeed() ), 0);}
-		if(inputManager.getKeyResult()[3]) {avatar.move(( +setup.getNewEntitySpeed() ), 0);}
+		if (inputManager.getKeyResult()[0]) {
+			avatar.move(0, (-setup.getNewEntitySpeed()));
+		}
+		if (inputManager.getKeyResult()[1]) {
+			avatar.move(0, (+setup.getNewEntitySpeed()));
+		}
+		if (inputManager.getKeyResult()[2]) {
+			avatar.move((-setup.getNewEntitySpeed()), 0);
+		}
+		if (inputManager.getKeyResult()[3]) {
+			avatar.move((+setup.getNewEntitySpeed()), 0);
+		}
 		//Exits when escape is pressed
 		if(inputManager.getKeyResult()[4]) {System.exit(0);}
+		//Switches between the game and the build mode
+		if(inputManager.getKeyResult()[5]) { Main.MODE = 0; }
+		if(inputManager.getKeyResult()[6]) { Main.MODE = 1; }
 
         // check if user clicked on save button
         if (inputManager.isMouseClicked()  && mapSaverLoader.saveButtonClicked()){
@@ -132,10 +143,6 @@ public class Game {
         if (inputManager.isMouseClicked()  && mapSaverLoader.loadButtonClicked()){
             mapSaverLoader.loadButtonLogic();
         }
-
-		//Switches between the game and the build mode
-		if(inputManager.getKeyResult()[5]) { Main.MODE = 0; }
-		if(inputManager.getKeyResult()[6]) { Main.MODE = 1; }
 
 		//Check for clicks on blocks
         if (Main.MODE==1 && inputManager.isMouseClicked() 
@@ -155,6 +162,62 @@ public class Game {
             this.clickedMapElement = null; 
             inputManager.setMouseClicked(false);
         }
+
+        // check for parameter changes by user and process them
+        processParameterChanges(graphicsManager.getRightBar().getParameterChanges());
+
+		/**
+		 * All buttons on the Bottom and Right bar
+		 *
+		 */
+		// Minus Button to decrease the speed between 1 to 10
+		if (inputManager.isMouseClicked()
+				&& graphicsManager.getBottomBar().isSpeedPlusButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
+
+			System.out.println("Minus Button Clicked");
+			int getDown = graphicsManager.getBottomBar().getSpeedUp();
+
+			if (getDown > 1) {
+				graphicsManager.getBottomBar().setSpeedUp(getDown - 1);
+			}
+
+			inputManager.setMouseClicked(false);
+		}
+
+		// Plus Button to increase the speed between 1 to 10
+		else if (inputManager.isMouseClicked()
+				&& graphicsManager.getBottomBar().isSpeedMinusButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
+
+			System.out.println("Plus Button Clicked");
+			int getUp = graphicsManager.getBottomBar().getSpeedUp();
+
+			if (getUp >= 1 && getUp < 10) {
+				graphicsManager.getBottomBar().setSpeedUp(getUp + 1);
+			} else
+				graphicsManager.getBottomBar().setSpeedUp(getUp);
+
+			inputManager.setMouseClicked(false);
+
+		}
+
+		// 	Play Button to play the game
+		else if (inputManager.isMouseClicked()
+				&& graphicsManager.getBottomBar().isPlayButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
+			System.out.println("Play Button Clicked");
+			inputManager.setMouseClicked(false);
+		}
+
+		//  Pause Button to pause the game
+		else if (inputManager.isMouseClicked()
+				&& graphicsManager.getBottomBar().isPauseButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
+			System.out.println("Pause Button Clicked");
+			inputManager.setMouseClicked(false);
+			System.exit(0);
+
+		}
+
+        inputManager.setMouseClicked(false);
+
 	}
 
     /**
@@ -205,6 +268,36 @@ public class Game {
 		//swap buffers to make changes visible
 		graphicsManager.redraw();
 	}
+
+    /**
+     * process a parameter change when user clicked on a minus or plus button
+     * on the right bar
+     *
+     * TODO: implementation
+     */
+    private void processParameterChanges(int type){
+        //exit in case of exception case
+        if(type == -1) return;
+
+        switch (type){
+            case 0:
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+            case 5:
+                break;
+            case 6:
+                break;
+            default:
+                break;
+        }
+    }
 
 	public Avatar getAvatar(){return avatar;}
 	public ArrayList<Entity> getEntities(){return entities;}
