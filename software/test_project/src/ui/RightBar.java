@@ -1,6 +1,5 @@
 package ui;
 
-<<<<<<< HEAD
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -11,14 +10,8 @@ import java.awt.geom.RoundRectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.*;
-
-import javax.swing.JSlider;
-=======
 import java.awt.*;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Arrays;
->>>>>>> rightBar
 
 import functionality.Constants;
 import functionality.GraphicsManager;
@@ -108,6 +101,7 @@ public class RightBar extends UIElement {
 			new ElementPlasmaBall(0,0, Constants.COLOR_PLASMA_BALL)
 	}; 
 
+    // will be used to check where user clicked on when selecting a map element in building mode
     // +2 due to headers
     private int[] elementsY = new int[staticMapElements.length+dynamicMapElements.length+2];
 	
@@ -144,6 +138,11 @@ public class RightBar extends UIElement {
 		for(int btn = 0; btn < allButtons.length; btn++) {
 			allButtons[btn] = new Rectangle(buttonsPositions[btn][0], buttonsPositions[btn][1]+buttonOffsetY, plusMinusButtonWidth, plusMinusButtonWidth);
 		}
+
+        // init elementsY
+        for (int rect=0; rect < elementsY.length; rect++){
+            elementsY[rect] = getY()+(rect*listItemHeight);
+        }
 	}
 
     /**
@@ -382,9 +381,9 @@ public class RightBar extends UIElement {
 			g2d.setColor(Constants.COLOR_MAP_LAND);
 			g2d.fillRect(itemX, itemY, Constants.WINDOW_RIGHT_BAR_WIDTH, itemHeight);
             //Need to extend to a custom object to add the element type so that we could check which element is clicked
-			Rectangle2D tempRect = new Rectangle2D.Float(itemX, itemY, Constants.WINDOW_RIGHT_BAR_WIDTH, itemHeight);
-            //Add sidebar elements to a list
-            itemList.add(tempRect);
+			//Rectangle2D tempRect = new Rectangle2D.Float(itemX, itemY, Constants.WINDOW_RIGHT_BAR_WIDTH, itemHeight);
+            ////Add sidebar elements to a list
+            //itemList.add(tempRect);
 
 			//draw item
 			g2d.setColor(element.getColor());
