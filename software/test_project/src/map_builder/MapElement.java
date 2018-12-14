@@ -29,6 +29,17 @@ public abstract class MapElement extends Entity {
 		this.gridY = gridY;
 		this.mapType = mapType;
 	}
+
+    // copy constructor
+    public MapElement(MapElement object){
+		super(object.getGridX()*Constants.MAP_ELEMENT_SIZE, 
+                object.getGridY()*Constants.MAP_ELEMENT_SIZE, 
+				Constants.MAP_ELEMENT_SIZE, Constants.MAP_ELEMENT_SIZE, 
+                object.getColor(), EntityType.MapElement);
+		this.gridX = object.gridX;
+		this.gridY = object.gridY;
+		this.mapType = object.mapType;
+    }
 	
 	/**
 	 * move the element

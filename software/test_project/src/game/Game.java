@@ -144,23 +144,29 @@ public class Game {
             mapSaverLoader.loadButtonLogic();
         }
 
-		//Check for clicks on blocks
-        if (Main.MODE==1 && inputManager.isMouseClicked() 
-                && graphicsManager.getRightBar().isRightBarClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
-            MapElement clickedElement = graphicsManager.getRightBar().getSelectedElement(
-                    inputManager.getMouseClickedX(), inputManager.getMouseClickedY());
-            inputManager.setMouseClicked(false);
-            if (clickedElement != null){
-                this.clickedMapElement = clickedElement;
+        //handle mouse clicks during building mode
+        if(Main.MODE==1 && inputManager.isMouseClicked()){
+            //Check for clicks on blocks on right bar
+            if (graphicsManager.getRightBar().isRightBarClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
+                MapElement clickedElement = graphicsManager.getRightBar().getSelectedElement(
+                        inputManager.getMouseClickedX(), inputManager.getMouseClickedY());
+                inputManager.setMouseClicked(false);
+                if (clickedElement != null){
+                    this.clickedMapElement = clickedElement;
+                }
             }
-        }
 
-        // check for right mouse button click
-        //System.out.println(inputManager.getMouseButton());
-        //System.out.println(inputManager.isMouseClicked());
-        if(inputManager.isMouseClicked() && inputManager.getMouseButton()==3){
-            this.clickedMapElement = null; 
-            inputManager.setMouseClicked(false);
+            // check for right mouse button click
+            if(inputManager.getMouseButton()==3){
+                if(this.clickedMapElement==null){removeMapElement();}
+                else
+                    this.clickedMapElement = null; 
+                inputManager.setMouseClicked(false);
+            }
+            // check for placing a map element on map
+            if(clickedMapElement != null && inputManager.getMouseButton()==1){
+                addMapElement();
+            }
         }
 
         // check for parameter changes by user and process them
@@ -232,24 +238,26 @@ public class Game {
     }
 
     /**
-     * Moves all dynamic map elements
+     * Updates the state of the game according to the current mode
+     * e.g.:
+     *      0 - Game
+     *      1 - Map Building
+     *      2 - Preview Mode
      *
      */
 	private void updateState(){
-		if(Main.MODE == 0 || Main.MODE == 2) {
-            for (MapElement element: this.getMapElements()){
-                if(element.getMapType() == MapType.PLASMA_BALL || element.getMapType() == MapType.ENEMY) {
-                    element.update();
-                    // Because of the grid element system we have to check if the elements don't collide on the grid level
-                    if(Math.abs(element.getX()  - avatar.getX()) < Constants.MAP_ELEMENT_SIZE
-                            && Math.abs(element.getY()  - avatar.getY()) < Constants.MAP_ELEMENT_SIZE) {
-                        this.restart();
-                    }
-                }
-            }
+	    switch(Main.MODE){
+            case 0:
+                moveElements();
+                break;
+            case 1:
+                break;
+            case 2:
+                moveElements();
+                break;
         }
-        map.updateEntitiesInMap(entities);
-	}
+        cleanUp();
+    }
 
     /**
      * redraws the full window
@@ -268,6 +276,26 @@ public class Game {
 		//swap buffers to make changes visible
 		graphicsManager.redraw();
 	}
+
+    /**
+     * Moves all dynamic map elements
+     *
+     */
+    private void moveElements(){
+		if(Main.MODE == 0 || Main.MODE == 2) {
+            for (MapElement element: this.getMapElements()){
+                if(element.getMapType() == MapType.PLASMA_BALL || element.getMapType() == MapType.ENEMY) {
+                    element.update();
+                    // Because of the grid element system we have to check if the elements don't collide on the grid level
+                    if(Math.abs(element.getX()  - avatar.getX()) < Constants.MAP_ELEMENT_SIZE
+                            && Math.abs(element.getY()  - avatar.getY()) < Constants.MAP_ELEMENT_SIZE) {
+                        this.restart();
+                    }
+                }
+            }
+        }
+        map.updateEntitiesInMap(entities);
+    }
 
     /**
      * process a parameter change when user clicked on a minus or plus button
@@ -297,6 +325,107 @@ public class Game {
             default:
                 break;
         }
+    }
+
+    /**
+     * removes a map element in case the user made a right mouse click on it
+     * in building mode
+     */
+    private void removeMapElement(){
+        //exit if game is not in building mode or right mouse button was not clicked
+        if(Main.MODE != 1 /*|| inputManager.getMouseButton() != 3*/) return;
+
+        int removeX = inputManager.getMouseClickedX();
+        int removeY = inputManager.getMouseClickedY();
+        //System.out.println("should remove element at x: "+removeX+", y: "+removeY);
+
+        // iterate through all map elements and check if mouse was clicked on one of them
+        // if so, remove it
+        for(int elem=0; elem < mapElements.size(); elem++){
+            int elemStartX = mapElements.get(elem).getX()+Constants.WINDOW_MAP_MARGIN;
+            int elemEndX = mapElements.get(elem).getX()+mapElements.get(elem).getWidth()+Constants.WINDOW_MAP_MARGIN;
+            int elemStartY = mapElements.get(elem).getY()+Constants.WINDOW_MAP_MARGIN+Constants.WINDOW_HEADER_HEIGHT;
+            int elemEndY = mapElements.get(elem).getY()+mapElements.get(elem).getHeight()+Constants.WINDOW_MAP_MARGIN+Constants.WINDOW_HEADER_HEIGHT;
+
+            if(elemStartX<=removeX && elemEndX>=removeX
+                && elemStartY<=removeY && elemEndY>=removeY
+                ){
+                //find the element also in entities and remove it
+                for(int i=0; i<entities.size(); i++){
+                    if(mapElements.get(elem).equals(entities.get(i))){
+                        entities.remove(i);
+                        break;
+                    }
+                }
+                mapElements.remove(elem);
+                break;
+            }
+        }
+    }
+
+    private void addMapElement(){
+        int mouseX = inputManager.getMouseClickedX()-Constants.WINDOW_MAP_MARGIN;
+        int mouseY = inputManager.getMouseClickedY()-Constants.WINDOW_MAP_MARGIN-Constants.WINDOW_HEADER_HEIGHT;
+        System.out.println("should place "+clickedMapElement.getMapType().name()+" at x: "
+                +mouseX+", y: "+mouseY);
+
+        // check for range, element cannot be placed outside of map
+        if(mouseX < Constants.WINDOW_MAP_MARGIN
+                || mouseX > (Constants.WINDOW_MAP_MARGIN + Constants.WINDOW_MAP_WIDTH)
+                || mouseY < (Constants.WINDOW_MAP_MARGIN+Constants.WINDOW_HEADER_HEIGHT)
+                || mouseY > (Constants.WINDOW_MAP_MARGIN+Constants.WINDOW_HEADER_HEIGHT+Constants.WINDOW_MAP_HEIGHT)){
+            System.out.println("Aborting placing element, out of range...");
+            return;
+        }
+
+        int gridX = -1, gridY = -1;
+        ArrayList<Integer> possibleXPos = new ArrayList<>();
+        ArrayList<Integer> possibleYPos = new ArrayList<>();
+        //find closest grid position to place the element
+        for(int i=0; i<Constants.MAP_ELEMENT_SIZE; i++){
+            if((mouseX+i) % Constants.MAP_ELEMENT_SIZE == 0){
+                gridX = (mouseX + i) / Constants.MAP_ELEMENT_SIZE;
+                possibleXPos.add(gridX);
+            }
+            if((mouseY+i) % Constants.MAP_ELEMENT_SIZE == 0){
+                gridY = (mouseY + i) / Constants.MAP_ELEMENT_SIZE;
+                possibleYPos.add(gridY);
+            }
+            if((mouseX-i) % Constants.MAP_ELEMENT_SIZE == 0 && i != 0){
+                gridX = (mouseX - i) / Constants.MAP_ELEMENT_SIZE;
+                possibleXPos.add(gridX);
+            }
+            if((mouseY-i) % Constants.MAP_ELEMENT_SIZE == 0 && i != 0){
+                gridY = (mouseY - i) / Constants.MAP_ELEMENT_SIZE;
+                possibleYPos.add(gridY);
+            }
+        }
+
+        if(gridX != -1 && gridY != -1){
+            System.out.println("found gridX: "+gridX+", gridY: "+gridY);
+            System.out.println("possibleXs: "+possibleXPos.toString()+", possibleYs: "+possibleYPos.toString());
+            //MapElement newElement = new MapElement(clickedMapElement);
+            clickedMapElement.setGridX(gridX);
+            clickedMapElement.setGridY(gridY);
+
+            mapElements.add(clickedMapElement);
+            entities.add(clickedMapElement);
+        } else {
+            System.out.println("Houston we have a problem... gridX: "+gridX+", gridY: "+gridY);
+        }
+        
+        this.clickedMapElement = null;
+    }
+
+    /**
+     * anything that should be avoided in different game modes
+     * should be handled here
+     *
+     */
+    private void cleanUp(){
+        //if player is not in building mode and an element is still underneath the mouse
+        //will be removed
+        if(Main.MODE != 1 && clickedMapElement != null) clickedMapElement=null;
     }
 
 	public Avatar getAvatar(){return avatar;}

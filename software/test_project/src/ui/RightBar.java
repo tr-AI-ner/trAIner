@@ -38,21 +38,6 @@ import map_builder.MapType;
  */
 public class RightBar extends UIElement {
 	
-	/*
-	 * build mode:
-	 * 		static mode:
-	 * 			- wall
-	 * 			- start
-	 * 			- finish
-	 * 			- black hole
-	 * 
-	 * 		dynamic mode:
-	 * 			- laser
-	 * 			- enemy
-	 * 			- plasma ball
-	 * 		
-	 */
-	
 	/**
 	 * Genetic Algorithm parameters
 	 * @param populationSize
@@ -70,17 +55,21 @@ public class RightBar extends UIElement {
 	int plusMinusButtonWidth = 22;
 	//int plusMinusButtonHeight = 18;
 
+    // start x positions of plus and minus buttons
     int minusButtonX = 1100, plusButtonX = 1190;
+    // y start position of first parameter
     int buttonStartY = 100;
 
     // offset so that the button is drawn beneath the string for each parameter
     int buttonOffsetY = 14;
+	
+	// height of each list item & header (in pixels) (for map-building mode)
+	final int listItemHeight = 50;
 
 	// Array to create the rectangles
 	int buttonsPositions [][]= new int[8][2];
 
 	// To create the all the buttons
-	//private Rectangle[] allButtons = new Rectangle[8];
 	private Rectangle[] allButtons = new Rectangle[8];
 
 	private String[] gameParameters = new String[]{
@@ -108,11 +97,7 @@ public class RightBar extends UIElement {
 	// string representations of the map elements
 	private String[] staticNames = new String[]{"Start", "Finish", "Wall", "Black Hole"};
 	private String[] dynamicNames = new String[]{"Enemy", "Laser", "Plasma Ball"};
-	
-	final String[] headers = new String[]{"Static", "Dynamic"};
-	
-	// height of each list item & header (in pixels)
-	final int listItemHeight = 50;
+	private final String[] headers = new String[]{"Static", "Dynamic"};
 	
 	// font for list items & headers text
 	int fontSize = 16;
@@ -174,7 +159,6 @@ public class RightBar extends UIElement {
                     System.out.println(staticMapElements[stat].getMapType().name());
                     found = true;
                     return staticMapElements[stat];
-                    //break;
                 }
             }
             // check for dynamic elements
@@ -184,7 +168,6 @@ public class RightBar extends UIElement {
                         System.out.println(dynamicMapElements[dyn].getMapType().name());
                         found = true;
                         return dynamicMapElements[dyn];
-                        //break;
                     }
                 }      
             }
@@ -224,51 +207,51 @@ public class RightBar extends UIElement {
         if(Main.MODE != 0 || !getInputManager().isMouseClicked()) return -1;
 
         //population size changes
-        if(isSizeMinusButtonClicked(getInputManager().getMouseClickedX(), 
-                    getInputManager().getMouseClickedY()) && populationSize > 1){
-            populationSize--;
-            return 0;
-        }
-        else if(isSizePlusButtonClicked(getInputManager().getMouseClickedX(), 
+        if(isSizePlusButtonClicked(getInputManager().getMouseClickedX(), 
                     getInputManager().getMouseClickedY()) 
                 && populationSize<=Constants.MAX_POPULATION_SIZE){
             populationSize++;
+            return 0;
+        }
+        else if(isSizeMinusButtonClicked(getInputManager().getMouseClickedX(), 
+                    getInputManager().getMouseClickedY()) && populationSize > 1){
+            populationSize--;
             return 1;
         }
 
         //number of moves changes
-        else if(isMoveMinusButtonClicked(getInputManager().getMouseClickedX(), 
-                    getInputManager().getMouseClickedY()) && noOfMoves > 1){
-            noOfMoves--;
-            return 2;
-        }
         else if(isMovePlusButtonClicked(getInputManager().getMouseClickedX(), 
                     getInputManager().getMouseClickedY()) && noOfMoves <= Constants.MAX_NO_OF_MOVES){
             noOfMoves++;
+            return 2;
+        }
+        else if(isMoveMinusButtonClicked(getInputManager().getMouseClickedX(), 
+                    getInputManager().getMouseClickedY()) && noOfMoves > 1){
+            noOfMoves--;
             return 3;
         }
 
         // mutation rate changes
-        else if(isRateMinusButtonClicked(getInputManager().getMouseClickedX(), 
-                    getInputManager().getMouseClickedY()) && mutationRate > 1){
-            mutationRate--;
-            return 4;
-        }
         else if(isRatePlusButtonClicked(getInputManager().getMouseClickedX(), 
                     getInputManager().getMouseClickedY()) && mutationRate <= Constants.MAX_MUTATION_RATE){
             mutationRate++;
+            return 4;
+        }
+        else if(isRateMinusButtonClicked(getInputManager().getMouseClickedX(), 
+                    getInputManager().getMouseClickedY()) && mutationRate > 1){
+            mutationRate--;
             return 5;
         }
         
         //number of generations changes
-        else if(isGenerationMinusButtonClicked(getInputManager().getMouseClickedX(), 
-                    getInputManager().getMouseClickedY()) &&  noOfGenerations > 1){
-            noOfGenerations--;
-            return 6;
-        }
         else if(isGenerationPlusButtonClicked(getInputManager().getMouseClickedX(), 
                     getInputManager().getMouseClickedY()) &&  noOfGenerations <= Constants.MAX_NO_OF_GENERATIONS){
             noOfGenerations++;
+            return 6;
+        }
+        else if(isGenerationMinusButtonClicked(getInputManager().getMouseClickedX(), 
+                    getInputManager().getMouseClickedY()) &&  noOfGenerations > 1){
+            noOfGenerations--;
             return 7;
         }
 
@@ -285,13 +268,13 @@ public class RightBar extends UIElement {
 	@Override
 	public void draw(Graphics graphics) {
 		drawBackground(graphics);
-		drawNumberOfTriesString(graphics);
 		// decide whether to draw list with map-elements or configurations for AI game-play
 		switch (Main.MODE){
 			case 0:
 				for (int para = 0; para < gameParameters.length; para++) {
 					drawParameter(graphics, para, (para * 70) + 100);
 				}
+                drawNumberOfTriesString(graphics);
 				break;
 			case 1:
 				drawMapBuilderList(graphics);
@@ -380,10 +363,6 @@ public class RightBar extends UIElement {
 			//draw background
 			g2d.setColor(Constants.COLOR_MAP_LAND);
 			g2d.fillRect(itemX, itemY, Constants.WINDOW_RIGHT_BAR_WIDTH, itemHeight);
-            //Need to extend to a custom object to add the element type so that we could check which element is clicked
-			//Rectangle2D tempRect = new Rectangle2D.Float(itemX, itemY, Constants.WINDOW_RIGHT_BAR_WIDTH, itemHeight);
-            ////Add sidebar elements to a list
-            //itemList.add(tempRect);
 
 			//draw item
 			g2d.setColor(element.getColor());
@@ -441,6 +420,7 @@ public class RightBar extends UIElement {
 
         //draw the value of each parameter
         int parameterX = (minusButtonX+plusButtonX) / 2 + (fontSize / 2);
+        int numberStringY = 128;
         switch (type){
             case 0:
                 graphics.drawString(populationSize + "x", parameterX, 128);
