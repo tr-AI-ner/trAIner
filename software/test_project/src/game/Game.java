@@ -21,6 +21,9 @@ public class Game {
 	private Clock clock; // Clock (time manager)
 	Setup setup;
 	private Map map;
+    
+    // will hold a selected element when user places new element in map in map-builder-mode
+    private MapElement clickedMapElement = null;
 	
 	Avatar avatar;
 	ArrayList<Entity> entities;
@@ -35,8 +38,6 @@ public class Game {
     ElementBlackHole blackHole2;
 	ElementStart start;
 	ElementFinish finish;
-
-    private MapElement clickedMapElement = null;
 
 	public Game(GraphicsManager gm){
 		this.graphicsManager = gm;
@@ -100,6 +101,10 @@ public class Game {
 		entities.addAll(mapElements);
 	}
 	
+    /**
+     * this will start the game loop
+     *
+     */
 	public void run(){
 		while(true)
 			this.gameLoop();
@@ -114,7 +119,15 @@ public class Game {
 		}
 	}
 
-	// process User Input
+    /**
+     * process user input
+     *
+     * @author Kasparas
+     * @author Rahul
+     * @author Sasha
+     * @author Patrick
+     *
+     */
 	private void processUserInput() {
 		//moves in the desired direction
 		if (inputManager.getKeyResult()[0]) {
@@ -229,6 +242,8 @@ public class Game {
     /**
      * Restart the game by resetting the enemies to their original positions. This is needed so that the game is
      * consistent every time
+     *
+     * @author Kasparas
      */
 	public void restart() {
         for (MapElement element: this.getMapElements()){
@@ -243,7 +258,8 @@ public class Game {
      *      0 - Game
      *      1 - Map Building
      *      2 - Preview Mode
-     *
+     * 
+     * @author Patrick
      */
 	private void updateState(){
 	    switch(Main.MODE){
@@ -280,6 +296,7 @@ public class Game {
     /**
      * Moves all dynamic map elements
      *
+     * @author Kasparas
      */
     private void moveElements(){
 		if(Main.MODE == 0 || Main.MODE == 2) {
@@ -302,6 +319,8 @@ public class Game {
      * on the right bar
      *
      * TODO: implementation
+     *
+     * @author Patrick
      */
     private void processParameterChanges(int type){
         //exit in case of exception case
@@ -330,22 +349,23 @@ public class Game {
     /**
      * removes a map element in case the user made a right mouse click on it
      * in building mode
+     *
+     * @author Patrick
      */
     private void removeMapElement(){
         //exit if game is not in building mode or right mouse button was not clicked
         if(Main.MODE != 1 /*|| inputManager.getMouseButton() != 3*/) return;
 
-        int removeX = inputManager.getMouseClickedX();
-        int removeY = inputManager.getMouseClickedY();
-        //System.out.println("should remove element at x: "+removeX+", y: "+removeY);
+        int removeX = inputManager.getMouseClickedX()-Constants.WINDOW_MAP_X0;
+        int removeY = inputManager.getMouseClickedY()-Constants.WINDOW_MAP_Y0;
 
         // iterate through all map elements and check if mouse was clicked on one of them
         // if so, remove it
         for(int elem=0; elem < mapElements.size(); elem++){
-            int elemStartX = mapElements.get(elem).getX()+Constants.WINDOW_MAP_MARGIN;
-            int elemEndX = mapElements.get(elem).getX()+mapElements.get(elem).getWidth()+Constants.WINDOW_MAP_MARGIN;
-            int elemStartY = mapElements.get(elem).getY()+Constants.WINDOW_MAP_MARGIN+Constants.WINDOW_HEADER_HEIGHT;
-            int elemEndY = mapElements.get(elem).getY()+mapElements.get(elem).getHeight()+Constants.WINDOW_MAP_MARGIN+Constants.WINDOW_HEADER_HEIGHT;
+            int elemStartX = mapElements.get(elem).getX();
+            int elemEndX = mapElements.get(elem).getX()+mapElements.get(elem).getWidth();
+            int elemStartY = mapElements.get(elem).getY();
+            int elemEndY = mapElements.get(elem).getY()+mapElements.get(elem).getHeight();
 
             if(elemStartX<=removeX && elemEndX>=removeX
                 && elemStartY<=removeY && elemEndY>=removeY
@@ -363,17 +383,17 @@ public class Game {
         }
     }
 
+    /**
+     * adds an element to the map in map-builder-mode
+     *
+     * @author Patrick
+     */
     private void addMapElement(){
-        int mouseX = inputManager.getMouseClickedX()-Constants.WINDOW_MAP_MARGIN;
-        int mouseY = inputManager.getMouseClickedY()-Constants.WINDOW_MAP_MARGIN-Constants.WINDOW_HEADER_HEIGHT;
-        System.out.println("should place "+clickedMapElement.getMapType().name()+" at x: "
-                +mouseX+", y: "+mouseY);
+        int mouseX = inputManager.getMouseClickedX()-Constants.WINDOW_MAP_X0;
+        int mouseY = inputManager.getMouseClickedY()-Constants.WINDOW_MAP_Y0;
 
         // check for range, element cannot be placed outside of map
-        if(mouseX < Constants.WINDOW_MAP_MARGIN
-                || mouseX > (Constants.WINDOW_MAP_MARGIN + Constants.WINDOW_MAP_WIDTH)
-                || mouseY < (Constants.WINDOW_MAP_MARGIN+Constants.WINDOW_HEADER_HEIGHT)
-                || mouseY > (Constants.WINDOW_MAP_MARGIN+Constants.WINDOW_HEADER_HEIGHT+Constants.WINDOW_MAP_HEIGHT)){
+        if(mouseX < 0 || mouseX >= Constants.WINDOW_MAP_WIDTH || mouseY < 0 || mouseY >= Constants.WINDOW_MAP_HEIGHT){
             System.out.println("Aborting placing element, out of range...");
             return;
         }
@@ -381,39 +401,70 @@ public class Game {
         int gridX = -1, gridY = -1;
         ArrayList<Integer> possibleXPos = new ArrayList<>();
         ArrayList<Integer> possibleYPos = new ArrayList<>();
-        //find closest grid position to place the element
-        for(int i=0; i<Constants.MAP_ELEMENT_SIZE; i++){
+        //find closest grid positions to place the element
+        for(int i=0; i< Constants.MAP_ELEMENT_SIZE+1; i++){
             if((mouseX+i) % Constants.MAP_ELEMENT_SIZE == 0){
-                gridX = (mouseX + i) / Constants.MAP_ELEMENT_SIZE;
-                possibleXPos.add(gridX);
+                int possibleGridX = (mouseX + i) / Constants.MAP_ELEMENT_SIZE;
+                if(possibleGridX >= 0 && possibleGridX < Constants.GRID_COLUMNS){
+                    gridX = (mouseX + i) / Constants.MAP_ELEMENT_SIZE;
+                    possibleXPos.add(gridX);
+                }
             }
             if((mouseY+i) % Constants.MAP_ELEMENT_SIZE == 0){
-                gridY = (mouseY + i) / Constants.MAP_ELEMENT_SIZE;
-                possibleYPos.add(gridY);
+                int possibleGridY = (mouseY + i) / Constants.MAP_ELEMENT_SIZE;
+                if(possibleGridY >= 0 && possibleGridY < Constants.GRID_COLUMNS){
+                    gridY = (mouseY + i) / Constants.MAP_ELEMENT_SIZE;
+                    possibleYPos.add(gridY);
+                }
             }
             if((mouseX-i) % Constants.MAP_ELEMENT_SIZE == 0 && i != 0){
-                gridX = (mouseX - i) / Constants.MAP_ELEMENT_SIZE;
-                possibleXPos.add(gridX);
+                int possibleGridX = (mouseX - i) / Constants.MAP_ELEMENT_SIZE;
+                if(possibleGridX >= 0 && possibleGridX < Constants.GRID_COLUMNS){
+                    gridX = (mouseX - i) / Constants.MAP_ELEMENT_SIZE;
+                    possibleXPos.add(gridX);
+                }
             }
             if((mouseY-i) % Constants.MAP_ELEMENT_SIZE == 0 && i != 0){
-                gridY = (mouseY - i) / Constants.MAP_ELEMENT_SIZE;
-                possibleYPos.add(gridY);
+                int possibleGridY = (mouseY - i) / Constants.MAP_ELEMENT_SIZE;
+                if(possibleGridY >= 0 && possibleGridY < Constants.GRID_COLUMNS){
+                    gridY = (mouseY - i) / Constants.MAP_ELEMENT_SIZE;
+                    possibleYPos.add(gridY);
+                }
             }
         }
 
-        if(gridX != -1 && gridY != -1){
-            System.out.println("found gridX: "+gridX+", gridY: "+gridY);
-            System.out.println("possibleXs: "+possibleXPos.toString()+", possibleYs: "+possibleYPos.toString());
-            //MapElement newElement = new MapElement(clickedMapElement);
-            clickedMapElement.setGridX(gridX);
-            clickedMapElement.setGridY(gridY);
+        // if at least one positon was found, filter for best position and add it
+        if(possibleXPos.size() > 0 && possibleYPos.size() > 0){
+            //filter found positions to find best suitable position
+            for(int k=0; k<possibleXPos.size(); k++){
+                for(int l=0; l<possibleYPos.size(); l++){
+                    int multi = Constants.MAP_ELEMENT_SIZE;
+                    gridX = ((possibleXPos.get(k)*multi-mouseX) < (gridX*multi-mouseX) ? possibleXPos.get(k) : gridX);
+                    gridY = ((possibleYPos.get(l)*multi-mouseY) < (gridY*multi-mouseY) ? possibleYPos.get(l) : gridY);
+                }
+            }
 
-            mapElements.add(clickedMapElement);
-            entities.add(clickedMapElement);
+            // create a new element at best suitable position and add it to the game
+            MapElement newElement = clickedMapElement;
+            newElement.setGridX(gridX);
+            newElement.setGridY(gridY);
+            switch (clickedMapElement.getMapType()){
+                case START: newElement = new ElementStart((ElementStart)clickedMapElement); break;
+                case FINISH: newElement = new ElementFinish((ElementFinish)clickedMapElement); break;
+                case WALL: newElement = new ElementWall((ElementWall)clickedMapElement); break;
+                case BLACK_HOLE: newElement = new ElementBlackHole((ElementBlackHole)clickedMapElement); break;
+                case ENEMY: newElement = new ElementEnemy((ElementEnemy)clickedMapElement); break;
+                case LASER: newElement = new ElementLaser((ElementLaser)clickedMapElement); break;
+                case PLASMA_BALL: newElement = new ElementPlasmaBall((ElementPlasmaBall)clickedMapElement); break;
+                default: break;
+            }
+            mapElements.add(newElement);
+            entities.add(newElement);
         } else {
-            System.out.println("Houston we have a problem... gridX: "+gridX+", gridY: "+gridY);
+            System.out.println("No position found for placing element... gridX: "+gridX+", gridY: "+gridY);
         }
         
+        // reset clicked element
         this.clickedMapElement = null;
     }
 

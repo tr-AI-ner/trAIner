@@ -17,4 +17,8 @@ public class ElementFinish extends MapElement{
 		
 	}
 
+    public ElementFinish(ElementFinish object){
+        super(object.getGridX(), object.getGridY(), MapType.FINISH, object.getColor());
+    }
+
 }

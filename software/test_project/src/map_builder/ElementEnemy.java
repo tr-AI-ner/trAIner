@@ -25,6 +25,9 @@ public class ElementEnemy extends MapElement {
         sourceY = gridY;
 	}
 
+    public ElementEnemy(ElementEnemy object){
+        super(object.getGridX(), object.getGridY(), MapType.ENEMY, object.getColor());
+    }
 
     public void update() {
         if (getGridX() >= Constants.GRID_COLUMNS-1){
