@@ -71,19 +71,21 @@ public abstract class MapElement extends Entity {
         int x = (gridX * Constants.MAP_ELEMENT_SIZE) + Constants.WINDOW_MAP_MARGIN;
         int y = (gridY*Constants.MAP_ELEMENT_SIZE) + Constants.WINDOW_MAP_MARGIN+Constants.WINDOW_HEADER_HEIGHT;
 
+        int offset = 3;
+        int fillOffset = 2;
+
 		// draw fill
 		g2d.setColor(getColor());
-        g2d.fillRect(x, y, getWidth(), getHeight());
+        //g2d.fillRect(x, y, getWidth(), getHeight());
+        g2d.fillRect(x+fillOffset, y+fillOffset, getWidth()-fillOffset*2, getHeight()-fillOffset*2);
+        
         //Border color is just the main color but with an alpha value
         Color color = new Color(getColor().getRed(),getColor().getGreen(),getColor().getBlue(),85);
         g2d.setColor(color);
         g2d.setStroke(new BasicStroke(5));
-        g2d.drawRect(x, y, getWidth(), getHeight());
+        //g2d.drawRect(x, y, getWidth(), getHeight());
+        g2d.drawRect(x+offset, y+offset, getWidth()-offset*2, getHeight()-offset*2);
         g2d.setStroke(new BasicStroke(1));
-		// draw border
-		// set custom color here with graphics.setColor(borderColor);
-        g2d.drawRect(x, y, getWidth(), getHeight());
-
 	}
 
     public void drawTemporary(Graphics graphics){

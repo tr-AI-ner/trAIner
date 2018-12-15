@@ -166,6 +166,7 @@ public class GraphicsManager extends JPanel {
 				Constants.WINDOW_RIGHT_BAR_WIDTH, 
 				Constants.WINDOW_RIGHT_BAR_HEIGHT, 
 				Constants.COLOR_MAP_LAND, setup, inputManager);
+        rightBar.setGame(game);
 	}
 
 
@@ -177,6 +178,8 @@ public class GraphicsManager extends JPanel {
 	public Map getMap(){
 		return map;
 	}
+
+    public void setGame(Game game){this.game = game;}
 
 	public InputManager getInputManager(){
 		return inputManager;

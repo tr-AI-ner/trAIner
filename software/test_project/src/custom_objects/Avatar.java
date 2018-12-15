@@ -165,12 +165,18 @@ public class Avatar extends Entity {
 
 		Graphics2D g2d = (Graphics2D)graphics;
 		g2d.setColor(getColor());
-		g2d.fillRect(getMapX(), getMapY(), getWidth(), getHeight());
+        
+        int offset = 3;
+        int fillOffset = 2;
+		
+        //g2d.fillRect(getMapX(), getMapY(), getWidth(), getHeight());
+        g2d.fillRect(getMapX()+fillOffset, getMapY()+fillOffset, getWidth()-fillOffset*2, getHeight()-fillOffset*2);
 		//draw border
 		Color color = new Color(getColor().getRed(),getColor().getGreen(),getColor().getBlue(),85);
 		g2d.setStroke(new BasicStroke(3));
 		g2d.setColor(color);
-		g2d.drawRect(getMapX(), getMapY(), getWidth(), getHeight());
+		//g2d.drawRect(getMapX(), getMapY(), getWidth(), getHeight());
+		g2d.drawRect(getMapX()+offset, getMapY()+offset, getWidth()-offset*2, getHeight()-offset*2);
 		g2d.setStroke(new BasicStroke(1));
 	}
 

@@ -25,6 +25,15 @@ public class Game {
     // will hold a selected element when user places new element in map in map-builder-mode
     private MapElement clickedMapElement = null;
 	
+    //genetic algorithm parameters
+    private int populationSize = 1;
+    private int speed = 1;
+	private int noOfMoves = 1;
+	private int mutationRate = 1;
+	private int noOfGenerations = 1;
+
+    private int noOfTries = 1;
+	
 	Avatar avatar;
 	ArrayList<Entity> entities;
 	ArrayList<MapElement> mapElements;
@@ -41,6 +50,8 @@ public class Game {
 
 	public Game(GraphicsManager gm){
 		this.graphicsManager = gm;
+        gm.setGame(this);
+        gm.getRightBar().setGame(this);
 		this.clock = new Clock(); // Initialize clock
 		this.inputManager = gm.getInputManager();
 		this.setup = gm.getSetup();
@@ -189,38 +200,9 @@ public class Game {
 		 * All buttons on the Bottom and Right bar
 		 *
 		 */
-		// Minus Button to decrease the speed between 1 to 10
-		if (inputManager.isMouseClicked()
-				&& graphicsManager.getBottomBar().isSpeedPlusButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
-
-			System.out.println("Minus Button Clicked");
-			int getDown = graphicsManager.getBottomBar().getSpeedUp();
-
-			if (getDown > 1) {
-				graphicsManager.getBottomBar().setSpeedUp(getDown - 1);
-			}
-
-			inputManager.setMouseClicked(false);
-		}
-
-		// Plus Button to increase the speed between 1 to 10
-		else if (inputManager.isMouseClicked()
-				&& graphicsManager.getBottomBar().isSpeedMinusButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
-
-			System.out.println("Plus Button Clicked");
-			int getUp = graphicsManager.getBottomBar().getSpeedUp();
-
-			if (getUp >= 1 && getUp < 10) {
-				graphicsManager.getBottomBar().setSpeedUp(getUp + 1);
-			} else
-				graphicsManager.getBottomBar().setSpeedUp(getUp);
-
-			inputManager.setMouseClicked(false);
-
-		}
 
 		// 	Play Button to play the game
-		else if (inputManager.isMouseClicked()
+		if (inputManager.isMouseClicked()
 				&& graphicsManager.getBottomBar().isPlayButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
 			System.out.println("Play Button Clicked");
 			inputManager.setMouseClicked(false);
@@ -327,22 +309,17 @@ public class Game {
         if(type == -1) return;
 
         switch (type){
-            case 0:
-                break;
-            case 1:
-                break;
-            case 2:
-                break;
-            case 3:
-                break;
-            case 4:
-                break;
-            case 5:
-                break;
-            case 6:
-                break;
-            default:
-                break;
+            case 0: populationSize++; break;
+            case 1: populationSize--; break;
+            case 2: speed++; break;
+            case 3: speed--; break;
+            case 4: noOfMoves++; break;
+            case 5: noOfMoves--; break;
+            case 6: mutationRate++; break;
+            case 7: mutationRate--; break;
+            case 8: noOfGenerations++; break;
+            case 9: noOfGenerations--; break;
+            default: break;
         }
     }
 
@@ -492,4 +469,13 @@ public class Game {
 	public ArrayList<MapElement> getMapElements(){return mapElements;}
 
 	public ElementStart getStart() {return start;}
+
+    public int getPopulationSize(){return populationSize;}
+    public int getSpeed(){return speed;}
+    public int getNoOfMoves(){return noOfMoves;}
+    public int getMutationRate(){return mutationRate;}
+    public int getNoOfGenerations(){return noOfGenerations;}
+    
+    public int getNoOfTries(){return noOfTries;}
+
 }

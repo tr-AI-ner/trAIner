@@ -74,6 +74,7 @@ public final class Constants {
 
     // Genetic Algorithm parameters max
     public static final int MAX_POPULATION_SIZE = 1000;
+    public static final int MAX_SPEED = 1000;
     public static final int MAX_NO_OF_MOVES = 1000;
     public static final int MAX_NO_OF_GENERATIONS = 1000;
     public static final int MAX_MUTATION_RATE = 1000;

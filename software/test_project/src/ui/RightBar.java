@@ -18,6 +18,7 @@ import functionality.GraphicsManager;
 import functionality.InputManager;
 import functionality.Setup;
 import game.Main;
+import game.Game;
 import map_builder.ElementBlackHole;
 import map_builder.ElementEnemy;
 import map_builder.ElementFinish;
@@ -34,47 +35,51 @@ import map_builder.MapType;
  * Anything that should be on the right bar, should be added here
  * 
  * @author Patrick
+ * @author Rahul
  *
  */
 public class RightBar extends UIElement {
 	
-	/**
-	 * Genetic Algorithm parameters
-	 * @param populationSize
-	 * @param mutationRate
-	 * @param noOfMoves
-	 * @param noOfGenerations
-	 */
-	int populationSize = 1;
-	int noOfMoves = 1;
-	int mutationRate = 1;
-	int noOfGenerations = 1;
-
+    Game game = null;
 
 	// Height and width of the buttons
-	int plusMinusButtonWidth = 22;
+	int plusMinusButtonWidth = 20;
 	//int plusMinusButtonHeight = 18;
 
+    // start x & y positions of right bar
+    final int rightBarStartX = Constants.WINDOW_MAP_MARGIN*2 + Constants.WINDOW_MAP_WIDTH;
+    final int rightBarStartY = Constants.WINDOW_HEADER_HEIGHT;
+
     // start x positions of plus and minus buttons
-    int minusButtonX = 1100, plusButtonX = 1190;
+    int minusButtonX = 15, plusButtonX = Constants.WINDOW_RIGHT_BAR_WIDTH-minusButtonX-plusMinusButtonWidth;
+    // start x position of parameter name
+	int parameterStringX = 15;
+    //int parametersStartY = 100;
+    int parametersStartY = Constants.WINDOW_MAP_Y0;
+
     // y start position of first parameter
-    int buttonStartY = 100;
+    int buttonStartY = parametersStartY;
 
     // offset so that the button is drawn beneath the string for each parameter
-    int buttonOffsetY = 14;
+    int buttonOffsetY = 22;
 	
 	// height of each list item & header (in pixels) (for map-building mode)
 	final int listItemHeight = 50;
+    final int listItemIndentX = 15;
+    final int parameterHeight = 80;
 
 	// Array to create the rectangles
-	int buttonsPositions [][]= new int[8][2];
+	int buttonsPositions [][]= new int[10][2];
 
 	// To create the all the buttons
-	private Rectangle[] allButtons = new Rectangle[8];
+	private Rectangle[] allButtons = new Rectangle[10];
 
 	private String[] gameParameters = new String[]{
-			"Population Size: ","Number Of Moves: ","Mutation Rate: ","Number Of Generations: "
+			"Population Size","Speed","Number Of Moves","Mutation Rate","Number Of Generations"
 	};
+    String plusString = "+";
+    String minusString = "-";
+    String numTriesString = "Number of Tries: ";
 	
 	// list of the static map elements that should be shown in map-building-mode
 	private MapElement[] staticMapElements = new MapElement[]{
@@ -109,13 +114,13 @@ public class RightBar extends UIElement {
 		// Loop for creating all the buttons
 		for(int i = 0; i < buttonsPositions.length; i++){
 			if (i % 2 == 0){
-				buttonsPositions[i][0] = minusButtonX;
+				buttonsPositions[i][0] = rightBarStartX + minusButtonX;
 				buttonsPositions[i][1] = buttonStartY;
 
 			} else {
-				buttonsPositions[i][0] = plusButtonX;
+				buttonsPositions[i][0] = rightBarStartX + plusButtonX;
 				buttonsPositions[i][1] = buttonStartY;
-				buttonStartY += 70;
+				buttonStartY += parameterHeight;
 			}
 		}
 
@@ -195,12 +200,14 @@ public class RightBar extends UIElement {
      *          -1 will represent the exception case when nothing should be changed
      *          0 - population size increase
      *          1 - population size decrease
-     *          2 - number of moves increase
-     *          3 - number of moves decrease
-     *          4 - mutation rate increase
-     *          5 - mutation rate decrease
-     *          6 - number of generations increase
-     *          7 - number of generations decrease
+     *          2 - speed increase
+     *          3 - speed decrease
+     *          4 - number of moves increase
+     *          5 - number of moves decrease
+     *          6 - mutation rate increase
+     *          7 - mutation rate decrease
+     *          8 - number of generations increase
+     *          9 - number of generations decrease
      */
     public int getParameterChanges(){
         // only change parameters in game mode or if mouse is clicked
@@ -209,50 +216,52 @@ public class RightBar extends UIElement {
         //population size changes
         if(isSizePlusButtonClicked(getInputManager().getMouseClickedX(), 
                     getInputManager().getMouseClickedY()) 
-                && populationSize<=Constants.MAX_POPULATION_SIZE){
-            populationSize++;
+                && game.getPopulationSize()<=Constants.MAX_POPULATION_SIZE){
             return 0;
         }
         else if(isSizeMinusButtonClicked(getInputManager().getMouseClickedX(), 
-                    getInputManager().getMouseClickedY()) && populationSize > 1){
-            populationSize--;
+                    getInputManager().getMouseClickedY()) && game.getPopulationSize() > 1){
             return 1;
+        }
+        
+        //speed changes
+        if(isSpeedPlusButtonClicked(getInputManager().getMouseClickedX(), 
+                    getInputManager().getMouseClickedY()) && game.getSpeed()<=Constants.MAX_SPEED){
+            return 2;
+        }
+        else if(isSpeedMinusButtonClicked(getInputManager().getMouseClickedX(), 
+                    getInputManager().getMouseClickedY()) && game.getSpeed() > 1){
+            return 3;
         }
 
         //number of moves changes
         else if(isMovePlusButtonClicked(getInputManager().getMouseClickedX(), 
-                    getInputManager().getMouseClickedY()) && noOfMoves <= Constants.MAX_NO_OF_MOVES){
-            noOfMoves++;
-            return 2;
+                    getInputManager().getMouseClickedY()) && game.getNoOfMoves() <= Constants.MAX_NO_OF_MOVES){
+            return 4;
         }
         else if(isMoveMinusButtonClicked(getInputManager().getMouseClickedX(), 
-                    getInputManager().getMouseClickedY()) && noOfMoves > 1){
-            noOfMoves--;
-            return 3;
+                    getInputManager().getMouseClickedY()) && game.getNoOfMoves() > 1){
+            return 5;
         }
 
         // mutation rate changes
         else if(isRatePlusButtonClicked(getInputManager().getMouseClickedX(), 
-                    getInputManager().getMouseClickedY()) && mutationRate <= Constants.MAX_MUTATION_RATE){
-            mutationRate++;
-            return 4;
+                    getInputManager().getMouseClickedY()) && game.getMutationRate() <= Constants.MAX_MUTATION_RATE){
+            return 6;
         }
         else if(isRateMinusButtonClicked(getInputManager().getMouseClickedX(), 
-                    getInputManager().getMouseClickedY()) && mutationRate > 1){
-            mutationRate--;
-            return 5;
+                    getInputManager().getMouseClickedY()) && game.getMutationRate() > 1){
+            return 7;
         }
         
         //number of generations changes
         else if(isGenerationPlusButtonClicked(getInputManager().getMouseClickedX(), 
-                    getInputManager().getMouseClickedY()) &&  noOfGenerations <= Constants.MAX_NO_OF_GENERATIONS){
-            noOfGenerations++;
-            return 6;
+                    getInputManager().getMouseClickedY()) &&  game.getNoOfGenerations() <= Constants.MAX_NO_OF_GENERATIONS){
+            return 8;
         }
         else if(isGenerationMinusButtonClicked(getInputManager().getMouseClickedX(), 
-                    getInputManager().getMouseClickedY()) &&  noOfGenerations > 1){
-            noOfGenerations--;
-            return 7;
+                    getInputManager().getMouseClickedY()) &&  game.getNoOfGenerations() > 1){
+            return 9;
         }
 
         return -1;
@@ -271,11 +280,8 @@ public class RightBar extends UIElement {
 		// decide whether to draw list with map-elements or configurations for AI game-play
 		switch (Main.MODE){
 			case 0:
-				for (int para = 0; para < gameParameters.length; para++) {
-					drawParameter(graphics, para, (para * 70) + 100);
-				}
-                drawNumberOfTriesString(graphics);
-				break;
+				drawParametersList(graphics);
+                break;
 			case 1:
 				drawMapBuilderList(graphics);
 				break;
@@ -339,7 +345,7 @@ public class RightBar extends UIElement {
 		Graphics2D g2d = (Graphics2D)graphics;
 		// if null, then it's a header
 		if (element == null){
-			int textIndent = 15;
+			//int textIndent = 15;
 			
 			//draw background
 			g2d.setColor(Constants.COLOR_RIGHT_BAR_HEADER);
@@ -350,14 +356,13 @@ public class RightBar extends UIElement {
 			
 			// Determine the Y coordinate for the text (note we add the ascent, as in java 2d 0 is top of the screen)
 		    int theY = itemY + ((itemHeight - g2d.getFontMetrics(font).getHeight()) / 2) + g2d.getFontMetrics(font).getAscent();
-			g2d.drawString(name, itemX+textIndent, theY);
+			g2d.drawString(name, itemX+listItemIndentX, theY);
 		    
 		} else {
 			//TODO: these variables should be added to Constants
-			int elementIndent = 15;
 			int elementWidth = 20;
-			int textIndent = 50;
-			int x = itemX+elementIndent;
+			int textIndent = listItemIndentX+35;
+			int x = itemX+listItemIndentX; 
 			int y = itemY + (itemHeight/2) - (elementWidth/2);
 
 			//draw background
@@ -386,122 +391,136 @@ public class RightBar extends UIElement {
 		g2d.drawLine(itemX, itemY+itemHeight-1, itemX+Constants.WINDOW_RIGHT_BAR_WIDTH, itemY+itemHeight-1);
 	}
 
-	public void drawNumberOfTriesString(Graphics graphics){
+    /**
+     * draws the parameter list along with other options shown in right bar during game mode
+     *
+     * @author Rahul
+     * @author Patrick
+     *
+     * @param graphics
+     *
+     */
+    private void drawParametersList(Graphics graphics){
+        for (int para = 0; para < gameParameters.length; para++) {
+            drawParameter(graphics, para, (para * parameterHeight) + parametersStartY);
+        }
+        drawNumberOfTriesString(graphics);
+        drawCheckboxes(graphics);
+    }
+
+    /**
+     * draws number of tries string in right bar during game mode
+     *
+     * @author Rahul
+     * @author Patrick
+     *
+     */
+	private void drawNumberOfTriesString(Graphics graphics){
 		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
 		graphics.setFont(font);
-		String numberOfTries = "Number of Tries:";
-		graphics.drawString(numberOfTries, 1090, 404);
-
+		String numberOfTries = numTriesString+game.getNoOfTries();
+		graphics.drawString(numberOfTries, minusButtonX+rightBarStartX, (gameParameters.length * parameterHeight) + parametersStartY);
 	}
 
-	public void drawParameter(Graphics graphics, int type, int y ){
-//		Type: 0 = Population Size , 1 = NUmber of Moves, 2 = Mutation Rate, 3 = Number of generations
+    /**
+     * TODO: draw checkboxes below parameters
+     *
+     * @author Patrick
+     */
+    private void drawCheckboxes(Graphics graphics){
+        //draw checkbox for showing only fittest genome
+    }
 
-		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
+    /**
+     * draws a parameter item
+     *
+     * @author Rahul
+     * @author Patrick
+     *
+     * @param graphics
+     * @param type 0=population_size, 1=speed, 2=no_of_moves, 3=mutation_rate, 4=no_of_generations
+     * @param y start y position of parameter
+     *
+     */
+	public void drawParameter(Graphics graphics, int type, int y){
+		Graphics2D g2d = (Graphics2D)graphics;
+        //draw header
+        g2d.setColor(Constants.COLOR_RIGHT_BAR_HEADER);
+        g2d.fillRect(rightBarStartX, y-(parameterHeight/3), Constants.WINDOW_RIGHT_BAR_WIDTH, (int)((float)parameterHeight/1.75)-5);
+
+        graphics.setColor(Constants.COLOR_AVATAR_WHITE);
 		graphics.setFont(font);
+		graphics.drawString(gameParameters[type], rightBarStartX+parameterStringX, y);
 
-		String s = gameParameters[type];
-		String plus = "+";
-		String minus = "-";
-		int minusButtonX = 1100, plusButtonX = 1190;
-
-		int xString = 1090;
-		graphics.drawString(s, xString, y );
-
+        // draw parameter
 		int beautyFactor = (plusMinusButtonWidth/2) / 2;
-        graphics.drawString(minus, 
-                minusButtonX+((plusMinusButtonWidth/2) - (fontSize / 8)), 
+        graphics.drawString(minusString, 
+                rightBarStartX+minusButtonX+((plusMinusButtonWidth/2) - (fontSize / 8)), 
                 (y+buttonOffsetY) + ((plusMinusButtonWidth/2)+beautyFactor));
-        graphics.drawString(plus, 
-                plusButtonX+((plusMinusButtonWidth/2) - 4), 
+        graphics.drawString(plusString, 
+                rightBarStartX+plusButtonX+((plusMinusButtonWidth/2) - 4), 
                 (y+buttonOffsetY) + ((plusMinusButtonWidth/2)+beautyFactor));
-        graphics.drawOval(minusButtonX, y+buttonOffsetY, plusMinusButtonWidth, plusMinusButtonWidth);
-        graphics.drawOval(plusButtonX, y+buttonOffsetY, plusMinusButtonWidth, plusMinusButtonWidth);
+        graphics.drawOval(rightBarStartX+minusButtonX, y+buttonOffsetY, plusMinusButtonWidth, plusMinusButtonWidth);
+        graphics.drawOval(rightBarStartX+plusButtonX, y+buttonOffsetY, plusMinusButtonWidth, plusMinusButtonWidth);
 
         //draw the value of each parameter
-        int parameterX = (minusButtonX+plusButtonX) / 2 + (fontSize / 2);
-        int numberStringY = 128;
+        int parameterX = rightBarStartX+((minusButtonX+plusButtonX) / 2 + (fontSize / 2));
         switch (type){
             case 0:
-                graphics.drawString(populationSize + "x", parameterX, 128);
+                graphics.drawString(game.getPopulationSize()+"x", parameterX, (y+buttonOffsetY)+((plusMinusButtonWidth/2)+beautyFactor));
                 break;
             case 1: 
-                graphics.drawString(noOfMoves + "x", parameterX, 198);
+                graphics.drawString(game.getSpeed()+"x", parameterX, (y+buttonOffsetY)+((plusMinusButtonWidth/2)+beautyFactor));
                 break;
-            case 2:
-                graphics.drawString(mutationRate + "x", parameterX, 268);
+            case 2: 
+                graphics.drawString(game.getNoOfMoves()+"x", parameterX, (y+buttonOffsetY)+((plusMinusButtonWidth/2)+beautyFactor));
+                break;
+            case 3:
+                graphics.drawString(game.getMutationRate()+"x", parameterX, (y+buttonOffsetY)+((plusMinusButtonWidth/2)+beautyFactor));
                 break;
             default: 
-                graphics.drawString(noOfGenerations + "x", parameterX, 338);
+                graphics.drawString(game.getNoOfGenerations()+"x", parameterX, (y+buttonOffsetY)+((plusMinusButtonWidth/2)+beautyFactor));
                 break;
         }
 	}
 
-	// Getters setters for all GA parameters
-	public int getPopulationSize() {
-		return populationSize;
-	}
 
-	public int getMutationRate() {
-		return mutationRate;
-	}
-
-	public int getNoOfMoves() {
-		return noOfMoves;
-	}
-
-	public int getNoOfGenerations() {
-		return noOfGenerations;
-	}
-
-	public void setPopulationSize(int populationSize) {
-		this.populationSize = populationSize;
-	}
-
-	public void setMutationRate(int mutationRate) {
-		this.mutationRate = mutationRate;
-	}
-
-	public void setNoOfMoves(int noOfMoves) {
-		this.noOfMoves = noOfMoves;
-	}
-
-	public void setNoOfGenerations(int noOfGenerations) {
-		this.noOfGenerations = noOfGenerations;
-	}
-
+    public void setGame(Game game){this.game = game;}
 
 	// to return if the buttons clicked
 	public boolean isSizeMinusButtonClicked(int mouseClickedX, int mouseClickedY) {
 		return allButtons[0].contains(mouseClickedX, mouseClickedY);
 	}
-
 	public boolean isSizePlusButtonClicked(int mouseClickedX, int mouseClickedY) {
 		return allButtons[1].contains(mouseClickedX, mouseClickedY);
 	}
-
-	public boolean isMoveMinusButtonClicked(int mouseClickedX, int mouseClickedY) {
+	
+    public boolean isSpeedMinusButtonClicked(int mouseClickedX, int mouseClickedY) {
 		return allButtons[2].contains(mouseClickedX, mouseClickedY);
 	}
-
-	public boolean isMovePlusButtonClicked(int mouseClickedX, int mouseClickedY) {
+	public boolean isSpeedPlusButtonClicked(int mouseClickedX, int mouseClickedY) {
 		return allButtons[3].contains(mouseClickedX, mouseClickedY);
 	}
 
-	public boolean isRateMinusButtonClicked(int mouseClickedX, int mouseClickedY) {
+	public boolean isMoveMinusButtonClicked(int mouseClickedX, int mouseClickedY) {
 		return allButtons[4].contains(mouseClickedX, mouseClickedY);
 	}
-
-	public boolean isRatePlusButtonClicked(int mouseClickedX, int mouseClickedY) {
+	public boolean isMovePlusButtonClicked(int mouseClickedX, int mouseClickedY) {
 		return allButtons[5].contains(mouseClickedX, mouseClickedY);
 	}
 
-	public boolean isGenerationMinusButtonClicked(int mouseClickedX, int mouseClickedY) {
+	public boolean isRateMinusButtonClicked(int mouseClickedX, int mouseClickedY) {
 		return allButtons[6].contains(mouseClickedX, mouseClickedY);
 	}
-
-	public boolean isGenerationPlusButtonClicked(int mouseClickedX, int mouseClickedY) {
+	public boolean isRatePlusButtonClicked(int mouseClickedX, int mouseClickedY) {
 		return allButtons[7].contains(mouseClickedX, mouseClickedY);
+	}
+
+	public boolean isGenerationMinusButtonClicked(int mouseClickedX, int mouseClickedY) {
+		return allButtons[8].contains(mouseClickedX, mouseClickedY);
+	}
+	public boolean isGenerationPlusButtonClicked(int mouseClickedX, int mouseClickedY) {
+		return allButtons[9].contains(mouseClickedX, mouseClickedY);
 	}
 
 }
