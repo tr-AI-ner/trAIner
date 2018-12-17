@@ -285,7 +285,11 @@ public class Game {
 		if(Main.MODE == 0 || Main.MODE == 2) {
             for (MapElement element: this.getMapElements()){
                 if(element.getMapType() == MapType.PLASMA_BALL || element.getMapType() == MapType.ENEMY) {
-                    element.update();
+                    if(element.getMapType() == MapType.ENEMY) {
+                        ((ElementEnemy)element).update(mapElements);
+                    } else {
+                        element.update();
+                    }
                     // Because of the grid element system we have to check if the elements don't collide on the grid level
                     if(Math.abs(element.getX()  - avatar.getX()) < Constants.MAP_ELEMENT_SIZE
                             && Math.abs(element.getY()  - avatar.getY()) < Constants.MAP_ELEMENT_SIZE) {
