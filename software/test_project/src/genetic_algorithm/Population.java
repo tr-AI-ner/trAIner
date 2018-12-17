@@ -63,7 +63,7 @@ public class Population {
         this.gene_pool = new ArrayList<>();
         this.game = game;
         for (int i = 0; i < population.length; i++) {
-            population[i] = new Individual(def_x+i, def_y+i, def_width, def_height, color, this.maxNrOfMoves);
+            population[i] = new Individual(def_x, def_y, def_width, def_height, color, this.maxNrOfMoves);
             population[i].setGame(game);
         }
     }
@@ -166,8 +166,11 @@ public class Population {
     public void reproduction(Game game) {
         Random rand = new Random();
         for(int i = 0; i < this.population.length; i++){
-            Individual father = this.gene_pool.get((int)(Math.random() * this.gene_pool.size() ));
-            Individual mother = this.gene_pool.get((int)(Math.random() * this.gene_pool.size() ));
+            int randomMommy = rand.nextInt(this.gene_pool.size());
+            int randomDaddy = rand.nextInt(this.gene_pool.size());
+
+            Individual father = this.gene_pool.get(randomDaddy);
+            Individual mother = this.gene_pool.get(randomMommy);
             Genome dadsGenes = father.getGenome();
             Genome momsGenes = mother.getGenome();
             Genome child = momsGenes.crossover(dadsGenes);

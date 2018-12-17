@@ -27,6 +27,7 @@ public class Game {
     public ArrayList<Entity> entities;
 	ArrayList<MapElement> mapElements;
 	ElementWall theGreatWall;
+	ElementWall theGreatWall2;
     Population pop;
 
     // lifetime of a population
@@ -128,10 +129,10 @@ public class Game {
             this.inputManager = gm.getInputManager();
             this.setup = gm.getSetup();
             this.map = gm.getMap();
-            this.maxNrOfMoves = 1800;
+            this.maxNrOfMoves = 900;
 
             entities = new ArrayList<>();
-            this.populationSize = 100;
+            this.populationSize = 200;
             this.mutationRate = (float) 0.01;
             this.maxGens = 10;
 
@@ -147,8 +148,10 @@ public class Game {
 
             mapElements = new ArrayList<>();
 
-            theGreatWall = new ElementWall( 50, 20, Constants.COLOR_WALL);
+            theGreatWall = new ElementWall( 50, 5, Constants.COLOR_WALL);
+            theGreatWall2 = new ElementWall(1,1,Constants.COLOR_WALL);
             mapElements.add(theGreatWall);
+            mapElements.add(theGreatWall2);
             // add all map-elements to entities
             entities.addAll(mapElements);
         }
@@ -245,10 +248,10 @@ public class Game {
                 }
                 this.currentLifecycle++;
             }else{
-                this.pop.resetDaShiat(this);
                 this.currentLifecycle = 0;
                 this.pop.calculateFitness();
                 this.pop.selection();
+                this.pop.resetDaShiat(this);
                 this.pop.reproduction(this);
 
             } 

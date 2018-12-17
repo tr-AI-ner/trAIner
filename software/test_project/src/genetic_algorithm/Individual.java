@@ -79,7 +79,13 @@ public class Individual extends Avatar {
      */
     public void calcFitness() {
         this.calcDistance();
-        this.fitness = Math.pow((1 / best_dist * nr_of_moves), 3);
+        // calculate the distance of the individual to the goal
+        double dist = Math.sqrt(Math.abs(Math.pow((this.getX() - goal[0]), 2) - Math.pow((this.getY() - goal[1]), 2)));
+        System.out.println("Distance: " + dist );
+        // calculate the fitness according to the fitness function
+        double preFit = 100;
+        this.fitness = Math.pow((preFit / dist * this.nr_of_moves), 5);
+        System.out.println("Fitness: " + this.fitness);
         if (this.fin) {
             this.fitness = this.fitness * 2;
         }
@@ -93,7 +99,7 @@ public class Individual extends Avatar {
         // calculate the distance of the vector d
         System.out.println(goal[0] + " / " + goal[1]);
         System.out.println(getX()+ " / " + this.getX());
-        double d = Math.pow((this.getX() - goal[0]), 2) - Math.pow((this.getY() - goal[0]), 2);
+        double d = Math.sqrt(Math.pow((this.getX() - goal[0]), 2) - Math.pow((this.getY() - goal[1]), 2));
         System.out.println(d);
         if (d < this.best_dist) {
             this.best_dist = d;
