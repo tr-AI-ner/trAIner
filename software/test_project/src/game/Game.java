@@ -158,7 +158,8 @@ public class Game {
 		//Switches between the game and the build mode
 		if(inputManager.getKeyResult()[5]) { Main.MODE = 0; }
 		if(inputManager.getKeyResult()[6]) { Main.MODE = 1; }
-
+		// loads an empty map
+		if(inputManager.getKeyResult()[7]) { mapSaverLoader.initEmptyMap(); }
         // check if user clicked on save button
         if (inputManager.isMouseClicked()  && mapSaverLoader.saveButtonClicked()){
             mapSaverLoader.saveButtonLogic();

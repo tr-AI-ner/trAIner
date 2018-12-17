@@ -8,6 +8,7 @@ import game.Game;
 import map_builder.ElementBlackHole;
 import map_builder.MapElement;
 import map_builder.MapType;
+import map_builder.ElementStart;
 
 public class Avatar extends Entity {
 	
@@ -198,6 +199,10 @@ public class Avatar extends Entity {
 	public void setGame(Game game){
 		this.game = game;
 	}
-
-
+	
+	public void setToStart(ElementStart start) {
+		setX(start.getGridX());
+		setY(start.getGridY());
+	}
+	
 }

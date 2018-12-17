@@ -69,6 +69,10 @@ public class MapSaverLoader {
                 else if (map[col][row] == MapType.START.representation())	{
                     ElementStart newStart = new ElementStart(col, row, functionality.Constants.COLOR_MAP_START);
                     game.getMapElements().add(newStart);
+                    game.getAvatar().setX(row*Constants.MAP_ELEMENT_SIZE);
+                    game.getAvatar().setY(col*Constants.MAP_ELEMENT_SIZE);
+                    game.getAvatar().reset();
+                    // To DO for Population
                 }
                 else if (map[col][row] == MapType.FINISH.representation())	{
                     ElementFinish newFinish = new ElementFinish(col, row, functionality.Constants.COLOR_MAP_FINISH);
@@ -214,6 +218,10 @@ public class MapSaverLoader {
         }
     }
 
+    /**
+     * takes away '.csv' from the filename
+     * in order for the map name to be shown in the TopBar
+     */
     public String editMapName(String mapName) {
     	mapName=mapName.substring(0,mapName.length()-4);
     	return mapName;
@@ -330,5 +338,14 @@ public class MapSaverLoader {
     public boolean loadButtonClicked() {
     	return game.getGraphicsManager().getTopBar().getLoadButton().contains(game.getGraphicsManager().getInputManager().getMouseClickedX(), game.getGraphicsManager().getInputManager().getMouseClickedY());
     }
-
+    
+    /**
+     *Resets Entities and Map Elements
+     *On the UI appears an Empty Map
+     * */
+    public void initEmptyMap() {
+        game.resetMapElements();
+        game.resetEntities();
+    }
+    
 }
