@@ -72,7 +72,7 @@ public class MapSaverLoader {
                     game.getAvatar().setX(row*Constants.MAP_ELEMENT_SIZE);
                     game.getAvatar().setY(col*Constants.MAP_ELEMENT_SIZE);
                     game.getAvatar().reset();
-                    // To DO for Population
+                    // TODO: do this for every single individual once the GA is merged with the master branch
                 }
                 else if (map[col][row] == MapType.FINISH.representation())	{
                     ElementFinish newFinish = new ElementFinish(col, row, functionality.Constants.COLOR_MAP_FINISH);
@@ -340,9 +340,9 @@ public class MapSaverLoader {
     }
     
     /**
-     *Resets Entities and Map Elements
-     *On the UI appears an Empty Map
-     * */
+     * Resets entities and map elements
+     * so that the UI shows an empty map
+     */
     public void initEmptyMap() {
         game.resetMapElements();
         game.resetEntities();
