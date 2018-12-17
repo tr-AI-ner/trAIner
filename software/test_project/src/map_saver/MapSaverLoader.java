@@ -29,6 +29,9 @@ public class MapSaverLoader {
     int ySize = WINDOW_MAP_HEIGHT / MAP_ELEMENT_SIZE;
     private char[][] mapArray = new char[xSize][ySize];
 
+    // directory name where custom maps should be saved and loaded from
+    private String dirName = "../../default_maps/";
+
     public MapSaverLoader(Game game){
         this.game=game;
 
@@ -126,7 +129,8 @@ public class MapSaverLoader {
         FileWriter fileWriter = null;
         char[][] m =game.getMap().getMapArr();
         try {
-            fileWriter = new FileWriter(fileName);
+            fileWriter = new FileWriter(new File(dirName,fileName));
+            //fileWriter.setCurrentDirectory("../../default_maps/");
             //Add a new line separator after the header
             for(int y=0;y<Constants.WINDOW_MAP_HEIGHT/MAP_ELEMENT_SIZE;y++){
                 if(y>0){fileWriter.append(NEW_LINE_SEPARATOR);}
@@ -167,11 +171,12 @@ public class MapSaverLoader {
                 public void run() {
                     JFileChooser fcLoad = new JFileChooser();
                     fcLoad.setVisible(true);
-                    fcLoad.setCurrentDirectory(new File(".."));
+                    fcLoad.setCurrentDirectory(new File(dirName));
                     fcLoad.setDialogTitle("LOAD MAP");
                     int returnVal = fcLoad.showOpenDialog(game.getGraphicsManager().getFrame());
                     if (returnVal == JFileChooser.APPROVE_OPTION && fcLoad.getSelectedFile().getName().contains(".csv")) {
                         String filename=fcLoad.getSelectedFile().getName();
+                        System.out.println("should load filename: "+filename);
                         loadMap(filename);
                     }
                     else{fcLoad.cancelSelection();}
@@ -190,7 +195,7 @@ public class MapSaverLoader {
         game.getGraphicsManager().getInputManager().setMouseClicked(false);
         try{
             JFileChooser fcPick = new JFileChooser();
-            fcPick.setCurrentDirectory(new File(".."));
+            fcPick.setCurrentDirectory(new File(dirName));
             fcPick.setVisible(true);
             fcPick.setDialogTitle("SAVE MAP");
             int returnVal = fcPick.showDialog(game.getGraphicsManager().getFrame(),"SAVE");
@@ -243,7 +248,7 @@ public class MapSaverLoader {
         BufferedReader fileReader = null;
         try {
             String line = "";
-            fileReader = new BufferedReader(new FileReader(mapFileName));
+            fileReader = new BufferedReader(new FileReader(new File(dirName, mapFileName)));
             int y=0;
             while ((line = fileReader.readLine()) != null) {
                 String [] tokens = line.split(COMMA_DELIMITER);

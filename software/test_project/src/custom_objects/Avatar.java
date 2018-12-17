@@ -95,10 +95,10 @@ public class Avatar extends Entity {
 	 */
 	private boolean collidingWithBorder(){
 		return (
-				       this.toMoveX <= 0 
-					|| this.toMoveY <= 0
-					|| this.toMoveX >= (Constants.WINDOW_MAP_WIDTH - getWidth()) 
-					|| this.toMoveY >= (Constants.WINDOW_MAP_HEIGHT - getHeight())
+				       this.toMoveX < 0 
+					|| this.toMoveY < 0
+					|| this.toMoveX > (Constants.WINDOW_MAP_WIDTH - getWidth()) 
+					|| this.toMoveY > (Constants.WINDOW_MAP_HEIGHT - getHeight())
 				);
 	}
 
@@ -108,10 +108,10 @@ public class Avatar extends Entity {
      */
     private boolean blackHoled(){
         for (MapElement element: game.getMapElements()){
-            if (toMoveX+getWidth() >= element.getX()
-                    && toMoveX <= (element.getX()+element.getWidth())
-                    && (toMoveY+getHeight() >= element.getY()
-                    && toMoveY <= (element.getY()+element.getHeight()))
+            if (toMoveX+getWidth() > element.getX()
+                    && toMoveX < (element.getX()+element.getWidth())
+                    && (toMoveY+getHeight() > element.getY()
+                    && toMoveY < (element.getY()+element.getHeight()))
                     && element.getMapType() == MapType.BLACK_HOLE
             ) {
                 currentlyTouched = (ElementBlackHole) element;
@@ -126,10 +126,10 @@ public class Avatar extends Entity {
 	 */
 	private boolean finished(){
 		for (MapElement element: game.getMapElements()){
-			if (toMoveX+getWidth() >= element.getX()
-					&& toMoveX <= (element.getX()+element.getWidth())
-					&& (toMoveY+getHeight() >= element.getY()
-					&& toMoveY <= (element.getY()+element.getHeight()))
+			if (toMoveX+getWidth() > element.getX()
+					&& toMoveX < (element.getX()+element.getWidth())
+					&& (toMoveY+getHeight() > element.getY()
+					&& toMoveY < (element.getY()+element.getHeight()))
 					&& element.getMapType() == MapType.FINISH
 			) {
 				return true;
@@ -143,10 +143,10 @@ public class Avatar extends Entity {
 	 */
 	private boolean collidingWithMapElement(){
 		for (MapElement element: game.getMapElements()){
-			if (toMoveX+getWidth() >= element.getX() 
-					&& toMoveX <= (element.getX()+element.getWidth())
-					&& (toMoveY+getHeight() >= element.getY()
-					&& toMoveY <= (element.getY()+element.getHeight()))
+			if (toMoveX+getWidth() > element.getX() 
+					&& toMoveX < (element.getX()+element.getWidth())
+					&& (toMoveY+getHeight() > element.getY()
+					&& toMoveY < (element.getY()+element.getHeight()))
 					&& element.getMapType() != MapType.BLACK_HOLE
 					&& element.getMapType() != MapType.START
 					&& element.getMapType() != MapType.FINISH

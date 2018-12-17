@@ -23,10 +23,14 @@ public class ElementEnemy extends MapElement {
 		super(gridX, gridY, MapType.ENEMY, elementColor);
         sourceX = gridX;
         sourceY = gridY;
+        temp = gridX;
 	}
 
     public ElementEnemy(ElementEnemy object){
         super(object.getGridX(), object.getGridY(), MapType.ENEMY, object.getColor());
+        sourceX = object.getGridX();
+        sourceY = object.getGridY();
+        this.temp = object.getGridX();
     }
 
     public void update() {
@@ -46,5 +50,6 @@ public class ElementEnemy extends MapElement {
     public void reset() {
         setGridX(sourceX);
         setGridY(sourceY);
+        temp = sourceX;
     }
 }
