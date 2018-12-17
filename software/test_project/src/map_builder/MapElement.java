@@ -88,27 +88,39 @@ public abstract class MapElement extends Entity {
         g2d.setStroke(new BasicStroke(1));
 	}
 
+    /**
+     * draws the temporary map element beneath the mouse when adding new element in building mode
+     *
+     * @author Patrick
+     *
+     */
     public void drawTemporary(Graphics graphics){
         Graphics2D g2d = (Graphics2D)graphics;
         int x = getX();
         int y = getY();
 
+        // offsets for also drawing a shadow
+        int offset = 3;
+        int fillOffset = 2;
+
+        // offsets so that middle of element is beneath the mouse pointer
+        int mouseOffsetX = getWidth() / 2;
+        int mouseOffsetY = getHeight() / 2;
+
 		// draw fill
 		g2d.setColor(getColor());
-        g2d.fillRect(x, y, getWidth(), getHeight());
+        g2d.fillRect(x+fillOffset-mouseOffsetX, y+fillOffset-mouseOffsetY, getWidth()-fillOffset*2, getHeight()-fillOffset*2);
+
         //Border color is just the main color but with an alpha value
         Color color = new Color(getColor().getRed(),getColor().getGreen(),getColor().getBlue(),85);
         g2d.setColor(color);
         g2d.setStroke(new BasicStroke(5));
-        g2d.drawRect(x, y, getWidth(), getHeight());
+        g2d.drawRect(x+offset-mouseOffsetX, y+offset-mouseOffsetY, getWidth()-offset*2, getHeight()-offset*2);
         g2d.setStroke(new BasicStroke(1));
-		// draw border
-		// set custom color here with graphics.setColor(borderColor);
-        g2d.drawRect(x, y, getWidth(), getHeight());
-    
     }
 
     /**
+     * creates a new specific map element according to its type
      *
      */
     public static Entity getSpecificInstance(MapType theType, int gridX, int gridY){

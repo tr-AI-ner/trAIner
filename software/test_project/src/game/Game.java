@@ -441,8 +441,8 @@ public class Game {
             System.out.println("No position found for placing element... gridX: "+gridX+", gridY: "+gridY);
         }
         
-        // reset clicked element
-        this.clickedMapElement = null;
+        // reset clicked element -> uncomment if only 1 element should be added
+        //this.clickedMapElement = null;
     }
 
     /**
