@@ -95,7 +95,7 @@ public class Population {
         for(int i = 0; i < this.population.length; i++){
         
             if(this.population[i].getX() == this.population[i].goal[0] && this.population[i].getY() == this.population[i].goal[1]){
-                this.population[i].fin = true;
+                this.population[i].fin = currentCycle;
             }
             this.population[i].makeMove(currentCycle);
         }

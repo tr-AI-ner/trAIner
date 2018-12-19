@@ -30,12 +30,10 @@ public class Individual extends Avatar {
 
     // tunable hyper parameters
 
-    // number of moves until current generation terminates
-    int nr_of_moves = 10;
     // x, y coordinate of the goal field
     int[] goal = {1, 1};
     // reached the goal
-    boolean fin = false;
+    int fin = 0;
     // start position
     int[] start_pos = {475, 265};
     // speed of the individuals movement
@@ -78,17 +76,17 @@ public class Individual extends Avatar {
      *
      */
     public void calcFitness() {
-        this.calcDistance();
+        // pre factor determining fluctuation of fitness function
+        double preFit = 100;
+        if (this.fin != 0) {
+            this.fitness = this.fitness * 2;
+            this.fitness = Math.pow((preFit / this.fin), 5);
+        }
         // calculate the distance of the individual to the goal
         double dist = Math.sqrt(Math.abs(Math.pow((this.getX() - goal[0]), 2) - Math.pow((this.getY() - goal[1]), 2)));
-        System.out.println("Distance: " + dist );
-        // calculate the fitness according to the fitness function
-        double preFit = 100;
-        this.fitness = Math.pow((preFit / dist * this.nr_of_moves), 5);
-        System.out.println("Fitness: " + this.fitness);
-        if (this.fin) {
-            this.fitness = this.fitness * 2;
-        }
+        // calculate the fitness 
+        this.fitness = Math.pow((preFit / dist * this.maxNrOfMoves), 5);
+        
     }
 
     /**
@@ -192,14 +190,6 @@ public class Individual extends Avatar {
 
     public void setBest_dist(double best_dist) {
         this.best_dist = best_dist;
-    }
-
-    public int getNr_of_moves() {
-        return nr_of_moves;
-    }
-
-    public void setNr_of_moves(int nr_of_moves) {
-        this.nr_of_moves = nr_of_moves;
     }
 
     public Avatar getAvatar() {
