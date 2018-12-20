@@ -5,14 +5,20 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
+import java.awt.geom.RoundRectangle2D;
 import java.util.ArrayList;
-
-import javax.swing.JSlider;
+import java.util.List;
+import java.util.*;
+import java.awt.*;
+import java.util.Arrays;
 
 import functionality.Constants;
 import functionality.GraphicsManager;
+import functionality.InputManager;
 import functionality.Setup;
 import game.Main;
+import game.Game;
 import map_builder.ElementBlackHole;
 import map_builder.ElementEnemy;
 import map_builder.ElementFinish;
@@ -29,31 +35,51 @@ import map_builder.MapType;
  * Anything that should be on the right bar, should be added here
  * 
  * @author Patrick
+ * @author Rahul
  *
  */
 public class RightBar extends UIElement {
 	
-	/*
-	 * build mode:
-	 * 		static mode:
-	 * 			- wall
-	 * 			- start
-	 * 			- finish
-	 * 			- black hole
-	 * 
-	 * 		dynamic mode:
-	 * 			- laser
-	 * 			- enemy
-	 * 			- plasma ball
-	 * 		
-	 */
+    Game game = null;
+
+	// Height and width of the buttons
+	int plusMinusButtonWidth = 20;
+	//int plusMinusButtonHeight = 18;
+
+    // start x & y positions of right bar
+    final int rightBarStartX = Constants.WINDOW_MAP_MARGIN*2 + Constants.WINDOW_MAP_WIDTH;
+    final int rightBarStartY = Constants.WINDOW_HEADER_HEIGHT;
+
+    // start x positions of plus and minus buttons
+    int minusButtonX = 15, plusButtonX = Constants.WINDOW_RIGHT_BAR_WIDTH-minusButtonX-plusMinusButtonWidth;
+    // start x position of parameter name
+	int parameterStringX = 15;
+    //int parametersStartY = 100;
+    int parametersStartY = Constants.WINDOW_MAP_Y0;
+
+    // y start position of first parameter
+    int buttonStartY = parametersStartY;
+
+    // offset so that the button is drawn beneath the string for each parameter
+    int buttonOffsetY = 22;
 	
-//	private GraphicsManager graphicsManager;
-	
+	// height of each list item & header (in pixels) (for map-building mode)
+	final int listItemHeight = 50;
+    final int listItemIndentX = 15;
+    final int parameterHeight = 80;
+
+	// Array to create the rectangles
+	int buttonsPositions [][]= new int[10][2];
+
+	// To create the all the buttons
+	private Rectangle[] allButtons = new Rectangle[10];
+
 	private String[] gameParameters = new String[]{
-			"Population Size","Number Of Moves","Mutation Rate","Number Of Generations"
+			"Population Size","Speed","Number Of Moves","Mutation Rate","Number Of Generations"
 	};
-	private CustomSlider[] sliders;
+    String plusString = "+";
+    String minusString = "-";
+    String numTriesString = "Number of Tries: ";
 	
 	// list of the static map elements that should be shown in map-building-mode
 	private MapElement[] staticMapElements = new MapElement[]{
@@ -68,32 +94,178 @@ public class RightBar extends UIElement {
 			new ElementLaser(0, 0, Constants.COLOR_LASER),
 			new ElementPlasmaBall(0,0, Constants.COLOR_PLASMA_BALL)
 	}; 
+
+    // will be used to check where user clicked on when selecting a map element in building mode
+    // +2 due to headers
+    private int[] elementsY = new int[staticMapElements.length+dynamicMapElements.length+2];
 	
 	// string representations of the map elements
 	private String[] staticNames = new String[]{"Start", "Finish", "Wall", "Black Hole"};
 	private String[] dynamicNames = new String[]{"Enemy", "Laser", "Plasma Ball"};
-	
-	final String[] headers = new String[]{"Static", "Dynamic"};
-	
-	// height of each list item & header (in pixels)
-	final int listItemHeight = 50;
+	private final String[] headers = new String[]{"Static", "Dynamic"};
 	
 	// font for list items & headers text
 	int fontSize = 16;
 	Font font = new Font(Constants.DEFAULT_FONT, Font.PLAIN, fontSize);
 
-	
-	public RightBar(int x, int y, int width, int height, Color backgroundColor, Setup setup) {
-		super(x, y, width, height, backgroundColor, setup);
-		
-		int sliderWidth = 170, sliderHeight = 5;
-		
-		sliders = new CustomSlider[]{
-				new CustomSlider(getX()+(getWidth()/2)-(sliderWidth/2), 
-						getY()+150, 
-						sliderWidth, sliderHeight, getBackgroundColor(), getSetup())
-		};
+	public RightBar(int x, int y, int width, int height, Color backgroundColor, Setup setup, InputManager inputManager) {
+		super(x, y, width, height, backgroundColor, setup, inputManager);
+
+		// Loop for creating all the buttons
+		for(int i = 0; i < buttonsPositions.length; i++){
+			if (i % 2 == 0){
+				buttonsPositions[i][0] = rightBarStartX + minusButtonX;
+				buttonsPositions[i][1] = buttonStartY;
+
+			} else {
+				buttonsPositions[i][0] = rightBarStartX + plusButtonX;
+				buttonsPositions[i][1] = buttonStartY;
+				buttonStartY += parameterHeight;
+			}
+		}
+
+		// creates all GA paramenter rectangles
+		for(int btn = 0; btn < allButtons.length; btn++) {
+			allButtons[btn] = new Rectangle(buttonsPositions[btn][0], buttonsPositions[btn][1]+buttonOffsetY, plusMinusButtonWidth, plusMinusButtonWidth);
+		}
+
+        // init elementsY
+        for (int rect=0; rect < elementsY.length; rect++){
+            elementsY[rect] = getY()+(rect*listItemHeight);
+        }
 	}
+
+    /**
+     * gets which map element was clicked on with the mouse
+     * (if a header gets clicked it returns null)
+     *
+     * @param mouseClickedX
+     * @param mouseClickedY
+     * @return the clicked map element
+     *
+     */
+    public MapElement getSelectedElement(int mouseClickedX, int mouseClickedY){
+        // check for static header 
+        if (mouseClickedY >= elementsY[0] && mouseClickedY <= elementsY[0]+listItemHeight){
+            System.out.println("Static header clicked");
+            return null;
+        }
+        // check for dynamic header
+        else if (mouseClickedY >= elementsY[staticMapElements.length+1] && mouseClickedY <= elementsY[staticMapElements.length+1]+listItemHeight){
+            System.out.println("Dynamic header clicked");
+            return null;
+        } 
+        // otherwise check for elements
+        else {
+            boolean found = false;
+            // check for static elements
+            for(int stat=0; stat < staticMapElements.length; stat++){
+                if(mouseClickedY >= elementsY[stat+1] && mouseClickedY <= elementsY[stat+1]+listItemHeight){
+                    System.out.println(staticMapElements[stat].getMapType().name());
+                    found = true;
+                    return staticMapElements[stat];
+                }
+            }
+            // check for dynamic elements
+            if(!found){
+                for(int dyn=0; dyn < dynamicMapElements.length; dyn++){
+                    if(mouseClickedY >= elementsY[staticMapElements.length+dyn+2] && mouseClickedY <= elementsY[staticMapElements.length+dyn+2]+listItemHeight){
+                        System.out.println(dynamicMapElements[dyn].getMapType().name());
+                        found = true;
+                        return dynamicMapElements[dyn];
+                    }
+                }      
+            }
+        }
+        return null;
+    }
+
+    /**
+     * checks if mouse was clicked inside the right bar
+     *
+     * @param mouseClickedX
+     * @param mouseClickedY
+     * @return whether the bar was clicked
+     *
+     */
+    public boolean isRightBarClicked(int mouseClickedX, int mouseClickedY){
+        Rectangle2D rightBar = new Rectangle2D.Float(getX(), getY(), getWidth(), getHeight());
+        return rightBar.contains(mouseClickedX, mouseClickedY);
+    }
+
+    /**
+     * determine if user changed a parameter
+     *
+     * @return an int, where following indeces will represent following parameter changes
+     *          -1 will represent the exception case when nothing should be changed
+     *          0 - population size increase
+     *          1 - population size decrease
+     *          2 - speed increase
+     *          3 - speed decrease
+     *          4 - number of moves increase
+     *          5 - number of moves decrease
+     *          6 - mutation rate increase
+     *          7 - mutation rate decrease
+     *          8 - number of generations increase
+     *          9 - number of generations decrease
+     */
+    public int getParameterChanges(){
+        // only change parameters in game mode or if mouse is clicked
+        if(Main.MODE != 0 || !getInputManager().isMouseClicked()) return -1;
+
+        //population size changes
+        if(isSizePlusButtonClicked(getInputManager().getMouseClickedX(), 
+                    getInputManager().getMouseClickedY()) 
+                && game.getPopulationSize()<=Constants.MAX_POPULATION_SIZE){
+            return 0;
+        }
+        else if(isSizeMinusButtonClicked(getInputManager().getMouseClickedX(), 
+                    getInputManager().getMouseClickedY()) && game.getPopulationSize() > 1){
+            return 1;
+        }
+        
+        //speed changes
+        if(isSpeedPlusButtonClicked(getInputManager().getMouseClickedX(), 
+                    getInputManager().getMouseClickedY()) && game.getSpeed()<=Constants.MAX_SPEED){
+            return 2;
+        }
+        else if(isSpeedMinusButtonClicked(getInputManager().getMouseClickedX(), 
+                    getInputManager().getMouseClickedY()) && game.getSpeed() > 1){
+            return 3;
+        }
+
+        //number of moves changes
+        else if(isMovePlusButtonClicked(getInputManager().getMouseClickedX(), 
+                    getInputManager().getMouseClickedY()) && game.getNoOfMoves() <= Constants.MAX_NO_OF_MOVES){
+            return 4;
+        }
+        else if(isMoveMinusButtonClicked(getInputManager().getMouseClickedX(), 
+                    getInputManager().getMouseClickedY()) && game.getNoOfMoves() > 1){
+            return 5;
+        }
+
+        // mutation rate changes
+        else if(isRatePlusButtonClicked(getInputManager().getMouseClickedX(), 
+                    getInputManager().getMouseClickedY()) && game.getMutationRate() <= Constants.MAX_MUTATION_RATE){
+            return 6;
+        }
+        else if(isRateMinusButtonClicked(getInputManager().getMouseClickedX(), 
+                    getInputManager().getMouseClickedY()) && game.getMutationRate() > 1){
+            return 7;
+        }
+        
+        //number of generations changes
+        else if(isGenerationPlusButtonClicked(getInputManager().getMouseClickedX(), 
+                    getInputManager().getMouseClickedY()) &&  game.getNoOfGenerations() <= Constants.MAX_NO_OF_GENERATIONS){
+            return 8;
+        }
+        else if(isGenerationMinusButtonClicked(getInputManager().getMouseClickedX(), 
+                    getInputManager().getMouseClickedY()) &&  game.getNoOfGenerations() > 1){
+            return 9;
+        }
+
+        return -1;
+    }
 	
 	/**
 	 * overriding draw method for custom draw behavior:
@@ -105,14 +277,18 @@ public class RightBar extends UIElement {
 	@Override
 	public void draw(Graphics graphics) {
 		drawBackground(graphics);
-
-		
-		// decide whether to draw list with map-elements or configurations for AI game-play 
-		if (Main.MODE == 1){
-			drawMapBuilderList(graphics);
-		} else {
-			drawGamePlayList(graphics);
+		// decide whether to draw list with map-elements or configurations for AI game-play
+		switch (Main.MODE){
+			case 0:
+				drawParametersList(graphics);
+                break;
+			case 1:
+				drawMapBuilderList(graphics);
+				break;
+			default:
+				break;
 		}
+
 	}
 	
 	/**
@@ -123,28 +299,7 @@ public class RightBar extends UIElement {
 		graphics.setColor(getBackgroundColor());
 		graphics.fillRect(getX(), getY(), getWidth(), getHeight());
 	}
-	
-	/**
-	 * TODO: draw everything that is needed for the game-play mode
-	 * @param graphics
-	 */
-	private void drawGamePlayList(Graphics graphics){
-		//parameters: no_of_moves, population_size, mutation_rate, no_of_generations
-		
-//		int sliderWidth = 170, sliderHeight = 5;
-//		JSlider slider = new JSlider(JSlider.HORIZONTAL, 0, 50, 25);
-//		graphicsManager.setLayout(null);
-//		graphicsManager.add(slider);
-//		
-//		slider.setBounds(getX()+(getWidth()/2)-(sliderWidth/2), 
-//				getY()+150, 
-//				sliderWidth, 10);
-		
-		for (int i=0; i<sliders.length; i++){
-			sliders[i].draw(graphics);
-		}
-		
-	}
+
 	
 	/**
 	 * draws the map-builder-list, according to design specifications
@@ -187,49 +342,185 @@ public class RightBar extends UIElement {
 	 */
 	private void drawMapElementListItem(Graphics graphics, int itemX, int itemY, int itemHeight, 
 			MapElement element, String name){
-		
+		Graphics2D g2d = (Graphics2D)graphics;
 		// if null, then it's a header
 		if (element == null){
-			int textIndent = 15;
+			//int textIndent = 15;
 			
 			//draw background
-			graphics.setColor(Constants.COLOR_RIGHT_BAR_HEADER);
-			graphics.fillRect(itemX, itemY, Constants.WINDOW_RIGHT_BAR_WIDTH, itemHeight);
+			g2d.setColor(Constants.COLOR_RIGHT_BAR_HEADER);
+			g2d.fillRect(itemX, itemY, Constants.WINDOW_RIGHT_BAR_WIDTH, itemHeight);
 			//draw text
-			graphics.setColor(Constants.COLOR_AVATAR_WHITE);
-			graphics.setFont(font);
+			g2d.setColor(Constants.COLOR_AVATAR_WHITE);
+			g2d.setFont(font);
 			
 			// Determine the Y coordinate for the text (note we add the ascent, as in java 2d 0 is top of the screen)
-		    int theY = itemY + ((itemHeight - graphics.getFontMetrics(font).getHeight()) / 2) + graphics.getFontMetrics(font).getAscent();
-		    graphics.drawString(name, itemX+textIndent, theY);
+		    int theY = itemY + ((itemHeight - g2d.getFontMetrics(font).getHeight()) / 2) + g2d.getFontMetrics(font).getAscent();
+			g2d.drawString(name, itemX+listItemIndentX, theY);
 		    
 		} else {
 			//TODO: these variables should be added to Constants
-			int elementIndent = 15;
 			int elementWidth = 20;
-			int textIndent = 50;
-			
+			int textIndent = listItemIndentX+35;
+			int x = itemX+listItemIndentX; 
+			int y = itemY + (itemHeight/2) - (elementWidth/2);
+
 			//draw background
-			graphics.setColor(Constants.COLOR_MAP_LAND);
-			graphics.fillRect(itemX, itemY, Constants.WINDOW_RIGHT_BAR_WIDTH, itemHeight);
+			g2d.setColor(Constants.COLOR_MAP_LAND);
+			g2d.fillRect(itemX, itemY, Constants.WINDOW_RIGHT_BAR_WIDTH, itemHeight);
+
 			//draw item
-			graphics.setColor(element.getColor());
-			graphics.fillRect(itemX+elementIndent, itemY + (itemHeight/2) - (elementWidth/2), elementWidth, elementWidth);
+			g2d.setColor(element.getColor());
+			g2d.fillRect(x, y, elementWidth, elementWidth);
+			//draw border
+			Color color = new Color(element.getColor().getRed(),element.getColor().getGreen(),element.getColor().getBlue(),85);
+			g2d.setColor(color);
+			g2d.setStroke(new BasicStroke(5));
+            g2d.drawRect(x, y, elementWidth, elementWidth);
+            g2d.setStroke(new BasicStroke(1));
 			//draw text
-			graphics.setFont(font);
-			graphics.setColor(Constants.COLOR_AVATAR_WHITE);
-			int theY = itemY + ((itemHeight - graphics.getFontMetrics(font).getHeight()) / 2) + graphics.getFontMetrics(font).getAscent();
-			graphics.drawString(name, itemX+textIndent, theY);
+			g2d.setFont(font);
+			g2d.setColor(Constants.COLOR_AVATAR_WHITE);
+			int theY = itemY + ((itemHeight - graphics.getFontMetrics(font).getHeight()) / 2) + g2d.getFontMetrics(font).getAscent();
+			g2d.drawString(name, itemX+textIndent, theY);
 		}
 		
 		// draw separator line at bottom of item
-		graphics.setColor(Constants.COLOR_RIGHT_BAR_HEADER);
+		g2d.setColor(Constants.COLOR_RIGHT_BAR_HEADER);
 		// -1 due to stroke width of line
-		graphics.drawLine(itemX, itemY+itemHeight-1, itemX+Constants.WINDOW_RIGHT_BAR_WIDTH, itemY+itemHeight-1);
+		g2d.drawLine(itemX, itemY+itemHeight-1, itemX+Constants.WINDOW_RIGHT_BAR_WIDTH, itemY+itemHeight-1);
+	}
+
+    /**
+     * draws the parameter list along with other options shown in right bar during game mode
+     *
+     * @author Rahul
+     * @author Patrick
+     *
+     * @param graphics
+     *
+     */
+    private void drawParametersList(Graphics graphics){
+        for (int para = 0; para < gameParameters.length; para++) {
+            drawParameter(graphics, para, (para * parameterHeight) + parametersStartY);
+        }
+        drawNumberOfTriesString(graphics);
+        drawCheckboxes(graphics);
+    }
+
+    /**
+     * draws number of tries string in right bar during game mode
+     *
+     * @author Rahul
+     * @author Patrick
+     *
+     */
+	private void drawNumberOfTriesString(Graphics graphics){
+		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
+		graphics.setFont(font);
+		String numberOfTries = numTriesString+game.getNoOfTries();
+		graphics.drawString(numberOfTries, minusButtonX+rightBarStartX, (gameParameters.length * parameterHeight) + parametersStartY);
+	}
+
+    /**
+     * TODO: draw checkboxes below parameters
+     *
+     * @author Patrick
+     */
+    private void drawCheckboxes(Graphics graphics){
+        //draw checkbox for showing only fittest genome
+    }
+
+    /**
+     * draws a parameter item
+     *
+     * @author Rahul
+     * @author Patrick
+     *
+     * @param graphics
+     * @param type 0=population_size, 1=speed, 2=no_of_moves, 3=mutation_rate, 4=no_of_generations
+     * @param y start y position of parameter
+     *
+     */
+	public void drawParameter(Graphics graphics, int type, int y){
+		Graphics2D g2d = (Graphics2D)graphics;
+        //draw header
+        g2d.setColor(Constants.COLOR_RIGHT_BAR_HEADER);
+        g2d.fillRect(rightBarStartX, y-(parameterHeight/3), Constants.WINDOW_RIGHT_BAR_WIDTH, (int)((float)parameterHeight/1.75)-5);
+
+        graphics.setColor(Constants.COLOR_AVATAR_WHITE);
+		graphics.setFont(font);
+		graphics.drawString(gameParameters[type], rightBarStartX+parameterStringX, y);
+
+        // draw parameter
+		int beautyFactor = (plusMinusButtonWidth/2) / 2;
+        graphics.drawString(minusString, 
+                rightBarStartX+minusButtonX+((plusMinusButtonWidth/2) - (fontSize / 8)), 
+                (y+buttonOffsetY) + ((plusMinusButtonWidth/2)+beautyFactor));
+        graphics.drawString(plusString, 
+                rightBarStartX+plusButtonX+((plusMinusButtonWidth/2) - 4), 
+                (y+buttonOffsetY) + ((plusMinusButtonWidth/2)+beautyFactor));
+        graphics.drawOval(rightBarStartX+minusButtonX, y+buttonOffsetY, plusMinusButtonWidth, plusMinusButtonWidth);
+        graphics.drawOval(rightBarStartX+plusButtonX, y+buttonOffsetY, plusMinusButtonWidth, plusMinusButtonWidth);
+
+        //draw the value of each parameter
+        int parameterX = rightBarStartX+((minusButtonX+plusButtonX) / 2 + (fontSize / 2));
+        switch (type){
+            case 0:
+                graphics.drawString(game.getPopulationSize()+"x", parameterX, (y+buttonOffsetY)+((plusMinusButtonWidth/2)+beautyFactor));
+                break;
+            case 1: 
+                graphics.drawString(game.getSpeed()+"x", parameterX, (y+buttonOffsetY)+((plusMinusButtonWidth/2)+beautyFactor));
+                break;
+            case 2: 
+                graphics.drawString(game.getNoOfMoves()+"x", parameterX, (y+buttonOffsetY)+((plusMinusButtonWidth/2)+beautyFactor));
+                break;
+            case 3:
+                graphics.drawString(game.getMutationRate()+"x", parameterX, (y+buttonOffsetY)+((plusMinusButtonWidth/2)+beautyFactor));
+                break;
+            default: 
+                graphics.drawString(game.getNoOfGenerations()+"x", parameterX, (y+buttonOffsetY)+((plusMinusButtonWidth/2)+beautyFactor));
+                break;
+        }
+	}
+
+
+    public void setGame(Game game){this.game = game;}
+
+	// to return if the buttons clicked
+	public boolean isSizeMinusButtonClicked(int mouseClickedX, int mouseClickedY) {
+		return allButtons[0].contains(mouseClickedX, mouseClickedY);
+	}
+	public boolean isSizePlusButtonClicked(int mouseClickedX, int mouseClickedY) {
+		return allButtons[1].contains(mouseClickedX, mouseClickedY);
 	}
 	
-//	public void setGraphicsManager(GraphicsManager gm){
-//		this.graphicsManager = gm;
-//	}
+    public boolean isSpeedMinusButtonClicked(int mouseClickedX, int mouseClickedY) {
+		return allButtons[2].contains(mouseClickedX, mouseClickedY);
+	}
+	public boolean isSpeedPlusButtonClicked(int mouseClickedX, int mouseClickedY) {
+		return allButtons[3].contains(mouseClickedX, mouseClickedY);
+	}
+
+	public boolean isMoveMinusButtonClicked(int mouseClickedX, int mouseClickedY) {
+		return allButtons[4].contains(mouseClickedX, mouseClickedY);
+	}
+	public boolean isMovePlusButtonClicked(int mouseClickedX, int mouseClickedY) {
+		return allButtons[5].contains(mouseClickedX, mouseClickedY);
+	}
+
+	public boolean isRateMinusButtonClicked(int mouseClickedX, int mouseClickedY) {
+		return allButtons[6].contains(mouseClickedX, mouseClickedY);
+	}
+	public boolean isRatePlusButtonClicked(int mouseClickedX, int mouseClickedY) {
+		return allButtons[7].contains(mouseClickedX, mouseClickedY);
+	}
+
+	public boolean isGenerationMinusButtonClicked(int mouseClickedX, int mouseClickedY) {
+		return allButtons[8].contains(mouseClickedX, mouseClickedY);
+	}
+	public boolean isGenerationPlusButtonClicked(int mouseClickedX, int mouseClickedY) {
+		return allButtons[9].contains(mouseClickedX, mouseClickedY);
+	}
 
 }

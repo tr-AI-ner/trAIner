@@ -10,6 +10,7 @@ import java.awt.*;
  * Any custom behavior should be implemented here
  * 
  * @author Patrick
+ * @author Kasparas
  *
  */
 public class ElementBlackHole extends MapElement {
@@ -22,6 +23,10 @@ public class ElementBlackHole extends MapElement {
     }
     public ElementBlackHole(int gridX, int gridY, Color elementColor, ElementBlackHole attachedBlackHole) {
         super(gridX, gridY,2,2, MapType.BLACK_HOLE, elementColor);
+    }
+
+    public ElementBlackHole(ElementBlackHole object){
+        super(object.getGridX(), object.getGridY(),2,2, MapType.BLACK_HOLE, object.getColor());
     }
 
 	@Override

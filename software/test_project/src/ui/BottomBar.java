@@ -1,15 +1,16 @@
 package ui;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.GradientPaint;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import java.awt.*;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 import functionality.Constants;
 import functionality.Setup;
+import functionality.InputManager;
+
+import javax.imageio.ImageIO;
 
 /**
  * This class is responsible for drawing the bottom bar of the game.
@@ -23,8 +24,38 @@ public class BottomBar extends UIElement {
 	
 	int copyrightFontSize = 10;
 
-	public BottomBar(int x, int y, int width, int height, Color backgroundColor, Setup setup) {
-		super(x, y, width, height, backgroundColor, setup);
+	int plusButtonY = getY() + 18;
+	int minusButtonY = getY() + 18;
+
+	int widthRect = 22;
+	int heightRect = 18;
+    int widthImg = 30;
+
+    int playButtonX = Constants.WINDOW_MAP_MARGIN + (Constants.WINDOW_MAP_WIDTH / 2) - (widthImg/2) - (widthImg / 6);
+	int playButtonY = getY() + (getHeight() / 2) - (widthImg / 2);
+	int pauseButtonX = Constants.WINDOW_MAP_MARGIN + (Constants.WINDOW_MAP_WIDTH / 2) + (widthImg/2) + (widthImg / 6);
+	int pauseButtonY = getY() + (getHeight() / 2) - (widthImg / 2);
+
+	public Rectangle playButton = new Rectangle(playButtonX, playButtonY, widthImg, widthImg);
+	public Rectangle pauseButton = new Rectangle(pauseButtonX, pauseButtonY, widthImg, widthImg);
+
+	int fontSize = 16;
+	Font font = new Font(Constants.DEFAULT_FONT, Font.PLAIN, fontSize);
+
+	BufferedImage playImg;
+	BufferedImage pauseImg;
+    // directory name where images should be loaded from 
+    String dirName = "../resources/";
+
+	public BottomBar(int x, int y, int width, int height, Color backgroundColor, Setup setup, InputManager inputManager) {
+		super(x, y, width, height, backgroundColor, setup, inputManager);
+
+		try {
+            playImg = ImageIO.read(new File(dirName, "playicon.png"));
+            pauseImg = ImageIO.read(new File(dirName, "pauseicon.png"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -35,6 +66,8 @@ public class BottomBar extends UIElement {
 	public void draw(Graphics graphics) {
 		drawBackground(graphics);
 		drawCopyright(graphics);
+		drawPlayButton(graphics);
+		drawPauseButton(graphics);
 		
 		//draw other UI-elements here...
 	}
@@ -76,4 +109,40 @@ public class BottomBar extends UIElement {
 		graphics.drawString(Constants.COPYRIGHT, copyX, copyY);
 	}
 
+	// Draws an play button
+	private void drawPlayButton(Graphics graphics){
+		graphics.setColor(Constants.COLOR_BACKGROUND);
+
+		int imgPlayX = Constants.WINDOW_MAP_MARGIN + (Constants.WINDOW_MAP_WIDTH / 2) - (widthImg/2) - (widthImg / 6);
+		int imgPlayY = getY() + (getHeight() / 2) - (widthImg / 2);
+
+		graphics.drawRect(playButtonX, playButtonY, widthImg, widthImg);
+        try {
+		    graphics.drawImage(playImg, imgPlayX, imgPlayY, widthImg, widthImg, null);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+	}
+	// Draws an pause button
+	private void drawPauseButton(Graphics graphics){
+		graphics.setColor(Constants.COLOR_BACKGROUND);
+
+		int imgPauseX = Constants.WINDOW_MAP_MARGIN + (Constants.WINDOW_MAP_WIDTH / 2) + (widthImg/2) + (widthImg / 6);
+		int imgPauseY = getY() + (getHeight() / 2) - (widthImg / 2);
+
+		graphics.drawRect(pauseButtonX, pauseButtonY, widthImg, widthImg);
+        try {
+            graphics.drawImage(pauseImg, imgPauseX, imgPauseY, widthImg, widthImg, null);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+	}
+
+	public boolean isPlayButtonClicked(int mouseClickedX, int mouseClickedY){
+	    return playButton.contains(mouseClickedX, mouseClickedY);
+    }
+
+    public boolean isPauseButtonClicked(int mouseClickedX, int mouseClickedY){
+        return pauseButton.contains(mouseClickedX, mouseClickedY);
+    }
 }

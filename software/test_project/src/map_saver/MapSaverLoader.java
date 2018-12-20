@@ -29,6 +29,9 @@ public class MapSaverLoader {
     int ySize = WINDOW_MAP_HEIGHT / MAP_ELEMENT_SIZE;
     private char[][] mapArray = new char[xSize][ySize];
 
+    // directory name where custom maps should be saved and loaded from
+    private String dirName = "../../default_maps/";
+
     public MapSaverLoader(Game game){
         this.game=game;
 
@@ -54,6 +57,7 @@ public class MapSaverLoader {
         boolean firstHole=true;
         //char[][] map = MapReader.readMap(mapFileName);
         char[][] map = readMap(mapFileName);
+        game.getGraphicsManager().getTopBar().setMapName(editMapName(mapFileName));
         game.resetMapElements();
         game.resetEntities();
         for (int col = 0; col < Constants.WINDOW_MAP_WIDTH / MAP_ELEMENT_SIZE; col += 1) {
@@ -65,6 +69,10 @@ public class MapSaverLoader {
                 else if (map[col][row] == MapType.START.representation())	{
                     ElementStart newStart = new ElementStart(col, row, functionality.Constants.COLOR_MAP_START);
                     game.getMapElements().add(newStart);
+                    game.getAvatar().setX(row*Constants.MAP_ELEMENT_SIZE);
+                    game.getAvatar().setY(col*Constants.MAP_ELEMENT_SIZE);
+                    game.getAvatar().reset();
+                    // TODO: do this for every single individual once the GA is merged with the master branch
                 }
                 else if (map[col][row] == MapType.FINISH.representation())	{
                     ElementFinish newFinish = new ElementFinish(col, row, functionality.Constants.COLOR_MAP_FINISH);
@@ -125,7 +133,8 @@ public class MapSaverLoader {
         FileWriter fileWriter = null;
         char[][] m =game.getMap().getMapArr();
         try {
-            fileWriter = new FileWriter(fileName);
+            fileWriter = new FileWriter(new File(dirName,fileName));
+            //fileWriter.setCurrentDirectory("../../default_maps/");
             //Add a new line separator after the header
             for(int y=0;y<Constants.WINDOW_MAP_HEIGHT/MAP_ELEMENT_SIZE;y++){
                 if(y>0){fileWriter.append(NEW_LINE_SEPARATOR);}
@@ -166,11 +175,12 @@ public class MapSaverLoader {
                 public void run() {
                     JFileChooser fcLoad = new JFileChooser();
                     fcLoad.setVisible(true);
-                    fcLoad.setCurrentDirectory(new File(".."));
+                    fcLoad.setCurrentDirectory(new File(dirName));
                     fcLoad.setDialogTitle("LOAD MAP");
                     int returnVal = fcLoad.showOpenDialog(game.getGraphicsManager().getFrame());
                     if (returnVal == JFileChooser.APPROVE_OPTION && fcLoad.getSelectedFile().getName().contains(".csv")) {
                         String filename=fcLoad.getSelectedFile().getName();
+                        System.out.println("should load filename: "+filename);
                         loadMap(filename);
                     }
                     else{fcLoad.cancelSelection();}
@@ -189,7 +199,7 @@ public class MapSaverLoader {
         game.getGraphicsManager().getInputManager().setMouseClicked(false);
         try{
             JFileChooser fcPick = new JFileChooser();
-            fcPick.setCurrentDirectory(new File(".."));
+            fcPick.setCurrentDirectory(new File(dirName));
             fcPick.setVisible(true);
             fcPick.setDialogTitle("SAVE MAP");
             int returnVal = fcPick.showDialog(game.getGraphicsManager().getFrame(),"SAVE");
@@ -208,6 +218,14 @@ public class MapSaverLoader {
         }
     }
 
+    /**
+     * takes away '.csv' from the filename
+     * in order for the map name to be shown in the TopBar
+     */
+    public String editMapName(String mapName) {
+    	mapName=mapName.substring(0,mapName.length()-4);
+    	return mapName;
+    }
     /**
      * edits filename
      * @param filename
@@ -238,7 +256,7 @@ public class MapSaverLoader {
         BufferedReader fileReader = null;
         try {
             String line = "";
-            fileReader = new BufferedReader(new FileReader(mapFileName));
+            fileReader = new BufferedReader(new FileReader(new File(dirName, mapFileName)));
             int y=0;
             while ((line = fileReader.readLine()) != null) {
                 String [] tokens = line.split(COMMA_DELIMITER);
@@ -305,6 +323,29 @@ public class MapSaverLoader {
             }
         }
     }
+    /**
+     * returns True if SAVE button was clicked
+     * @return
+     */
+    public boolean saveButtonClicked() {
+    	return game.getGraphicsManager().getTopBar().getSaveButton().contains(game.getGraphicsManager().getInputManager().getMouseClickedX(), game.getGraphicsManager().getInputManager().getMouseClickedY());
+    }
 
-
+    /**
+     * returns True if LOAD button was clicked
+     * @return 
+     */
+    public boolean loadButtonClicked() {
+    	return game.getGraphicsManager().getTopBar().getLoadButton().contains(game.getGraphicsManager().getInputManager().getMouseClickedX(), game.getGraphicsManager().getInputManager().getMouseClickedY());
+    }
+    
+    /**
+     * Resets entities and map elements
+     * so that the UI shows an empty map
+     */
+    public void initEmptyMap() {
+        game.resetMapElements();
+        game.resetEntities();
+    }
+    
 }

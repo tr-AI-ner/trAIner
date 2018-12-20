@@ -121,7 +121,31 @@ public class GraphicsManager extends JPanel {
 		//draw map
 		map.draw(graphics, entities);
 	}
-	
+
+    /**
+     * draws the selected map element from the right bar underneath the mouse
+     * if the game is in building mode
+     *
+     * @param selectedElement 
+     *
+     */
+    public void drawBuilderElement(MapElement selectedElement){
+        //int x = (gridX * Constants.MAP_ELEMENT_SIZE) + Constants.WINDOW_MAP_MARGIN;
+        //int y = (gridY*Constants.MAP_ELEMENT_SIZE) + Constants.WINDOW_MAP_MARGIN+Constants.WINDOW_HEADER_HEIGHT;
+
+        //System.out.println("x: "+inputManager.getMouseMovedX()+", y: "+inputManager.getMouseMovedY());
+        if (selectedElement != null){
+            //System.out.println("oldX: "+selectedElement.getX()+", oldY: "+selectedElement.getY());
+//            selectedElement.move(inputManager.getMouseMovedX(), inputManager.getMouseMovedY());
+            selectedElement.setX(inputManager.getMouseMovedX());
+            selectedElement.setY(inputManager.getMouseMovedY());
+//            selectedElement.setGridX(inputManager.getMouseMovedX());
+//            selectedElement.setGridY(inputManager.getMouseMovedY());
+            //System.out.println("newX: "+selectedElement.getX()+", newY: "+selectedElement.getY());
+            selectedElement.drawTemporary(graphics);
+        }
+    }
+
 	/**
 	 * initialize all 3 toolbars
 	 * (top-, bottom-, & right-bar)
@@ -129,19 +153,20 @@ public class GraphicsManager extends JPanel {
 	 */
 	private void setupToolbars(){
 		topBar = new TopBar(0, 0, setup.getFrameWidth()+12, Constants.WINDOW_HEADER_HEIGHT, 
-				Constants.COLOR_HEADER_1, setup,"map name"); // TODO change with the loaded map name
+				Constants.COLOR_HEADER_1, setup, inputManager, "map name"); // TODO change with the loaded map name
 		
 		bottomBar = new BottomBar(0, 
 				Constants.WINDOW_HEADER_HEIGHT+(Constants.WINDOW_MAP_MARGIN*2)+Constants.WINDOW_MAP_HEIGHT, 
 				setup.getFrameWidth()+12, 
 				Constants.WINDOW_HEADER_HEIGHT, 
-				Constants.COLOR_HEADER_1, setup);
+				Constants.COLOR_HEADER_1, setup, inputManager);
 		
 		rightBar = new RightBar((Constants.WINDOW_MAP_MARGIN*2)+Constants.WINDOW_MAP_WIDTH, 
 				Constants.WINDOW_HEADER_HEIGHT, 
 				Constants.WINDOW_RIGHT_BAR_WIDTH, 
 				Constants.WINDOW_RIGHT_BAR_HEIGHT, 
-				Constants.COLOR_MAP_LAND, setup);
+				Constants.COLOR_MAP_LAND, setup, inputManager);
+        rightBar.setGame(game);
 	}
 
 
@@ -153,6 +178,8 @@ public class GraphicsManager extends JPanel {
 	public Map getMap(){
 		return map;
 	}
+
+    public void setGame(Game game){this.game = game;}
 
 	public InputManager getInputManager(){
 		return inputManager;
