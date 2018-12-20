@@ -165,7 +165,7 @@ public class Genome {
     public Genome crossover(Genome mate){
         int [][]child = new int[this.maxNrOfMoves][2];
         Random rand = new Random();
-        int crossover = rand.nextInt(this.maxNrOfMoves);
+        int crossover = this.maxNrOfMoves / 2;
         for(int i = 0; i<this.maxNrOfMoves;i++){
             if(i > crossover){
                 child[i] = this.gene[i];

@@ -36,7 +36,7 @@ public class Individual extends Avatar {
     // start position
     int[] start_pos = {475, 265};
     // speed of the individuals movement
-    int speed = 10;
+    int speed = 25;
     // length of the gene, that is number of directions in the gene array i.e maximum
     // number of possible moves
     int maxNrOfMoves;
@@ -72,20 +72,22 @@ public class Individual extends Avatar {
     /**
      * Calculate the fitness of an Individual
      *
-     *
      */
     public void calcFitness() {
         // pre factor determining fluctuation of fitness function
-        double preFit = 100;
+        double preFit = this.maxNrOfMoves * 100;
+        // calculate the distance if individual has finished
         if (this.fin != 0) {
-            this.fitness = this.fitness * 2;
-            this.fitness = Math.pow((preFit / this.fin), 5);
+            this.fitness = (preFit / (this.fin));
+            this.fitness = Math.pow(this.fitness, 3);
+        }else
+        {
+            // calculate the distance of the individual to the goal
+            double distance = Math.sqrt(Math.abs(Math.pow((this.getX() - goal[0]), 2) - Math.pow((this.getY() - goal[1]), 2)));
+            // calculate the fitness
+            this.fitness = (preFit / (this.maxNrOfMoves * distance));
+            this.fitness = Math.pow(this.fitness, 3);
         }
-        // calculate the distance of the individual to the goal
-        double dist = Math.sqrt(Math.abs(Math.pow((this.getX() - goal[0]), 2) - Math.pow((this.getY() - goal[1]), 2)));
-        // calculate the fitness 
-        this.fitness = Math.pow((preFit / dist * this.maxNrOfMoves), 2);
-        
     }
 
     /**
@@ -93,7 +95,7 @@ public class Individual extends Avatar {
      * already reached the goal
      */
     public void calcDistance() {
-        // calculate the distance of the vector
+        // calculate the distance of the vector d
         double d = Math.sqrt(Math.pow((this.getX() - goal[0]), 2) - Math.pow((this.getY() - goal[1]), 2));
         if (d < this.best_dist) {
             this.best_dist = d;
@@ -160,9 +162,9 @@ public class Individual extends Avatar {
      * move the individual according to the next direction in the gene
      *
      */
-    public void makeMove(int currentMove){
-        int direction[];
-        direction = this.getGenome().getGenes()[currentMove];
+    public void makeMove(int maxNrOfMovestep){
+        int direction[] = new int[2];
+        direction = this.getGenome().getGenes()[maxNrOfMovestep]; 
         this.move(direction[0], direction[1]);
     }
 
