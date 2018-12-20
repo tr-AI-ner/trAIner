@@ -58,7 +58,7 @@ public class Individual extends Avatar {
         this.genome = new Genome(maxNrOfMoves);
 
     }
-    
+
     /**
      * Constructor of the individual, inheriting from Avatar
      *

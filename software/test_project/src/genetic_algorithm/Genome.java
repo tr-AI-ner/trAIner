@@ -30,7 +30,7 @@ public class Genome {
 //        int numOfMoves = rand.nextInt(25) + 1;
         for(int i=0; i<maxNrOfMoves; i++){
 
-            if(i%35==0) {
+            if(i%numberOfSameMoves==0) {
                // numOfMoves = rand.nextInt(25) + 1;
                 move = this.getRandomDirection();
             }
