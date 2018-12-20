@@ -129,10 +129,10 @@ public class Game {
             this.inputManager = gm.getInputManager();
             this.setup = gm.getSetup();
             this.map = gm.getMap();
-            this.maxNrOfMoves = 1000;
+            this.maxNrOfMoves = 400;
 
             entities = new ArrayList<>();
-            this.populationSize = 500;
+            this.populationSize = 1000;
             this.mutationRate = (float) 0.01;
             this.maxGens = 10;
 

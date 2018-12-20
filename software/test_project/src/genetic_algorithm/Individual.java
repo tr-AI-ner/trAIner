@@ -36,7 +36,7 @@ public class Individual extends Avatar {
     // start position
     int[] start_pos = {475, 265};
     // speed of the individuals movement
-    int speed = 25;
+    int speed = 15;
     // length of the gene, that is number of directions in the gene array i.e maximum
     // number of possible moves
     int maxNrOfMoves;
@@ -87,7 +87,9 @@ public class Individual extends Avatar {
             // calculate the fitness
             this.fitness = (preFit / (this.maxNrOfMoves * distance));
             this.fitness = Math.pow(this.fitness, 3);
+            System.out.println("Distance " + distance);
         }
+        System.out.println("Fitness " + this.fitness);
     }
 
     /**

@@ -97,7 +97,9 @@ public class Population {
             if(this.population[i].getX() == this.population[i].goal[0] && this.population[i].getY() == this.population[i].goal[1]){
                 this.population[i].fin = currentCycle;
             }
-            this.population[i].makeMove(currentCycle);
+            if(this.population[i].fin == 0){
+                this.population[i].makeMove(currentCycle);
+            }
         }
     }
 
