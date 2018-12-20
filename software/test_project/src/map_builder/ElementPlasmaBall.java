@@ -25,6 +25,11 @@ public class ElementPlasmaBall extends MapElement {
         sourceY = gridY;
 	}
 
+    public ElementPlasmaBall(ElementPlasmaBall object){
+        super(object.getGridX(), object.getGridY(), MapType.PLASMA_BALL, object.getColor());
+        sourceX = object.getGridX();
+        sourceY = object.getGridY();
+    }
 
 	/**
 	 *
