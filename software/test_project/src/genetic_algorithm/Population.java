@@ -29,6 +29,7 @@ public class Population {
     // one generation
     int maxNrOfMoves;
 
+
     //defaults
     //
     Individual[] population;
@@ -169,12 +170,13 @@ public class Population {
             int randomMommy = rand.nextInt(this.gene_pool.size());
             int randomDaddy = rand.nextInt(this.gene_pool.size());
 
+
             Individual father = this.gene_pool.get(randomDaddy);
             Individual mother = this.gene_pool.get(randomMommy);
             Genome dadsGenes = father.getGenome();
             Genome momsGenes = mother.getGenome();
             Genome child = momsGenes.crossover(dadsGenes);
-
+            System.out.println("Child genes: " + Arrays.deepToString(child.gene));
             child.mutateGene(this.mutationRate);
             this.population[i].setGenome(child);
             game.entities.add(this.population[i]);

@@ -1,5 +1,6 @@
 package genetic_algorithm;
 
+import java.util.Arrays;
 import java.util.Random;
 
 public class Genome {
@@ -8,7 +9,8 @@ public class Genome {
  *
  * @author Lugges991: Lucas Mahler
  */
-    
+
+    int numberOfSameMoves = 15;
     int[][] gene;
     int step;
     int maxNrOfMoves;
@@ -23,8 +25,16 @@ public class Genome {
         this.step = 0;
         this.maxNrOfMoves = maxNrOfMoves;
         this.gene = new int[maxNrOfMoves][2];
+        int[] move = this.getRandomDirection();
+//        Random rand = new Random();
+//        int numOfMoves = rand.nextInt(25) + 1;
         for(int i=0; i<maxNrOfMoves; i++){
-            this.gene[i] = this.getRandomDirection();
+
+            if(i%35==0) {
+               // numOfMoves = rand.nextInt(25) + 1;
+                move = this.getRandomDirection();
+            }
+            this.gene[i] = move;
         }
 
     }
@@ -44,11 +54,24 @@ public class Genome {
      */
     private void randomizeGene(int population_size) {
         for (int i = 0; i < population_size; i++) {
+
             this.gene[i] = getRandomDirection();
         }
 
     }
-    
+
+    /**
+     *
+     * randomly pick how long the individual is going to walk in one direction
+     *
+     * @return int, number of times we are going to use the same value
+     */
+    private int getNumberSameMoves() {
+        Random random = new Random();
+        return random.nextInt(10);
+    }
+
+
     /**
      * randomly pick a direction
      *
@@ -124,8 +147,6 @@ public class Genome {
      */
     public void mutateGene(float mutationRate) {
         Random rand = new Random();
-
-
         for (int i = 0; i < this.gene.length; i++) {
             if(rand.nextFloat() < mutationRate){
                 this.gene[i] = this.getRandomDirection();
@@ -175,5 +196,13 @@ public class Genome {
     }
     public int getMaxNrOfMoves(){
         return this.maxNrOfMoves;
+    }
+
+    public int getNumberOfSameMoves() {
+        return numberOfSameMoves;
+    }
+
+    public void setNumberOfSameMoves(int numberOfSameMoves) {
+        this.numberOfSameMoves = numberOfSameMoves;
     }
 }

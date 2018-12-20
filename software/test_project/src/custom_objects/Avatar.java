@@ -28,8 +28,8 @@ public class Avatar extends Entity {
 	}
 	
 	public void move(int incX, int incY){
-		this.toMoveX = (int) (this.toMoveX != 0 ? this.toMoveX : this.getX() + incX); 
-		this.toMoveY = (int) (this.toMoveY != 0 ? this.toMoveY : this.getY() + incY); 
+		this.toMoveX = (int) (this.toMoveX == 0 ? this.toMoveX : this.getX() + incX); //POSSIBLE BUGS WITH KEYBOARD MODE AS OUR GAME WAS BUILT ON LIES
+		this.toMoveY = (int) (this.toMoveY == 0 ? this.toMoveY : this.getY() + incY);//POSSIBLE BUGS WITH KEYBOARD MODE AS OUR GAME WAS BUILT ON LIES
 		
 		if(incY == 0) // left-arrow right-arrow
 			this.toMoveX = (this.getX() + incX);
