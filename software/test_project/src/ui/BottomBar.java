@@ -3,6 +3,7 @@ package ui;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
 import functionality.Constants;
@@ -29,33 +30,29 @@ public class BottomBar extends UIElement {
 	int widthRect = 22;
 	int heightRect = 18;
     int widthImg = 30;
-    int heightImg = 26;
 
-    int playButtonX = Constants.WINDOW_MAP_MARGIN + 360;
-	int playButtonY = getY() + 15;
-	int pauseButtonX = Constants.WINDOW_MAP_X0 + 410;
-	int pauseButtonY = getY() + 15;
+    int playButtonX = Constants.WINDOW_MAP_MARGIN + (Constants.WINDOW_MAP_WIDTH / 2) - (widthImg/2) - (widthImg / 6);
+	int playButtonY = getY() + (getHeight() / 2) - (widthImg / 2);
+	int pauseButtonX = Constants.WINDOW_MAP_MARGIN + (Constants.WINDOW_MAP_WIDTH / 2) + (widthImg/2) + (widthImg / 6);
+	int pauseButtonY = getY() + (getHeight() / 2) - (widthImg / 2);
 
-	public Rectangle playButton = new Rectangle(playButtonX, playButtonY, widthImg, heightImg);
-	public Rectangle pauseButton = new Rectangle(pauseButtonX, pauseButtonY, widthImg, heightImg);
+	public Rectangle playButton = new Rectangle(playButtonX, playButtonY, widthImg, widthImg);
+	public Rectangle pauseButton = new Rectangle(pauseButtonX, pauseButtonY, widthImg, widthImg);
 
 	int fontSize = 16;
 	Font font = new Font(Constants.DEFAULT_FONT, Font.PLAIN, fontSize);
 
 	BufferedImage playImg;
 	BufferedImage pauseImg;
+    // directory name where images should be loaded from 
+    String dirName = "../resources/";
 
 	public BottomBar(int x, int y, int width, int height, Color backgroundColor, Setup setup, InputManager inputManager) {
 		super(x, y, width, height, backgroundColor, setup, inputManager);
 
-    /**
-    *	Getting two images for Pause and Play Button
-    */
 		try {
-			playImg = ImageIO.read(getClass().getResourceAsStream("/playicon.png"));
-
-			pauseImg = ImageIO.read(getClass().getResourceAsStream("/pauseicon.png"));
-
+            playImg = ImageIO.read(new File(dirName, "playicon.png"));
+            pauseImg = ImageIO.read(new File(dirName, "pauseicon.png"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -116,12 +113,12 @@ public class BottomBar extends UIElement {
 	private void drawPlayButton(Graphics graphics){
 		graphics.setColor(Constants.COLOR_BACKGROUND);
 
-		int imgPlayX = Constants.WINDOW_MAP_MARGIN + 360;
-		int imgPlayY = getY() + 15;
+		int imgPlayX = Constants.WINDOW_MAP_MARGIN + (Constants.WINDOW_MAP_WIDTH / 2) - (widthImg/2) - (widthImg / 6);
+		int imgPlayY = getY() + (getHeight() / 2) - (widthImg / 2);
 
-		graphics.drawRect(playButtonX, playButtonY, widthImg, heightImg);
+		graphics.drawRect(playButtonX, playButtonY, widthImg, widthImg);
         try {
-		    graphics.drawImage(playImg, imgPlayX, imgPlayY, widthImg, heightImg, null);
+		    graphics.drawImage(playImg, imgPlayX, imgPlayY, widthImg, widthImg, null);
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -130,12 +127,12 @@ public class BottomBar extends UIElement {
 	private void drawPauseButton(Graphics graphics){
 		graphics.setColor(Constants.COLOR_BACKGROUND);
 
-		int imgPauseX = Constants.WINDOW_MAP_MARGIN + 410;
-		int imgPauseY = getY() + 15;
+		int imgPauseX = Constants.WINDOW_MAP_MARGIN + (Constants.WINDOW_MAP_WIDTH / 2) + (widthImg/2) + (widthImg / 6);
+		int imgPauseY = getY() + (getHeight() / 2) - (widthImg / 2);
 
-		graphics.drawRect(pauseButtonX, pauseButtonY, widthImg, heightImg);
+		graphics.drawRect(pauseButtonX, pauseButtonY, widthImg, widthImg);
         try {
-            graphics.drawImage(pauseImg, imgPauseX, imgPauseY, widthImg, heightImg, null);
+            graphics.drawImage(pauseImg, imgPauseX, imgPauseY, widthImg, widthImg, null);
         } catch (Exception e){
             e.printStackTrace();
         }

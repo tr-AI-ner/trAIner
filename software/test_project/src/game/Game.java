@@ -158,7 +158,8 @@ public class Game {
 		//Switches between the game and the build mode
 		if(inputManager.getKeyResult()[5]) { Main.MODE = 0; }
 		if(inputManager.getKeyResult()[6]) { Main.MODE = 1; }
-
+		// loads an empty map
+		if(inputManager.getKeyResult()[7]) { mapSaverLoader.initEmptyMap(); }
         // check if user clicked on save button
         if (inputManager.isMouseClicked()  && mapSaverLoader.saveButtonClicked()){
             mapSaverLoader.saveButtonLogic();
@@ -196,25 +197,16 @@ public class Game {
         // check for parameter changes by user and process them
         processParameterChanges(graphicsManager.getRightBar().getParameterChanges());
 
-		/**
-		 * All buttons on the Bottom and Right bar
-		 *
-		 */
-
 		// 	Play Button to play the game
 		if (inputManager.isMouseClicked()
 				&& graphicsManager.getBottomBar().isPlayButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
 			System.out.println("Play Button Clicked");
-			inputManager.setMouseClicked(false);
 		}
 
 		//  Pause Button to pause the game
 		else if (inputManager.isMouseClicked()
 				&& graphicsManager.getBottomBar().isPauseButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
 			System.out.println("Pause Button Clicked");
-			inputManager.setMouseClicked(false);
-			System.exit(0);
-
 		}
 
         inputManager.setMouseClicked(false);
@@ -237,9 +229,11 @@ public class Game {
     /**
      * Updates the state of the game according to the current mode
      * e.g.:
-     *      0 - Game
+     *      0 - Player Game
      *      1 - Map Building
      *      2 - Preview Mode
+     *      3 - AI Game
+     *      4 - Challenge Mode
      * 
      * @author Patrick
      */
@@ -252,6 +246,10 @@ public class Game {
                 break;
             case 2:
                 moveElements();
+                break;
+            case 3:
+                break;
+            case 4:
                 break;
         }
         cleanUp();
@@ -284,7 +282,11 @@ public class Game {
 		if(Main.MODE == 0 || Main.MODE == 2) {
             for (MapElement element: this.getMapElements()){
                 if(element.getMapType() == MapType.PLASMA_BALL || element.getMapType() == MapType.ENEMY) {
-                    element.update();
+                    if(element.getMapType() == MapType.ENEMY) {
+                        ((ElementEnemy)element).update(mapElements);
+                    } else {
+                        element.update();
+                    }
                     // Because of the grid element system we have to check if the elements don't collide on the grid level
                     if(Math.abs(element.getX()  - avatar.getX()) < Constants.MAP_ELEMENT_SIZE
                             && Math.abs(element.getY()  - avatar.getY()) < Constants.MAP_ELEMENT_SIZE) {
@@ -441,8 +443,8 @@ public class Game {
             System.out.println("No position found for placing element... gridX: "+gridX+", gridY: "+gridY);
         }
         
-        // reset clicked element
-        this.clickedMapElement = null;
+        // reset clicked element -> uncomment if only 1 element should be added
+        //this.clickedMapElement = null;
     }
 
     /**

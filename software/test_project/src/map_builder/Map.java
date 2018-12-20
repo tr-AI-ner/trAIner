@@ -101,8 +101,12 @@ public class Map {
 		// add map elements to map
 		for (Entity e: entities){
 			if ((e instanceof MapElement)){
-				map[((MapElement)e).getGridX()][((MapElement)e).getGridY()] = 
-						((MapElement)e).getMapType().representation();
+                MapElement elem = (MapElement) e;
+                if(elem.getGridX()>=0 && elem.getGridX()<Constants.GRID_COLUMNS  
+                        && elem.getGridY()>=0 && elem.getGridY()<Constants.GRID_ROWS){
+				    map[((MapElement)e).getGridX()][((MapElement)e).getGridY()] = 
+						    ((MapElement)e).getMapType().representation();
+                }
 			}
 		}
 	}
