@@ -359,6 +359,7 @@ public class Game {
                         break;
                     }
                 }
+                map.setMapArr(mapElements.get(elem).getGridX(),mapElements.get(elem).getGridY(),MapType.LAND.representation());
                 mapElements.remove(elem);
                 break;
             }
@@ -442,6 +443,7 @@ public class Game {
             }
             mapElements.add(newElement);
             entities.add(newElement);
+            map.setMapArr(newElement.getGridX(), newElement.getGridY(), newElement.getMapType().representation());
         } else {
             System.out.println("No position found for placing element... gridX: "+gridX+", gridY: "+gridY);
         }

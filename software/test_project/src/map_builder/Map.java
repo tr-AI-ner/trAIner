@@ -140,7 +140,9 @@ public class Map {
         return theEntities;
     }
 
-
+    public void setMapArr(int x, int y, char value) {
+    	map[x][y]=value;
+    }
 }
 
 
