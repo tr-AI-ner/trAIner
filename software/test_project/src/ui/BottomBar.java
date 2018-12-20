@@ -3,6 +3,7 @@ package ui;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
 import functionality.Constants;
@@ -52,13 +53,37 @@ public class BottomBar extends UIElement {
     *	Getting two images for Pause and Play Button
     */
 		try {
-			playImg = ImageIO.read(getClass().getResourceAsStream("/playicon.png"));
+			//playImg = ImageIO.read(getClass().getResourceAsStream("/playicon.png"));
 
-			pauseImg = ImageIO.read(getClass().getResourceAsStream("/pauseicon.png"));
+			//pauseImg = ImageIO.read(getClass().getResourceAsStream("/pauseicon.png"));
+            
+            String dirName = "../resources/";
+            
+            playImg = ImageIO.read(new File(dirName, "playicon.png"));
+            pauseImg = ImageIO.read(new File(dirName, "pauseicon.png"));
+			
+            
+            //playImg = ImageIO.read(getClass().getResourceAsStream("resources/playicon.png"));
+			//pauseImg = ImageIO.read(getClass().getResourceAsStream("resources/pauseicon.png"));
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+        
+        //String path = "resources/playicon.png";
+        //ClassLoader cl = ImageHandler.class.getClassLoader();
+        //URL imgURL = cl.getResource(path);
+        ////URL imgURL = ImageHandler.class.getResource(path);
+
+        //if (imgURL != null) {
+        //    ImageIcon icon = new ImageIcon(imgURL, description);
+        //    Image img = icon.getImage();
+        //    Image sizedImg = img.getScaledInstance(width, height, Image.SCALE_DEFAULT);
+        //    return new ImageIcon(sizedImg);
+        //} else {
+        //    System.err.println("Couldn't find file: " + path);
+        //    return null;
+        //}
 	}
 	
 	/**
