@@ -119,7 +119,7 @@ public class Population {
      */
     public boolean reachedGoal() {
         for (int i = 0; i < this.population.length; i++) {
-            if (this.population[i].fin) return true;
+            if (this.population[i].fin != 0) return true;
         }
         return false;
     }

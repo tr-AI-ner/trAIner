@@ -29,7 +29,6 @@ public class Individual extends Avatar {
    
 
     // tunable hyper parameters
-
     // x, y coordinate of the goal field
     int[] goal = {1, 1};
     // reached the goal
@@ -101,8 +100,6 @@ public class Individual extends Avatar {
         System.out.println(d);
         if (d < this.best_dist) {
             this.best_dist = d;
-        } else if (d == 0) {
-            this.fin = true;
         }
 
     }
@@ -208,11 +205,11 @@ public class Individual extends Avatar {
         this.goal = goal;
     }
 
-    public boolean isFin() {
+    public int isFin() {
         return fin;
     }
 
-    public void setFin(boolean fin) {
+    public void setFin(int fin) {
         this.fin = fin;
     }
 
