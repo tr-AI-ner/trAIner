@@ -7,7 +7,7 @@ import map_builder.Map;
 
 public class Main {
 
-	public static int MODE = 0; //0 = Game , 1 = MapBuilder, 2 = Preview mode
+	public static int MODE = 0; //0 = Player_Game , 1 = MapBuilder, 2 = Preview mode, 3 = AI_Game, 4 = Challenge mode
 	private Game game = null;
 
 	public static void main(String[] args) {

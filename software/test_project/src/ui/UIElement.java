@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import functionality.Setup;
+import functionality.InputManager;
 
 /**
  * 
@@ -28,14 +29,16 @@ public abstract class UIElement {
 	private Color backgroundColor;
 	
 	private Setup setup;
+    private InputManager inputManager;
 	
-	public UIElement(int x, int y, int width, int height, Color backgroundColor, Setup setup){
+	public UIElement(int x, int y, int width, int height, Color backgroundColor, Setup setup, InputManager inputManager){
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
 		this.backgroundColor = backgroundColor;
 		this.setup = setup;
+        this.inputManager = inputManager;
 	}
 
 	/**
@@ -93,6 +96,13 @@ public abstract class UIElement {
 		this.setup = setup;
 	}
 	
+	public InputManager getInputManager() {
+		return inputManager;
+	}
+
+	public void setInputManager(InputManager inputManager) {
+		this.inputManager = inputManager;
+	}
 	
 	
 }

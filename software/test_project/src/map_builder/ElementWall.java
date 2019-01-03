@@ -17,5 +17,9 @@ public class ElementWall extends MapElement{
 		super(gridX, gridY, MapType.WALL, elementColor);
 		
 	}
+    
+    public ElementWall(ElementWall object){
+        super(object.getGridX(), object.getGridY(), MapType.WALL, object.getColor());
+    }
 
 }

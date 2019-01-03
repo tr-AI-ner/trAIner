@@ -62,6 +62,7 @@ public class InputManager extends Component implements KeyListener, MouseListene
 		if(evt.getKeyCode() == KeyEvent.VK_ESCAPE) { keyArray[4] = true; } //ESC CLOSE_GAME
 		if(evt.getKeyCode() == KeyEvent.VK_G) { keyArray[5] = true; } //Change into game mode
 		if(evt.getKeyCode() == KeyEvent.VK_B) { keyArray[6] = true; } //Change into build mode
+		if(evt.getKeyCode() == KeyEvent.VK_E) { keyArray[7] = true; } //Initialize an Empty map
 
 	}
 
@@ -79,13 +80,16 @@ public class InputManager extends Component implements KeyListener, MouseListene
 		if(evt.getKeyCode() == KeyEvent.VK_ESCAPE) { keyArray[4] = false; }
 		if(evt.getKeyCode() == KeyEvent.VK_G) { keyArray[5] = false; }
 		if(evt.getKeyCode() == KeyEvent.VK_B) { keyArray[6] = false; }
-
+		if(evt.getKeyCode() == KeyEvent.VK_E) { keyArray[7] = false; }
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent evt){}
 	@Override
 	public void mouseExited(MouseEvent evt){}
+
+
+
 	@Override
 	public void mouseClicked(MouseEvent evt){
         isMouseClicked   = true;
@@ -119,7 +123,7 @@ public class InputManager extends Component implements KeyListener, MouseListene
 	public boolean getIsMouseDragged(){return isMouseDragged;}
 	public boolean getIsKeyEvent(){return isKeyEvent;}
 	public boolean getIsMousePressed(){return isMousePressed;}
-
+	
 	//a way to get the boolean array of keys
 	public boolean[] getKeyResult() {return keyArray;}
 	
@@ -131,12 +135,13 @@ public class InputManager extends Component implements KeyListener, MouseListene
 		this.lastMouseProcessTime = System.currentTimeMillis();
 	}
 
-	public boolean isMouseClicked() {
-		return isMouseClicked;
-	}
-
+	public boolean isMouseClicked() {return isMouseClicked;}
 	public void setMouseClicked(boolean mouseClicked) {
 		isMouseClicked = mouseClicked;
+        //also reset the mouse button
+        if (mouseClicked==false){
+            mouseButton = 0;
+        }
 	}
 
 	public int getMouseButtonClicked(){return mouseButtonClicked;}

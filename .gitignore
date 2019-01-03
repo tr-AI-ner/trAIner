@@ -9,6 +9,13 @@
 .idea/*
 *.iml
 
+# discard vim session files
+*.vim
+
+# discard eclipse classpath files
+*.classpath
+#software/test_project/.classpath
+
 # User-specific stuff
 .idea/**/workspace.xml
 .idea/**/tasks.xml

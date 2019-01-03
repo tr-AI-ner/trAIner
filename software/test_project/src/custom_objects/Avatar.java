@@ -8,6 +8,7 @@ import game.Game;
 import map_builder.ElementBlackHole;
 import map_builder.MapElement;
 import map_builder.MapType;
+import map_builder.ElementStart;
 
 public class Avatar extends Entity {
 	
@@ -95,10 +96,10 @@ public class Avatar extends Entity {
 	 */
 	private boolean collidingWithBorder(){
 		return (
-				       this.toMoveX <= 0 
-					|| this.toMoveY <= 0
-					|| this.toMoveX >= (Constants.WINDOW_MAP_WIDTH - getWidth()) 
-					|| this.toMoveY >= (Constants.WINDOW_MAP_HEIGHT - getHeight())
+				       this.toMoveX < 0 
+					|| this.toMoveY < 0
+					|| this.toMoveX > (Constants.WINDOW_MAP_WIDTH - getWidth()) 
+					|| this.toMoveY > (Constants.WINDOW_MAP_HEIGHT - getHeight())
 				);
 	}
 
@@ -108,10 +109,10 @@ public class Avatar extends Entity {
      */
     private boolean blackHoled(){
         for (MapElement element: game.getMapElements()){
-            if (toMoveX+getWidth() >= element.getX()
-                    && toMoveX <= (element.getX()+element.getWidth())
-                    && (toMoveY+getHeight() >= element.getY()
-                    && toMoveY <= (element.getY()+element.getHeight()))
+            if (toMoveX+getWidth() > element.getX()
+                    && toMoveX < (element.getX()+element.getWidth())
+                    && (toMoveY+getHeight() > element.getY()
+                    && toMoveY < (element.getY()+element.getHeight()))
                     && element.getMapType() == MapType.BLACK_HOLE
             ) {
                 currentlyTouched = (ElementBlackHole) element;
@@ -126,10 +127,10 @@ public class Avatar extends Entity {
 	 */
 	private boolean finished(){
 		for (MapElement element: game.getMapElements()){
-			if (toMoveX+getWidth() >= element.getX()
-					&& toMoveX <= (element.getX()+element.getWidth())
-					&& (toMoveY+getHeight() >= element.getY()
-					&& toMoveY <= (element.getY()+element.getHeight()))
+			if (toMoveX+getWidth() > element.getX()
+					&& toMoveX < (element.getX()+element.getWidth())
+					&& (toMoveY+getHeight() > element.getY()
+					&& toMoveY < (element.getY()+element.getHeight()))
 					&& element.getMapType() == MapType.FINISH
 			) {
 				return true;
@@ -142,11 +143,12 @@ public class Avatar extends Entity {
 	 * @return if avatar collides with another map-element
 	 */
 	private boolean collidingWithMapElement(){
-        for (MapElement element: game.getMapElements()){
-			if (toMoveX+getWidth() >= element.getX() 
-					&& toMoveX <= (element.getX()+element.getWidth())
-					&& (toMoveY+getHeight() >= element.getY()
-					&& toMoveY <= (element.getY()+element.getHeight()))
+
+		for (MapElement element: game.getMapElements()){
+			if (toMoveX+getWidth() > element.getX() 
+					&& toMoveX < (element.getX()+element.getWidth())
+					&& (toMoveY+getHeight() > element.getY()
+					&& toMoveY < (element.getY()+element.getHeight()))
 					&& element.getMapType() != MapType.BLACK_HOLE
 					&& element.getMapType() != MapType.START
 					&& element.getMapType() != MapType.FINISH
@@ -165,12 +167,18 @@ public class Avatar extends Entity {
 
 		Graphics2D g2d = (Graphics2D)graphics;
 		g2d.setColor(getColor());
-		g2d.fillRect(getMapX(), getMapY(), getWidth(), getHeight());
+        
+        int offset = 3;
+        int fillOffset = 2;
+		
+        //g2d.fillRect(getMapX(), getMapY(), getWidth(), getHeight());
+        g2d.fillRect(getMapX()+fillOffset, getMapY()+fillOffset, getWidth()-fillOffset*2, getHeight()-fillOffset*2);
 		//draw border
 		Color color = new Color(getColor().getRed(),getColor().getGreen(),getColor().getBlue(),85);
 		g2d.setStroke(new BasicStroke(3));
 		g2d.setColor(color);
-		g2d.drawRect(getMapX(), getMapY(), getWidth(), getHeight());
+		//g2d.drawRect(getMapX(), getMapY(), getWidth(), getHeight());
+		g2d.drawRect(getMapX()+offset, getMapY()+offset, getWidth()-offset*2, getHeight()-offset*2);
 		g2d.setStroke(new BasicStroke(1));
 	}
 
@@ -192,6 +200,10 @@ public class Avatar extends Entity {
 	public void setGame(Game game){
 		this.game = game;
 	}
-
-
+	
+	public void setToStart(ElementStart start) {
+		setX(start.getGridX());
+		setY(start.getGridY());
+	}
+	
 }
