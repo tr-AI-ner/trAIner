@@ -197,25 +197,16 @@ public class Game {
         // check for parameter changes by user and process them
         processParameterChanges(graphicsManager.getRightBar().getParameterChanges());
 
-		/**
-		 * All buttons on the Bottom and Right bar
-		 *
-		 */
-
 		// 	Play Button to play the game
 		if (inputManager.isMouseClicked()
 				&& graphicsManager.getBottomBar().isPlayButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
 			System.out.println("Play Button Clicked");
-			inputManager.setMouseClicked(false);
 		}
 
 		//  Pause Button to pause the game
 		else if (inputManager.isMouseClicked()
 				&& graphicsManager.getBottomBar().isPauseButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
 			System.out.println("Pause Button Clicked");
-			inputManager.setMouseClicked(false);
-			System.exit(0);
-
 		}
 
         inputManager.setMouseClicked(false);
@@ -238,9 +229,11 @@ public class Game {
     /**
      * Updates the state of the game according to the current mode
      * e.g.:
-     *      0 - Game
+     *      0 - Player Game
      *      1 - Map Building
      *      2 - Preview Mode
+     *      3 - AI Game
+     *      4 - Challenge Mode
      * 
      * @author Patrick
      */
@@ -253,6 +246,10 @@ public class Game {
                 break;
             case 2:
                 moveElements();
+                break;
+            case 3:
+                break;
+            case 4:
                 break;
         }
         cleanUp();
