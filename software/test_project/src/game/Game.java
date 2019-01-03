@@ -140,19 +140,6 @@ public class Game {
      *
      */
 	private void processUserInput() {
-		//moves in the desired direction
-		if (inputManager.getKeyResult()[0]) {
-			avatar.move(0, (-setup.getNewEntitySpeed()));
-		}
-		if (inputManager.getKeyResult()[1]) {
-			avatar.move(0, (+setup.getNewEntitySpeed()));
-		}
-		if (inputManager.getKeyResult()[2]) {
-			avatar.move((-setup.getNewEntitySpeed()), 0);
-		}
-		if (inputManager.getKeyResult()[3]) {
-			avatar.move((+setup.getNewEntitySpeed()), 0);
-		}
 		//Exits when escape is pressed
 		if(inputManager.getKeyResult()[4]) {System.exit(0);}
 		//Switches between the game and the build mode
@@ -167,6 +154,22 @@ public class Game {
         //check if user clicked on load button
         if (inputManager.isMouseClicked()  && mapSaverLoader.loadButtonClicked()){
             mapSaverLoader.loadButtonLogic();
+        }
+
+        if (Main.MODE==0){
+            //moves in the desired direction
+            if (inputManager.getKeyResult()[0]) {
+                avatar.move(0, (-setup.getNewEntitySpeed()));
+            }
+            if (inputManager.getKeyResult()[1]) {
+                avatar.move(0, (+setup.getNewEntitySpeed()));
+            }
+            if (inputManager.getKeyResult()[2]) {
+                avatar.move((-setup.getNewEntitySpeed()), 0);
+            }
+            if (inputManager.getKeyResult()[3]) {
+                avatar.move((+setup.getNewEntitySpeed()), 0);
+            }
         }
 
         //handle mouse clicks during building mode
@@ -248,8 +251,10 @@ public class Game {
                 moveElements();
                 break;
             case 3:
+                moveElements();
                 break;
             case 4:
+                moveElements();
                 break;
         }
         cleanUp();
