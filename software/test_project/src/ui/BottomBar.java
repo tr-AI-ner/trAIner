@@ -36,14 +36,23 @@ public class BottomBar extends UIElement {
 	int pauseButtonX = Constants.WINDOW_MAP_MARGIN + (Constants.WINDOW_MAP_WIDTH / 2) + (widthImg/2) + (widthImg / 6);
 	int pauseButtonY = getY() + (getHeight() / 2) - (widthImg / 2);
 
-	public Rectangle playButton = new Rectangle(playButtonX, playButtonY, widthImg, widthImg);
-	public Rectangle pauseButton = new Rectangle(pauseButtonX, pauseButtonY, widthImg, widthImg);
+    int settingsButtonX = Constants.WINDOW_MAP_WIDTH - widthImg - 15;
+    int settingsButtonY = Constants.WINDOW_MAP_HEIGHT - widthImg - 15;
+
+	private Rectangle playButton = new Rectangle(playButtonX, playButtonY, widthImg, widthImg);
+	private Rectangle pauseButton = new Rectangle(pauseButtonX, pauseButtonY, widthImg, widthImg);
+	private Rectangle settingsButton = new Rectangle(settingsButtonX, settingsButtonY, widthImg, widthImg);
+
+    String pathPlayButton = "playicon.png";
+    String pathPauseButton = "pauseicon.png";
+    String pathSettingsButton = "settings.png";
 
 	int fontSize = 16;
 	Font font = new Font(Constants.DEFAULT_FONT, Font.PLAIN, fontSize);
 
 	BufferedImage playImg;
 	BufferedImage pauseImg;
+    BufferedImage settingsImg;
     // directory name where images should be loaded from 
     String dirName = "../resources/";
 
@@ -51,8 +60,9 @@ public class BottomBar extends UIElement {
 		super(x, y, width, height, backgroundColor, setup, inputManager);
 
 		try {
-            playImg = ImageIO.read(new File(dirName, "playicon.png"));
-            pauseImg = ImageIO.read(new File(dirName, "pauseicon.png"));
+            playImg = ImageIO.read(new File(dirName, pathPlayButton));
+            pauseImg = ImageIO.read(new File(dirName, pathPauseButton));
+            settingsImg = ImageIO.read(new File(dirName, pathSettingsButton));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -68,6 +78,7 @@ public class BottomBar extends UIElement {
 		drawCopyright(graphics);
 		drawPlayButton(graphics);
 		drawPauseButton(graphics);
+        drawSettingsButton(graphics);
 		
 		//draw other UI-elements here...
 	}
@@ -123,7 +134,8 @@ public class BottomBar extends UIElement {
             e.printStackTrace();
         }
 	}
-	// Draws an pause button
+	
+    // Draws an pause button
 	private void drawPauseButton(Graphics graphics){
 		graphics.setColor(Constants.COLOR_BACKGROUND);
 
@@ -133,6 +145,21 @@ public class BottomBar extends UIElement {
 		graphics.drawRect(pauseButtonX, pauseButtonY, widthImg, widthImg);
         try {
             graphics.drawImage(pauseImg, imgPauseX, imgPauseY, widthImg, widthImg, null);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+	}
+	
+    // Draws an play button
+	private void drawSettingsButton(Graphics graphics){
+		graphics.setColor(Constants.COLOR_BACKGROUND);
+
+		//int imgPlayX = Constants.WINDOW_MAP_MARGIN + (Constants.WINDOW_MAP_WIDTH / 2) - (widthImg/2) - (widthImg / 6);
+		//int imgPlayY = getY() + (getHeight() / 2) - (widthImg / 2);
+
+		//graphics.drawRect(playButtonX, playButtonY, widthImg, widthImg);
+        try {
+		    graphics.drawImage(settingsImg, settingsButtonX, settingsButtonY, widthImg, widthImg, null);
         } catch (Exception e){
             e.printStackTrace();
         }
