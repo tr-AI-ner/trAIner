@@ -135,7 +135,7 @@ public class Genome {
     }
 
     /**
-     * exchange genetic material of 2 genes
+     * exchange genetic material of 2 genes using a 3 way crossover
      *
      * @param mate individuals genes to mate with
      *
@@ -144,12 +144,16 @@ public class Genome {
     public Genome crossover(Genome mate){
         int [][]child = new int[this.maxNrOfMoves][2];
         Random rand = new Random();
-        int crossover = this.maxNrOfMoves / 2;
+        int crossover = this.maxNrOfMoves / 4;
         for(int i = 0; i<this.maxNrOfMoves;i++){
-            if(i > crossover){
+            if(i< crossover){
                 child[i] = this.gene[i];
             }
-            else{
+            else if(i > crossover && i < 2*crossover){
+                child[i] = mate.gene[i];
+            }else if(i > 2*crossover && i < 3*crossover ){
+                child[i] = this.gene[i];
+            }else{
                 child[i] = mate.gene[i];
             }
         }
