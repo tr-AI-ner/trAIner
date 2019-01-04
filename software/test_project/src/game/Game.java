@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import custom_objects.Avatar;
 import custom_objects.Entity;
+import custom_objects.EntityType;
 import functionality.Clock;
 import functionality.Constants;
 import functionality.GraphicsManager;
@@ -35,8 +36,9 @@ public class Game {
     private int noOfTries = 1;
 	
 	Avatar avatar;
-	ArrayList<Entity> entities;
-	ArrayList<MapElement> mapElements;
+	
+    ArrayList<Entity> entities;
+    ArrayList<MapElement> mapElements;
 	ElementWall theGreatWall;
 
 	MapSaverLoader mapSaverLoader;
@@ -144,7 +146,10 @@ public class Game {
 		if(inputManager.getKeyResult()[4]) {System.exit(0);}
 		//Switches between the game and the build mode
 		if(inputManager.getKeyResult()[5]) { Main.MODE = 0; }
-		if(inputManager.getKeyResult()[6]) { Main.MODE = 1; }
+		if(inputManager.getKeyResult()[6]) { 
+            Main.MODE = 1; 
+            reloadBuildState();
+        }
 		// loads an empty map
 		if(inputManager.getKeyResult()[7]) { mapSaverLoader.initEmptyMap(); }
         // check if user clicked on save button
@@ -197,20 +202,47 @@ public class Game {
             }
         }
 
+        // check if preview button was clicked
+        if((Main.MODE==1 || Main.MODE==2) && inputManager.isMouseClicked() 
+                && graphicsManager.getBottomBar().isPreviewButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())){
+            if(Main.MODE==1){ 
+                Main.MODE = 2;
+            }
+            else if(Main.MODE == 2){ 
+                Main.MODE = 1;
+                reloadBuildState();
+            }
+        }
+
         // check for parameter changes by user and process them
         processParameterChanges(graphicsManager.getRightBar().getParameterChanges());
-
-		// 	Play Button to play the game
+		
+        // 	Exit Button to exit the game
 		if (inputManager.isMouseClicked()
-				&& graphicsManager.getBottomBar().isPlayButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
-			System.out.println("Play Button Clicked");
+				&& graphicsManager.getTopBar().isExitButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
+			System.exit(0);
+		}
+        // 	building mode Button to exit the game
+		if (inputManager.isMouseClicked()
+				&& graphicsManager.getTopBar().isBuildModeButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
+			Main.MODE = 1;
+		}
+        // 	game-play mode Button to exit the game
+		if (inputManager.isMouseClicked()
+				&& graphicsManager.getTopBar().isGamePlayModeButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
+			Main.MODE = 0;
 		}
 
-		//  Pause Button to pause the game
-		else if (inputManager.isMouseClicked()
-				&& graphicsManager.getBottomBar().isPauseButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
-			System.out.println("Pause Button Clicked");
-		}
+        if (Main.MODE != 1 && Main.MODE != 2 && inputManager.isMouseClicked()){
+            // 	Play Button to play the game
+            if (graphicsManager.getBottomBar().isPlayButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
+                System.out.println("Play Button Clicked");
+            }
+            //  Pause Button to pause the game
+            if (graphicsManager.getBottomBar().isPauseButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
+                System.out.println("Pause Button Clicked");
+            }
+        }
 
         inputManager.setMouseClicked(false);
 
@@ -452,6 +484,24 @@ public class Game {
         
         // reset clicked element -> uncomment if only 1 element should be added
         //this.clickedMapElement = null;
+    }
+
+    /**
+     * Reloads the original coordinates of the elements when switchin preview mode off.
+     *
+     */
+    private void reloadBuildState(){
+        for(int i=0; i<entities.size(); i++){
+            if (entities.get(i).getType()==EntityType.MapElement){
+                if(((MapElement)entities.get(i)).getMapType()==MapType.ENEMY){
+                    ((ElementEnemy)entities.get(i)).reset();
+                }
+                else if (((MapElement)entities.get(i)).getMapType()==MapType.PLASMA_BALL){
+                    ((ElementPlasmaBall)entities.get(i)).reset();
+                } 
+            } else {
+            }
+        }
     }
 
     /**
