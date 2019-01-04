@@ -1,7 +1,10 @@
 package ui;
 
 import java.awt.*;
+import java.awt.RenderingHints;
+import java.awt.Font;
 import java.awt.geom.Rectangle2D;
+import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -9,6 +12,8 @@ import java.io.IOException;
 import functionality.Constants;
 import functionality.Setup;
 import functionality.InputManager;
+import functionality.FontLoader;
+import game.Main;
 
 import javax.imageio.ImageIO;
 
@@ -29,30 +34,49 @@ public class BottomBar extends UIElement {
 
 	int widthRect = 22;
 	int heightRect = 18;
-    int widthImg = 30;
+    int iconWidth = 30;
 
-    int playButtonX = Constants.WINDOW_MAP_MARGIN + (Constants.WINDOW_MAP_WIDTH / 2) - (widthImg/2) - (widthImg / 6);
-	int playButtonY = getY() + (getHeight() / 2) - (widthImg / 2);
-	int pauseButtonX = Constants.WINDOW_MAP_MARGIN + (Constants.WINDOW_MAP_WIDTH / 2) + (widthImg/2) + (widthImg / 6);
-	int pauseButtonY = getY() + (getHeight() / 2) - (widthImg / 2);
+    int playButtonX = Constants.WINDOW_MAP_MARGIN + (Constants.WINDOW_MAP_WIDTH / 2) - (iconWidth/2) - (iconWidth / 6);
+	int playButtonY = getY() + (getHeight() / 2) - (iconWidth / 2);
+	int pauseButtonX = Constants.WINDOW_MAP_MARGIN + (Constants.WINDOW_MAP_WIDTH / 2) + (iconWidth/2) + (iconWidth / 6);
+	int pauseButtonY = getY() + (getHeight() / 2) - (iconWidth / 2);
 
-	public Rectangle playButton = new Rectangle(playButtonX, playButtonY, widthImg, widthImg);
-	public Rectangle pauseButton = new Rectangle(pauseButtonX, pauseButtonY, widthImg, widthImg);
+    int settingsButtonX = Constants.WINDOW_MAP_WIDTH + (Constants.WINDOW_MAP_MARGIN * 2) + Constants.WINDOW_RIGHT_BAR_WIDTH - (iconWidth*2);
+    int settingsButtonY = Constants.WINDOW_MAP_HEIGHT + (Constants.WINDOW_MAP_MARGIN * 2) + Constants.WINDOW_HEADER_HEIGHT + ((Constants.WINDOW_HEADER_HEIGHT/2) - (iconWidth/2));
+
+    int previewButtonWidth = 90, previewButtonHeight = 30;
+    int previewButtonX = (getWidth() / 2) - (previewButtonWidth / 2);
+    int previewButtonY = getY() + (getHeight()/2) - (previewButtonHeight/2);
+	int BUTTON_ARCH_WH = 30;
+    boolean tmp = false;
+	
+    private Rectangle playButton = new Rectangle(playButtonX, playButtonY, iconWidth, iconWidth);
+	private Rectangle pauseButton = new Rectangle(pauseButtonX, pauseButtonY, iconWidth, iconWidth);
+	private Rectangle settingsButton = new Rectangle(settingsButtonX, settingsButtonY, iconWidth, iconWidth);
+	private RoundRectangle2D previewButton = new RoundRectangle2D.Float(previewButtonX, previewButtonY, previewButtonWidth, previewButtonHeight, BUTTON_ARCH_WH, BUTTON_ARCH_WH);
+
+    // directory name where images should be loaded from 
+    String dirName = "../resources/";
+    String pathPlayButton = "playicon.png";
+    String pathPauseButton = "pauseicon.png";
+    String pathSettingsButton = "settings.png";
+
+    String namePreviewButton = "Preview";
 
 	int fontSize = 16;
 	Font font = new Font(Constants.DEFAULT_FONT, Font.PLAIN, fontSize);
 
 	BufferedImage playImg;
 	BufferedImage pauseImg;
-    // directory name where images should be loaded from 
-    String dirName = "../resources/";
+    BufferedImage settingsImg;
 
 	public BottomBar(int x, int y, int width, int height, Color backgroundColor, Setup setup, InputManager inputManager) {
 		super(x, y, width, height, backgroundColor, setup, inputManager);
 
 		try {
-            playImg = ImageIO.read(new File(dirName, "playicon.png"));
-            pauseImg = ImageIO.read(new File(dirName, "pauseicon.png"));
+            playImg = ImageIO.read(new File(dirName, pathPlayButton));
+            pauseImg = ImageIO.read(new File(dirName, pathPauseButton));
+            settingsImg = ImageIO.read(new File(dirName, pathSettingsButton));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -66,8 +90,13 @@ public class BottomBar extends UIElement {
 	public void draw(Graphics graphics) {
 		drawBackground(graphics);
 		drawCopyright(graphics);
-		drawPlayButton(graphics);
-		drawPauseButton(graphics);
+		if (Main.MODE == 1 || Main.MODE == 2){
+            drawPreviewButton(graphics);
+        } else {
+            drawPlayButton(graphics);
+		    drawPauseButton(graphics);
+        }
+        drawSettingsButton(graphics);
 		
 		//draw other UI-elements here...
 	}
@@ -113,26 +142,64 @@ public class BottomBar extends UIElement {
 	private void drawPlayButton(Graphics graphics){
 		graphics.setColor(Constants.COLOR_BACKGROUND);
 
-		int imgPlayX = Constants.WINDOW_MAP_MARGIN + (Constants.WINDOW_MAP_WIDTH / 2) - (widthImg/2) - (widthImg / 6);
-		int imgPlayY = getY() + (getHeight() / 2) - (widthImg / 2);
+		int imgPlayX = Constants.WINDOW_MAP_MARGIN + (Constants.WINDOW_MAP_WIDTH / 2) - (iconWidth/2) - (iconWidth / 6);
+		int imgPlayY = getY() + (getHeight() / 2) - (iconWidth / 2);
 
-		graphics.drawRect(playButtonX, playButtonY, widthImg, widthImg);
+		graphics.drawRect(playButtonX, playButtonY, iconWidth, iconWidth);
         try {
-		    graphics.drawImage(playImg, imgPlayX, imgPlayY, widthImg, widthImg, null);
+		    graphics.drawImage(playImg, imgPlayX, imgPlayY, iconWidth, iconWidth, null);
         } catch (Exception e){
             e.printStackTrace();
         }
 	}
-	// Draws an pause button
+	
+    // Draws a pause button
 	private void drawPauseButton(Graphics graphics){
 		graphics.setColor(Constants.COLOR_BACKGROUND);
 
-		int imgPauseX = Constants.WINDOW_MAP_MARGIN + (Constants.WINDOW_MAP_WIDTH / 2) + (widthImg/2) + (widthImg / 6);
-		int imgPauseY = getY() + (getHeight() / 2) - (widthImg / 2);
+		int imgPauseX = Constants.WINDOW_MAP_MARGIN + (Constants.WINDOW_MAP_WIDTH / 2) + (iconWidth/2) + (iconWidth / 6);
+		int imgPauseY = getY() + (getHeight() / 2) - (iconWidth / 2);
 
-		graphics.drawRect(pauseButtonX, pauseButtonY, widthImg, widthImg);
+		graphics.drawRect(pauseButtonX, pauseButtonY, iconWidth, iconWidth);
         try {
-            graphics.drawImage(pauseImg, imgPauseX, imgPauseY, widthImg, widthImg, null);
+            graphics.drawImage(pauseImg, imgPauseX, imgPauseY, iconWidth, iconWidth, null);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+	}
+    
+	/**
+	 * Draw the preview button.
+	 *
+	 * @param graphics
+	 */
+	private void drawPreviewButton(Graphics graphics){
+		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
+		graphics.setFont(font);
+		// Determine the Y coordinate for the text (note we add the ascent, as in java 2d 0 is top of the screen)
+		int nameY = getY() + ((getHeight() - graphics.getFontMetrics(font).getHeight()) / 2)
+				+ graphics.getFontMetrics(font).getAscent();
+		int nameX = previewButtonX + (previewButtonWidth/6);
+		
+        if(Main.MODE == 2){
+		    graphics.fillRoundRect(previewButtonX,previewButtonY,previewButtonWidth,previewButtonHeight,BUTTON_ARCH_WH,BUTTON_ARCH_WH);
+            graphics.setColor(Constants.COLOR_HEADER_2);
+            graphics.drawString(namePreviewButton, nameX, nameY);
+        } else {
+		    graphics.drawRoundRect(previewButtonX,previewButtonY,previewButtonWidth,previewButtonHeight,BUTTON_ARCH_WH,BUTTON_ARCH_WH);
+            graphics.drawString(namePreviewButton, nameX, nameY);
+        }
+	}
+
+	
+    // Draws the settings button
+	private void drawSettingsButton(Graphics graphics){
+		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
+        int offset = 6;
+        graphics.drawOval(settingsButtonX-((offset+2)/2), settingsButtonY-((offset+2)/2), iconWidth+offset, iconWidth+offset);
+
+        try {
+		    graphics.drawImage(settingsImg, settingsButtonX+(offset/2), settingsButtonY+(offset/2), iconWidth-offset, iconWidth-offset, null);
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -145,4 +212,13 @@ public class BottomBar extends UIElement {
     public boolean isPauseButtonClicked(int mouseClickedX, int mouseClickedY){
         return pauseButton.contains(mouseClickedX, mouseClickedY);
     }
+    
+    public boolean isPreviewButtonClicked(int mouseClickedX, int mouseClickedY){
+        return previewButton.contains(mouseClickedX, mouseClickedY);
+    }
+    
+    public boolean isSettingsButtonClicked(int mouseClickedX, int mouseClickedY){
+        return settingsButton.contains(mouseClickedX, mouseClickedY);
+    }
+
 }
