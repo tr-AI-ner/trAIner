@@ -10,6 +10,10 @@ import java.awt.geom.Rectangle2D;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
 import functionality.Constants;
 import functionality.FontLoader;
@@ -29,10 +33,32 @@ import ui.UIElement;
  */
 public class TopBar extends UIElement {
 
+    // icons refer to circular images in top right
+    int iconWidth = 28;
+
     //TODO: these should be moved to Constants
-	int BUTTON_SAVE_X = 360, BUTTON_SAVE_Y =35;
-	int BUTTON_LOAD_X = 280, BUTTON_LOAD_Y =35;
-	int BUTTON_OFFSET_X=15, BUTTON_OFFSET_Y=20;
+	int BUTTON_SAVE_X = 400, BUTTON_SAVE_Y =35;
+	int BUTTON_LOAD_X = 320, BUTTON_LOAD_Y =35;
+    int BUTTON_OFFSET_X=15, BUTTON_OFFSET_Y=20;
+    int BUTTON_EXIT_X = Constants.WINDOW_MAP_WIDTH + (Constants.WINDOW_MAP_MARGIN * 2) + Constants.WINDOW_RIGHT_BAR_WIDTH - (iconWidth*2);
+    int BUTTON_EXIT_Y = ((Constants.WINDOW_HEADER_HEIGHT/2) - (iconWidth/2));
+
+    int BUTTON_BUILD_X = BUTTON_EXIT_X - (iconWidth*3) + 10;
+    int BUTTON_BUILD_Y = ((Constants.WINDOW_HEADER_HEIGHT/2) - (iconWidth/2));
+	
+    int BUTTON_GAMEPLAY_X = BUTTON_BUILD_X - (iconWidth*3) + 10;
+    int BUTTON_GAMEPLAY_Y = ((Constants.WINDOW_HEADER_HEIGHT/2) - (iconWidth/2));
+
+    // directory name where images should be loaded from 
+    String dirName = "../resources/";
+    String pathExitButton = "exit.png";
+    String pathGameplayButton = "play_game.png";
+    String pathBuilButton = "build_mode.png";
+	
+    BufferedImage exitImg;
+    BufferedImage gameplayImg;
+    BufferedImage buildImg;
+	
     // arch width and height of rounded corner of a button
 	int BUTTON_ARCH_WH = 30;
 	int BUTTON_WIDTH = 70, BUTTON_HEIGHT =30;
@@ -57,6 +83,15 @@ public class TopBar extends UIElement {
 	public TopBar(int x, int y, int width, int height, Color backgroundColor, Setup setup, InputManager inputManager, String mapName) {
 		super(x, y, width, height, backgroundColor, setup, inputManager);
 		this.mapName = mapName;
+
+        try {
+            exitImg = ImageIO.read(new File(dirName, pathExitButton));
+            gameplayImg = ImageIO.read(new File(dirName, pathGameplayButton));
+            buildImg = ImageIO.read(new File(dirName, pathBuilButton));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 	
 	/**
@@ -72,12 +107,18 @@ public class TopBar extends UIElement {
 		drawSeparator(graphics);
 
 		drawMapName(graphics);
-
-		drawLoadButton(graphics);
-
-		drawSaveButton(graphics);
+        drawButtons(graphics);
 		//draw other UI-elements here...
 	}
+
+    private void drawButtons(Graphics graphics){
+		drawLoadButton(graphics);
+		drawSaveButton(graphics);
+
+        drawExitButton(graphics);
+        drawGameplayButton(graphics);
+        drawBuildButton(graphics);
+    }
 	
 	/**
 	 * draw top-bar background with gradients 
@@ -169,6 +210,38 @@ public class TopBar extends UIElement {
 		graphics.drawRoundRect(BUTTON_LOAD_X-BUTTON_OFFSET_X,BUTTON_LOAD_Y-BUTTON_OFFSET_Y,BUTTON_WIDTH,BUTTON_HEIGHT,BUTTON_ARCH_WH,BUTTON_ARCH_WH);
 	}
 
+    // Draws the settings button
+	private void drawExitButton(Graphics graphics){
+		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
+        //int offset = 5;
+        //graphics.drawOval(BUTTON_EXIT_X-offset, BUTTON_EXIT_Y-offset, iconWidth+(offset*2), iconWidth+(offset*2));
+
+        try {
+		    graphics.drawImage(exitImg, BUTTON_EXIT_X, BUTTON_EXIT_Y, iconWidth, iconWidth, null);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+	}
+    // Draws the game play button
+	private void drawGameplayButton(Graphics graphics){
+		graphics.setColor(Constants.COLOR_BACKGROUND);
+        try {
+		    graphics.drawImage(gameplayImg, BUTTON_GAMEPLAY_X, BUTTON_GAMEPLAY_Y, iconWidth, iconWidth, null);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+	}
+    
+    // Draws the build mode button
+	private void drawBuildButton(Graphics graphics){
+		graphics.setColor(Constants.COLOR_BACKGROUND);
+        try {
+		    graphics.drawImage(buildImg, BUTTON_BUILD_X, BUTTON_BUILD_Y, iconWidth, iconWidth, null);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+	}
+
 	/**
 	 * draw the separator line at the top-bar (to the right of the game name)
 	 * 
@@ -182,6 +255,7 @@ public class TopBar extends UIElement {
 		int y2 = Constants.WINDOW_HEADER_HEIGHT - (y1);
 		graphics.drawLine(x1, y1, x1, y2);
 	}
+
 	/**
 	 * Takes away .csv extention from a filename for The MapName at the TopBar
 	 * */

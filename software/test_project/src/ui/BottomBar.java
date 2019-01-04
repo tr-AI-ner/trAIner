@@ -36,8 +36,8 @@ public class BottomBar extends UIElement {
 	int pauseButtonX = Constants.WINDOW_MAP_MARGIN + (Constants.WINDOW_MAP_WIDTH / 2) + (widthImg/2) + (widthImg / 6);
 	int pauseButtonY = getY() + (getHeight() / 2) - (widthImg / 2);
 
-    int settingsButtonX = Constants.WINDOW_MAP_WIDTH - widthImg - 15;
-    int settingsButtonY = Constants.WINDOW_MAP_HEIGHT - widthImg - 15;
+    int settingsButtonX = Constants.WINDOW_MAP_WIDTH + (Constants.WINDOW_MAP_MARGIN * 2) + Constants.WINDOW_RIGHT_BAR_WIDTH - (widthImg*2);
+    int settingsButtonY = Constants.WINDOW_MAP_HEIGHT + (Constants.WINDOW_MAP_MARGIN * 2) + Constants.WINDOW_HEADER_HEIGHT + ((Constants.WINDOW_HEADER_HEIGHT/2) - (widthImg/2));
 
 	private Rectangle playButton = new Rectangle(playButtonX, playButtonY, widthImg, widthImg);
 	private Rectangle pauseButton = new Rectangle(pauseButtonX, pauseButtonY, widthImg, widthImg);
@@ -135,7 +135,7 @@ public class BottomBar extends UIElement {
         }
 	}
 	
-    // Draws an pause button
+    // Draws a pause button
 	private void drawPauseButton(Graphics graphics){
 		graphics.setColor(Constants.COLOR_BACKGROUND);
 
@@ -150,14 +150,10 @@ public class BottomBar extends UIElement {
         }
 	}
 	
-    // Draws an play button
+    // Draws the settings button
 	private void drawSettingsButton(Graphics graphics){
 		graphics.setColor(Constants.COLOR_BACKGROUND);
 
-		//int imgPlayX = Constants.WINDOW_MAP_MARGIN + (Constants.WINDOW_MAP_WIDTH / 2) - (widthImg/2) - (widthImg / 6);
-		//int imgPlayY = getY() + (getHeight() / 2) - (widthImg / 2);
-
-		//graphics.drawRect(playButtonX, playButtonY, widthImg, widthImg);
         try {
 		    graphics.drawImage(settingsImg, settingsButtonX, settingsButtonY, widthImg, widthImg, null);
         } catch (Exception e){
@@ -172,4 +168,9 @@ public class BottomBar extends UIElement {
     public boolean isPauseButtonClicked(int mouseClickedX, int mouseClickedY){
         return pauseButton.contains(mouseClickedX, mouseClickedY);
     }
+    
+    public boolean isSettingsButtonClicked(int mouseClickedX, int mouseClickedY){
+        return settingsButton.contains(mouseClickedX, mouseClickedY);
+    }
+
 }
