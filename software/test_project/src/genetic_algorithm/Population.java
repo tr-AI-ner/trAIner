@@ -63,7 +63,7 @@ public class Population {
         this.gene_pool = new ArrayList<>();
         this.game = game;
         for (int i = 0; i < population.length; i++) {
-            population[i] = new Individual(def_x, def_y, def_width, def_height, color, this.maxNrOfMoves);
+            population[i] = new Individual(def_x, def_y, def_width, def_height, color, this.maxNrOfMoves, game);
             population[i].setGame(game);
         }
     }
@@ -150,6 +150,7 @@ public class Population {
         this.gene_pool.clear();
 
         double maxFit = getMaxFitness();
+        System.out.println("max fit: " + maxFit);
         for (int i = 0; i < this.population.length; i++) {
             double scaledFitness = scaleMinMax(this.population[i].fitness, 0, maxFit);
             int multiplier = (int)(scaledFitness * 100);
@@ -157,6 +158,7 @@ public class Population {
                 gene_pool.add(this.population[i]);
             }
         }
+        System.out.println("gene pool after: " + this.gene_pool.size());
     }
     
     /**
@@ -167,6 +169,7 @@ public class Population {
      */
     public void reproduction(Game game) {
         Random rand = new Random();
+        System.out.println("gene pool size: " + this.gene_pool.size());
         for(int i = 0; i < this.population.length; i++){
             int randomMommy = rand.nextInt(this.gene_pool.size());
             int randomDaddy = rand.nextInt(this.gene_pool.size());

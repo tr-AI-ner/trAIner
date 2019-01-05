@@ -269,8 +269,8 @@ public class Game {
                 this.currentLifecycle = 0;
                 this.pop.calculateFitness();
                 this.pop.selection();
-                this.pop.resetDaShiat(this);
                 this.pop.reproduction(this);
+                this.pop.resetDaShiat(this);
 
             } 
             this.updateState();
@@ -661,7 +661,40 @@ public class Game {
         if(Main.MODE != 1 && clickedMapElement != null) clickedMapElement=null;
     }
 
-	public Avatar getAvatar(){return avatar;}
+    //public ElementStart getStart(){
+    //    for(int i = 0; i < entities.size(); i++){
+    //        if(entities.get(i).getMapType() == MapType.START)
+    //            return (ElementStart)entities.get(i);
+    //    }
+    //    return new ElementStart(0,0,Constants.COLOR_MAP_START);
+    //}
+
+    public int[] getStartXY(){
+        for(int i = 0; i < entities.size(); i++){
+            if (entities.get(i).getType()==EntityType.MapElement){
+                if(((MapElement)entities.get(i)).getMapType()==MapType.ENEMY){
+                    return new int[] {((ElementStart)entities.get(i)).getX(), ((ElementStart)entities.get(i)).getY()};
+                }
+            }
+        }
+        return new int[] {0,0};
+    }
+
+
+    public int[] getFinishXY(){
+        for(int i = 0; i < entities.size(); i++){
+            if (entities.get(i).getType()==EntityType.MapElement){
+                if(((MapElement)entities.get(i)).getMapType()==MapType.ENEMY){
+                    return new int[] {((ElementFinish)entities.get(i)).getX(), ((ElementFinish)entities.get(i)).getY()};
+                }
+            }
+        }
+        return new int[] {222,220};
+
+            }
+        
+    
+    public Avatar getAvatar(){return avatar;}
 	public ArrayList<Entity> getEntities(){return entities;}
 
     public void resetEntities(){this.entities = new ArrayList<>();}

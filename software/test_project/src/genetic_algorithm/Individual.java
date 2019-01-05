@@ -4,6 +4,8 @@ import java.lang.Math;
 import custom_objects.Avatar;
 import java.util.Random;
 import java.awt.*;
+import game.Game;
+
 
 /**
  * Class that represents an Individual of the Population of the genetic algorithm
@@ -30,11 +32,11 @@ public class Individual extends Avatar {
 
     // tunable hyper parameters
     // x, y coordinate of the goal field
-    int[] goal = {1, 1};
+    int[] goal;
     // reached the goal
     int fin = 0;
     // start position
-    int[] start_pos = {475, 265};
+    int[] start_pos;
     // speed of the individuals movement
     int speed = 15;
     // length of the gene, that is number of directions in the gene array i.e maximum
@@ -52,10 +54,12 @@ public class Individual extends Avatar {
      *@param color  Color color of the individual
      *@param maxNrOfMoves int maximum number of possible moves
      */
-    public Individual(int x, int y, int width, int height, Color color, int maxNrOfMoves) {
+    public Individual(int x, int y, int width, int height, Color color, int maxNrOfMoves, Game game) {
         super(x, y, width, height, color);
         this.maxNrOfMoves = maxNrOfMoves;
         this.genome = new Genome(maxNrOfMoves);
+        this.start_pos = game.getStartXY();
+        this.goal = game.getFinishXY();
 
     }
     
