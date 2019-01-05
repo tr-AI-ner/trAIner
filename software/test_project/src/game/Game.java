@@ -152,6 +152,9 @@ public class Game {
         }
 		// loads an empty map
 		if(inputManager.getKeyResult()[7]) { mapSaverLoader.initEmptyMap(); }
+		// switch to AI mode
+		if(inputManager.getKeyResult()[8]) { Main.MODE = 3; }
+
         // check if user clicked on save button
         if (inputManager.isMouseClicked()  && mapSaverLoader.saveButtonClicked()){
             mapSaverLoader.saveButtonLogic();
@@ -219,18 +222,23 @@ public class Game {
 		
         // 	Exit Button to exit the game
 		if (inputManager.isMouseClicked()
-				&& graphicsManager.getTopBar().isExitButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
+				&& graphicsManager.getBottomBar().isExitButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
 			System.exit(0);
 		}
-        // 	building mode Button to exit the game
+        // 	building mode Button
 		if (inputManager.isMouseClicked()
 				&& graphicsManager.getTopBar().isBuildModeButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
 			Main.MODE = 1;
 		}
-        // 	game-play mode Button to exit the game
+        // 	game-play mode Button
 		if (inputManager.isMouseClicked()
 				&& graphicsManager.getTopBar().isGamePlayModeButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
 			Main.MODE = 0;
+		}
+        // 	AI mode Button
+		if (inputManager.isMouseClicked()
+				&& graphicsManager.getTopBar().isBrainButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
+			Main.MODE = 3;
 		}
 
         if (Main.MODE != 1 && Main.MODE != 2 && inputManager.isMouseClicked()){

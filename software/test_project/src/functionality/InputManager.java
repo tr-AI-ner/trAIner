@@ -19,6 +19,7 @@ public class InputManager extends Component implements KeyListener, MouseListene
 	//boolean array to "save" keys
 	private boolean[] keyArray = new boolean[100]; 
 	//0=up-arrow 1=down-arrow   2=left-arrow   3=right-arrow    4=ESC   5=SHIFT
+    //6=build-mode 7=empty-map 8=AI-mode
 	//UP, DOWN, LEFT, RIGHT, ESCAPE, RUN
 	
 	private long lastMouseProcessTime = 0;
@@ -63,6 +64,7 @@ public class InputManager extends Component implements KeyListener, MouseListene
 		if(evt.getKeyCode() == KeyEvent.VK_G) { keyArray[5] = true; } //Change into game mode
 		if(evt.getKeyCode() == KeyEvent.VK_B) { keyArray[6] = true; } //Change into build mode
 		if(evt.getKeyCode() == KeyEvent.VK_E) { keyArray[7] = true; } //Initialize an Empty map
+		if(evt.getKeyCode() == KeyEvent.VK_A) { keyArray[8] = true; } //Change into AI mode
 
 	}
 
@@ -81,6 +83,7 @@ public class InputManager extends Component implements KeyListener, MouseListene
 		if(evt.getKeyCode() == KeyEvent.VK_G) { keyArray[5] = false; }
 		if(evt.getKeyCode() == KeyEvent.VK_B) { keyArray[6] = false; }
 		if(evt.getKeyCode() == KeyEvent.VK_E) { keyArray[7] = false; }
+		if(evt.getKeyCode() == KeyEvent.VK_A) { keyArray[8] = false; }
 	}
 
 	@Override
