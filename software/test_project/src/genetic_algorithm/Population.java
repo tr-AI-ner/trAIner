@@ -179,7 +179,7 @@ public class Population {
 
             child.mutateGene(this.mutationRate);
             this.population[i].setGenome(child);
-            game.entities.add(this.population[i]);
+            game.getEntities().add(this.population[i]);
         }
         this.currentGeneration++;
     }
