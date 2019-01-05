@@ -142,6 +142,7 @@ public class Game {
             this.clock = new Clock(); // Initialize clock
             this.inputManager = gm.getInputManager();
             this.setup = gm.getSetup();
+            gm.getRightBar().setGame(this);
             this.map = gm.getMap();
             this.maxNrOfMoves = 400;
 
@@ -189,6 +190,7 @@ public class Game {
             this.inputManager = gm.getInputManager();
             this.setup = gm.getSetup();
             this.map = gm.getMap();
+            gm.getRightBar().setGame(this);
 
             this.maxNrOfMoves = maxNrOfMoves;
             entities = new ArrayList<>();
