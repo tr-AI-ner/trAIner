@@ -36,9 +36,9 @@ public class BottomBar extends UIElement {
 	int heightRect = 18;
     int iconWidth = 30;
 
-    int playButtonX = Constants.WINDOW_MAP_MARGIN + (Constants.WINDOW_MAP_WIDTH / 2) - (iconWidth/2) - (iconWidth / 6);
+    int playButtonX = (getWidth() / 2) - iconWidth; 
 	int playButtonY = getY() + (getHeight() / 2) - (iconWidth / 2);
-	int pauseButtonX = Constants.WINDOW_MAP_MARGIN + (Constants.WINDOW_MAP_WIDTH / 2) + (iconWidth/2) + (iconWidth / 6);
+	int pauseButtonX = (getWidth() / 2) + iconWidth; 
 	int pauseButtonY = getY() + (getHeight() / 2) - (iconWidth / 2);
 
     int settingsButtonX = Constants.WINDOW_MAP_WIDTH + (Constants.WINDOW_MAP_MARGIN * 2) + Constants.WINDOW_RIGHT_BAR_WIDTH - (iconWidth*2);
@@ -141,13 +141,8 @@ public class BottomBar extends UIElement {
 	// Draws an play button
 	private void drawPlayButton(Graphics graphics){
 		graphics.setColor(Constants.COLOR_BACKGROUND);
-
-		int imgPlayX = Constants.WINDOW_MAP_MARGIN + (Constants.WINDOW_MAP_WIDTH / 2) - (iconWidth/2) - (iconWidth / 6);
-		int imgPlayY = getY() + (getHeight() / 2) - (iconWidth / 2);
-
-		graphics.drawRect(playButtonX, playButtonY, iconWidth, iconWidth);
         try {
-		    graphics.drawImage(playImg, imgPlayX, imgPlayY, iconWidth, iconWidth, null);
+		    graphics.drawImage(playImg, playButtonX, playButtonY, iconWidth, iconWidth, null);
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -156,13 +151,8 @@ public class BottomBar extends UIElement {
     // Draws a pause button
 	private void drawPauseButton(Graphics graphics){
 		graphics.setColor(Constants.COLOR_BACKGROUND);
-
-		int imgPauseX = Constants.WINDOW_MAP_MARGIN + (Constants.WINDOW_MAP_WIDTH / 2) + (iconWidth/2) + (iconWidth / 6);
-		int imgPauseY = getY() + (getHeight() / 2) - (iconWidth / 2);
-
-		graphics.drawRect(pauseButtonX, pauseButtonY, iconWidth, iconWidth);
         try {
-            graphics.drawImage(pauseImg, imgPauseX, imgPauseY, iconWidth, iconWidth, null);
+            graphics.drawImage(pauseImg, pauseButtonX, pauseButtonY, iconWidth, iconWidth, null);
         } catch (Exception e){
             e.printStackTrace();
         }
