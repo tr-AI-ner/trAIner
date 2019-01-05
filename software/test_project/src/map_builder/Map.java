@@ -77,7 +77,7 @@ public class Map {
 			if (!(e instanceof Avatar))
 				e.draw(graphics);
 		}
-		if(Main.MODE == 0) {
+		if(Main.MODE != 1 && Main.MODE != 2) {
 			// draw entities which are avatar(s) only, since they're not bound to the grid (they can move freely)
 			for (Entity avatar: entities){
 				if (avatar instanceof Avatar){
@@ -140,7 +140,9 @@ public class Map {
         return theEntities;
     }
 
-
+    public void setMapArr(int x, int y, char value) {
+    	map[x][y]=value;
+    }
 }
 
 
