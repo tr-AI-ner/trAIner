@@ -1,5 +1,5 @@
 package genetic_algorithm;
-
+import java.util.Arrays;
 import java.util.Random;
 
 public class Genome {
@@ -9,10 +9,11 @@ public class Genome {
  * @author Lugges991: Lucas Mahler
  */
     
+    int numberOfSameMoves = 3;
     int[][] gene;
     int step;
     int maxNrOfMoves;
-    int speed = 5;
+    int speed = 3;
     /**
      * default constructor
      *
@@ -23,8 +24,13 @@ public class Genome {
         this.step = 0;
         this.maxNrOfMoves = maxNrOfMoves;
         this.gene = new int[maxNrOfMoves][2];
+        int[] move = this.getRandomDirection(); 
         for(int i=0; i<maxNrOfMoves; i++){
-            this.gene[i] = this.getRandomDirection();
+            move = this.getRandomDirection(); 
+            if(i % numberOfSameMoves == 0){
+                move = this.getRandomDirection();
+            }
+            this.gene[i] = move;
         }
 
     }
