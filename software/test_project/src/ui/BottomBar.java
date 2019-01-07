@@ -50,14 +50,13 @@ public class BottomBar extends UIElement {
     int previewButtonWidth = 90, previewButtonHeight = 30;
     int previewButtonX = (getWidth() / 2) - (previewButtonWidth / 2);
     int previewButtonY = getY() + (getHeight()/2) - (previewButtonHeight/2);
-	int BUTTON_ARCH_WH = 30;
-    boolean tmp = false;
 	
     private Rectangle playButton = new Rectangle(playButtonX, playButtonY, iconWidth, iconWidth);
 	private Rectangle pauseButton = new Rectangle(pauseButtonX, pauseButtonY, iconWidth, iconWidth);
 	private Rectangle settingsButton = new Rectangle(settingsButtonX, settingsButtonY, iconWidth, iconWidth);
     Rectangle exitButton = new Rectangle(exitButtonX, exitButtonY, iconWidth, iconWidth);
-	private RoundRectangle2D previewButton = new RoundRectangle2D.Float(previewButtonX, previewButtonY, previewButtonWidth, previewButtonHeight, BUTTON_ARCH_WH, BUTTON_ARCH_WH);
+	private RoundRectangle2D previewButton = new RoundRectangle2D.Float(previewButtonX, previewButtonY, previewButtonWidth, previewButtonHeight, 
+            Constants.BUTTON_ARCH_WH, Constants.BUTTON_ARCH_WH);
 
     // directory name where images should be loaded from 
     String dirName = "../resources/";
@@ -71,9 +70,7 @@ public class BottomBar extends UIElement {
 	int fontSize = 16;
 	Font font = new Font(Constants.DEFAULT_FONT, Font.PLAIN, fontSize);
 
-	BufferedImage playImg;
-	BufferedImage pauseImg;
-    BufferedImage exitImg, settingsImg;
+    BufferedImage exitImg, settingsImg, pauseImg, playImg;
 
 	public BottomBar(int x, int y, int width, int height, Color backgroundColor, Setup setup, InputManager inputManager) {
 		super(x, y, width, height, backgroundColor, setup, inputManager);
@@ -96,7 +93,7 @@ public class BottomBar extends UIElement {
 	public void draw(Graphics graphics) {
 		drawBackground(graphics);
 		drawCopyright(graphics);
-		if (Main.MODE == 1 || Main.MODE == 2){
+		if (Main.MODE == Constants.MODE_MAP_BUILDER || Main.MODE == Constants.MODE_PREVIEW){
             drawPreviewButton(graphics);
         } else {
             drawPlayButton(graphics);
@@ -178,12 +175,12 @@ public class BottomBar extends UIElement {
 				+ graphics.getFontMetrics(font).getAscent();
 		int nameX = previewButtonX + (previewButtonWidth/6);
 		
-        if(Main.MODE == 2){
-		    graphics.fillRoundRect(previewButtonX,previewButtonY,previewButtonWidth,previewButtonHeight,BUTTON_ARCH_WH,BUTTON_ARCH_WH);
+        if(Main.MODE == Constants.MODE_PREVIEW){
+		    graphics.fillRoundRect(previewButtonX,previewButtonY,previewButtonWidth,previewButtonHeight,Constants.BUTTON_ARCH_WH,Constants.BUTTON_ARCH_WH);
             graphics.setColor(Constants.COLOR_HEADER_2);
             graphics.drawString(namePreviewButton, nameX, nameY);
         } else {
-		    graphics.drawRoundRect(previewButtonX,previewButtonY,previewButtonWidth,previewButtonHeight,BUTTON_ARCH_WH,BUTTON_ARCH_WH);
+		    graphics.drawRoundRect(previewButtonX,previewButtonY,previewButtonWidth,previewButtonHeight,Constants.BUTTON_ARCH_WH,Constants.BUTTON_ARCH_WH);
             graphics.drawString(namePreviewButton, nameX, nameY);
         }
 	}

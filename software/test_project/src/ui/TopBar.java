@@ -43,14 +43,10 @@ public class TopBar extends UIElement {
 	int BUTTON_LOAD_X = 120, BUTTON_LOAD_Y =35;
     int BUTTON_OFFSET_X=15, BUTTON_OFFSET_Y=20;
 
+    int BUTTONS_Y = ((Constants.WINDOW_HEADER_HEIGHT/2) - (iconWidth/2)) - 3;
     int BUTTON_BUILD_X = Constants.WINDOW_MAP_WIDTH + (Constants.WINDOW_MAP_MARGIN * 2) + Constants.WINDOW_RIGHT_BAR_WIDTH - (iconWidth*2);
-    int BUTTON_BUILD_Y = ((Constants.WINDOW_HEADER_HEIGHT/2) - (iconWidth/2)) - 3;
-	
     int BUTTON_GAMEPLAY_X = BUTTON_BUILD_X - (iconWidth*3) + 10;
-    int BUTTON_GAMEPLAY_Y = ((Constants.WINDOW_HEADER_HEIGHT/2) - (iconWidth/2)) - 3;
-    
     int BUTTON_BRAIN_X = BUTTON_GAMEPLAY_X - (iconWidth*3) + 10;
-    int BUTTON_BRAIN_Y = ((Constants.WINDOW_HEADER_HEIGHT/2) - (iconWidth/2)) - 3;
 
     // directory name where images should be loaded from 
     String dirName = "../resources/";
@@ -60,27 +56,23 @@ public class TopBar extends UIElement {
 	
     BufferedImage gameplayInactiveImg, gameplayActiveImg, buildInactiveImg, buildActiveImg, brainInactiveImg, brainActiveImg;
 
-    Rectangle gamePlayButton = new Rectangle(BUTTON_GAMEPLAY_X, BUTTON_GAMEPLAY_Y, iconWidth, iconWidth);
-    Rectangle buildButton = new Rectangle(BUTTON_BUILD_X, BUTTON_BUILD_Y, iconWidth, iconWidth);
-    Rectangle brainButton = new Rectangle(BUTTON_BRAIN_X, BUTTON_BRAIN_Y, iconWidth, iconWidth);
+    Rectangle gamePlayButton = new Rectangle(BUTTON_GAMEPLAY_X, BUTTONS_Y, iconWidth, iconWidth);
+    Rectangle buildButton = new Rectangle(BUTTON_BUILD_X, BUTTONS_Y, iconWidth, iconWidth);
+    Rectangle brainButton = new Rectangle(BUTTON_BRAIN_X, BUTTONS_Y, iconWidth, iconWidth);
 	
-    // arch width and height of rounded corner of a button
-	int BUTTON_ARCH_WH = 30;
-	int BUTTON_WIDTH = 70, BUTTON_HEIGHT =30;
-
 	int fontSize = 16;
     Font font = new Font(Constants.DEFAULT_FONT, Font.PLAIN, fontSize);
-	//Font font = FontLoader.getFont("ChakraPetch-SemiBold.ttf"); //TODO: not laoding for everybody
+	//Font font = FontLoader.getFont("ChakraPetch-SemiBold.ttf"); //TODO: not loading for everybody
 	String mapName;
 
 	private RoundRectangle2D saveButton = new RoundRectangle2D.Float(
                 BUTTON_SAVE_X-BUTTON_OFFSET_X, BUTTON_SAVE_Y-BUTTON_OFFSET_Y,
-			    BUTTON_WIDTH, BUTTON_HEIGHT, BUTTON_ARCH_WH, BUTTON_ARCH_WH
+			    Constants.BUTTON_WIDTH, Constants.BUTTON_HEIGHT, Constants.BUTTON_ARCH_WH, Constants.BUTTON_ARCH_WH
             );
 	private RoundRectangle2D loadButton = new RoundRectangle2D.Float(
                 BUTTON_LOAD_X-BUTTON_OFFSET_X,
                 BUTTON_LOAD_Y-BUTTON_OFFSET_Y,
-                BUTTON_WIDTH,BUTTON_HEIGHT,BUTTON_ARCH_WH,BUTTON_ARCH_WH
+                Constants.BUTTON_WIDTH,Constants.BUTTON_HEIGHT,Constants.BUTTON_ARCH_WH,Constants.BUTTON_ARCH_WH
             );
 
 	public TopBar(int x, int y, int width, int height, Color backgroundColor, Setup setup, InputManager inputManager, String mapName) {
@@ -198,7 +190,7 @@ public class TopBar extends UIElement {
 		BUTTON_SAVE_Y= getY() + ((getHeight() - graphics.getFontMetrics(font).getHeight()) / 2)
 				+ graphics.getFontMetrics(font).getAscent();
 		graphics.drawString("SAVE", BUTTON_SAVE_X, BUTTON_SAVE_Y);
-		graphics.drawRoundRect(BUTTON_SAVE_X-BUTTON_OFFSET_X,BUTTON_SAVE_Y-BUTTON_OFFSET_Y,BUTTON_WIDTH,BUTTON_HEIGHT,BUTTON_ARCH_WH,BUTTON_ARCH_WH);
+		graphics.drawRoundRect(BUTTON_SAVE_X-BUTTON_OFFSET_X,BUTTON_SAVE_Y-BUTTON_OFFSET_Y,Constants.BUTTON_WIDTH,Constants.BUTTON_HEIGHT,Constants.BUTTON_ARCH_WH,Constants.BUTTON_ARCH_WH);
 	}
 
 	/**
@@ -213,23 +205,23 @@ public class TopBar extends UIElement {
 		BUTTON_LOAD_Y = getY() + ((getHeight() - graphics.getFontMetrics(font).getHeight()) / 2)
 				+ graphics.getFontMetrics(font).getAscent();
 		graphics.drawString("LOAD", BUTTON_LOAD_X, BUTTON_LOAD_Y);
-		graphics.drawRoundRect(BUTTON_LOAD_X-BUTTON_OFFSET_X,BUTTON_LOAD_Y-BUTTON_OFFSET_Y,BUTTON_WIDTH,BUTTON_HEIGHT,BUTTON_ARCH_WH,BUTTON_ARCH_WH);
+		graphics.drawRoundRect(BUTTON_LOAD_X-BUTTON_OFFSET_X,BUTTON_LOAD_Y-BUTTON_OFFSET_Y,Constants.BUTTON_WIDTH,Constants.BUTTON_HEIGHT,Constants.BUTTON_ARCH_WH,Constants.BUTTON_ARCH_WH);
 	}
 
     // Draws the game play button
 	private void drawGameplayButton(Graphics graphics){
-        if (Main.MODE == 0){
+        if (Main.MODE == Constants.MODE_PLAYER_GAME){
 		    graphics.setColor(Constants.COLOR_AVATAR_RED);
         } else {
 		    graphics.setColor(Constants.COLOR_AVATAR_WHITE);
         }
         int offset = 6;
-        graphics.drawOval(BUTTON_GAMEPLAY_X-((offset+2)/2), BUTTON_GAMEPLAY_Y-((offset+2)/2), iconWidth+offset, iconWidth+offset);
+        graphics.drawOval(BUTTON_GAMEPLAY_X-((offset+2)/2), BUTTONS_Y-((offset+2)/2), iconWidth+offset, iconWidth+offset);
         try {
-            if (Main.MODE == 0)
-		        graphics.drawImage(gameplayActiveImg, BUTTON_GAMEPLAY_X+(offset/2), BUTTON_GAMEPLAY_Y+(offset/2), iconWidth-offset, iconWidth-offset, null);
+            if (Main.MODE == Constants.MODE_PLAYER_GAME)
+		        graphics.drawImage(gameplayActiveImg, BUTTON_GAMEPLAY_X+(offset/2), BUTTONS_Y+(offset/2), iconWidth-offset, iconWidth-offset, null);
             else
-		        graphics.drawImage(gameplayInactiveImg, BUTTON_GAMEPLAY_X+(offset/2), BUTTON_GAMEPLAY_Y+(offset/2), iconWidth-offset, iconWidth-offset, null);
+		        graphics.drawImage(gameplayInactiveImg, BUTTON_GAMEPLAY_X+(offset/2), BUTTONS_Y+(offset/2), iconWidth-offset, iconWidth-offset, null);
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -237,16 +229,16 @@ public class TopBar extends UIElement {
     
     // Draws the build mode button
 	private void drawBuildButton(Graphics graphics){
-        if (Main.MODE == 1){
+        if (Main.MODE == Constants.MODE_MAP_BUILDER){
 		    graphics.setColor(Constants.COLOR_AVATAR_RED);
         } else {
 		    graphics.setColor(Constants.COLOR_AVATAR_WHITE);
         }
         int offset = 6;
-        graphics.drawOval(BUTTON_BUILD_X-((offset+2)/2), BUTTON_BUILD_Y-((offset+2)/2), iconWidth+offset, iconWidth+offset);
+        graphics.drawOval(BUTTON_BUILD_X-((offset+2)/2), BUTTONS_Y-((offset+2)/2), iconWidth+offset, iconWidth+offset);
         try {
-            if(Main.MODE == 1) graphics.drawImage(buildActiveImg, BUTTON_BUILD_X+(offset/2), BUTTON_BUILD_Y+(offset/2), iconWidth-offset, iconWidth-offset, null);
-		    else graphics.drawImage(buildInactiveImg, BUTTON_BUILD_X+(offset/2), BUTTON_BUILD_Y+(offset/2), iconWidth-offset, iconWidth-offset, null);
+            if(Main.MODE == Constants.MODE_MAP_BUILDER) graphics.drawImage(buildActiveImg, BUTTON_BUILD_X+(offset/2), BUTTONS_Y+(offset/2), iconWidth-offset, iconWidth-offset, null);
+		    else graphics.drawImage(buildInactiveImg, BUTTON_BUILD_X+(offset/2), BUTTONS_Y+(offset/2), iconWidth-offset, iconWidth-offset, null);
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -255,18 +247,18 @@ public class TopBar extends UIElement {
     
     // Draws the brain/AI button
 	private void drawBrainButton(Graphics graphics){
-        if (Main.MODE == 3){
+        if (Main.MODE == Constants.MODE_AI_GAME){
 		    graphics.setColor(Constants.COLOR_AVATAR_RED);
         } else {
 		    graphics.setColor(Constants.COLOR_AVATAR_WHITE);
         }
         int offset = 6;
-        graphics.drawOval(BUTTON_BRAIN_X-((offset+2)/2), BUTTON_BRAIN_Y-((offset+2)/2), iconWidth+offset, iconWidth+offset);
+        graphics.drawOval(BUTTON_BRAIN_X-((offset+2)/2), BUTTONS_Y-((offset+2)/2), iconWidth+offset, iconWidth+offset);
         try {
-            if (Main.MODE == 3){
-		        graphics.drawImage(brainActiveImg, BUTTON_BRAIN_X+(offset/2), BUTTON_BRAIN_Y+(offset/2), iconWidth-offset, iconWidth-offset, null);
+            if (Main.MODE == Constants.MODE_AI_GAME){
+		        graphics.drawImage(brainActiveImg, BUTTON_BRAIN_X+(offset/2), BUTTONS_Y+(offset/2), iconWidth-offset, iconWidth-offset, null);
             } else {
-		        graphics.drawImage(brainInactiveImg, BUTTON_BRAIN_X+(offset/2), BUTTON_BRAIN_Y+(offset/2), iconWidth-offset, iconWidth-offset, null);
+		        graphics.drawImage(brainInactiveImg, BUTTON_BRAIN_X+(offset/2), BUTTONS_Y+(offset/2), iconWidth-offset, iconWidth-offset, null);
             }
         } catch (Exception e){
             e.printStackTrace();
