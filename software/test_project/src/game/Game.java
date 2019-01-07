@@ -33,7 +33,8 @@ public class Game {
 	private int noOfMoves = 1;
 	private float mutationRate = (float)0.01;
 	private int noOfGenerations = 1;
-
+    private int incMovesAfterGen = 5;
+    private int increaseMovesBy = 1;
     private int noOfTries = 1;
 	
 	Avatar avatar;
@@ -55,6 +56,7 @@ public class Game {
     int recordtime;
     //max nr of generations
     int maxGens;
+    int currentGen;
 
 	MapSaverLoader mapSaverLoader;
 
@@ -145,12 +147,16 @@ public class Game {
             this.setup = gm.getSetup();
             gm.getRightBar().setGame(this);
             this.map = gm.getMap();
-            this.maxNrOfMoves = 400;
+            this.maxNrOfMoves = 80;
 
             entities = new ArrayList<>();
-            this.populationSize = 1000;
+            this.populationSize = 500;
             this.mutationRate = (float) 0.01;
-            this.maxGens = 10;
+            this.maxGens = 100;
+            this.incMovesAfterGen = 5;
+            this.increaseMovesBy = 45;
+            this.currentGen= 1;
+
 
             mapElements = new ArrayList<>();
             start = new ElementStart(33,33,Constants.COLOR_MAP_START);
@@ -209,6 +215,7 @@ public class Game {
             }
             this.recordtime = this.maxNrOfMoves +1;
             mapElements = new ArrayList<>();
+            // help
 
             theGreatWall = new ElementWall( 50, 20, Constants.COLOR_WALL);
             mapElements.add(theGreatWall);
@@ -259,23 +266,37 @@ public class Game {
      */
     private void gameLoop(boolean ai_playing) {
         if(this.clock.frameShouldChange()){
-            if(this.currentLifecycle < this.maxNrOfMoves){
-                this.pop.live(currentLifecycle);
-                if(this.pop.reachedGoal() && (this.currentLifecycle < this.recordtime)){
-                    this.recordtime = this.currentLifecycle;
+            if(this.currentGen < this.maxGens){
+                if((this.currentGen % this.incMovesAfterGen) == 0 && this.currentGen != 1){
+                    System.out.println("slow?");
+                    this.pop.extendGenes(this.increaseMovesBy);
+                    runGA();             
+                }else{
+                    runGA();         
                 }
-                this.currentLifecycle++;
-            }else{
-                this.currentLifecycle = 0;
-                this.pop.calculateFitness();
-                this.pop.selection();
-                this.pop.reproduction(this);
-                this.pop.resetDaShiat(this);
-
-            } 
-            this.updateState();
-            this.redrawAll();
+            }
         }
+    }
+
+    private void runGA(){
+        if(this.currentLifecycle < this.maxNrOfMoves){
+            this.pop.live(currentLifecycle);
+            if(this.pop.reachedGoal() && (this.currentLifecycle < this.recordtime)){
+                this.recordtime = this.currentLifecycle;
+            }
+            this.currentLifecycle++;
+        }else{
+            this.currentLifecycle = 0;
+            this.pop.calculateFitness();
+            this.pop.selection();
+            this.pop.reproduction(this);
+            this.pop.resetDaShiat(this);
+            this.currentGen++;
+
+        } 
+        this.updateState();
+        this.redrawAll();
+
     }
 
     /**
@@ -673,7 +694,6 @@ public class Game {
         for(int i = 0; i < entities.size(); i++){
             if (entities.get(i).getType()==EntityType.MapElement){
                 if(((MapElement)entities.get(i)).getMapType()==MapType.START){
-                    System.out.println("start x: " + ((ElementStart)entities.get(i)).getX());
                     return new int[] {((ElementStart)entities.get(i)).getX(), ((ElementStart)entities.get(i)).getY()};
                 }
             }
@@ -686,7 +706,6 @@ public class Game {
         for(int i = 0; i < entities.size(); i++){
             if (entities.get(i).getType()==EntityType.MapElement){
                 if(((MapElement)entities.get(i)).getMapType()==MapType.FINISH){
-                    System.out.println("fin: " + ((ElementFinish)entities.get(i)).getX());
                     return new int[] {((ElementFinish)entities.get(i)).getX(), ((ElementFinish)entities.get(i)).getY()};
                 }
             }

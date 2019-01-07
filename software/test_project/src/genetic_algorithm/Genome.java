@@ -13,7 +13,7 @@ public class Genome {
     int[][] gene;
     int step;
     int maxNrOfMoves;
-    int speed = 3;
+    int speed = 10;
     /**
      * default constructor
      *
@@ -165,6 +165,21 @@ public class Genome {
         }
         Genome newGenes = new Genome(child, this.maxNrOfMoves);
         return newGenes;
+    }
+    
+    public Genome getExtendedGene(int increase){
+        int newLen = this.maxNrOfMoves + increase;
+        int[][] newGene = new int[newLen][2];
+        for(int i=0; i < newLen; i++){
+            if(i < this.maxNrOfMoves){
+                newGene[i] = this.gene[i];
+            }else{
+                newGene[i] = getRandomDirection();
+            }
+        }
+        this.maxNrOfMoves = newLen;
+        this.gene = newGene;
+        return this;
     }
 
     /**

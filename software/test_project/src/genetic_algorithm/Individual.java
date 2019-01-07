@@ -73,6 +73,12 @@ public class Individual extends Avatar {
         this.maxNrOfMoves = genome.getMaxNrOfMoves();
     }
 
+    public Individual(Individual oldInd, Genome newGenes){
+        super(oldInd.getX(), oldInd.getY(), oldInd.getWidth(), oldInd.getHeight(), oldInd.getColor());
+        this.genome = newGenes;
+        this.maxNrOfMoves = newGenes.getMaxNrOfMoves();
+    }
+
     /**
      * Calculate the fitness of an Individual
      *
@@ -170,6 +176,11 @@ public class Individual extends Avatar {
         int direction[] = new int[2];
         direction = this.getGenome().getGenes()[maxNrOfMovestep]; 
         this.move(direction[0], direction[1]);
+    }
+
+    public void updateGenome(Genome newGenes){
+        this.genome = newGenes;
+        this.maxNrOfMoves = newGenes.getMaxNrOfMoves();
     }
 
     /**

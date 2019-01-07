@@ -96,8 +96,10 @@ public class Population {
      */
     public void live(int currentCycle){
         for(int i = 0; i < this.population.length; i++){
+            Individual ind = this.population[i];
         
             if(this.population[i].getX() == this.population[i].goal[0] && this.population[i].getY() == this.population[i].goal[1]){
+                System.out.println("Im here now live");
                 this.population[i].fin = currentCycle;
             }
             if(this.population[i].fin == 0){
@@ -186,7 +188,16 @@ public class Population {
         }
         this.currentGeneration++;
     }
+    
+    public void extendGenes(int increase){
+        for(int i=0; i<this.population.length; i++){
+            int newLen = this.population[i].maxNrOfMoves + increase;
+            Genome oldGene = this.population[i].getGenome();
+            Genome newGene = oldGene.getExtendedGene(increase);
+            this.population[i].updateGenome(newGene);
 
+        }
+    }
    /**
     * min max scale the values
     *
