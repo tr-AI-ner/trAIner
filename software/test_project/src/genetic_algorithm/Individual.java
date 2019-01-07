@@ -58,7 +58,7 @@ public class Individual extends Avatar {
         super(x, y, width, height, color);
         this.maxNrOfMoves = maxNrOfMoves;
         this.genome = new Genome(maxNrOfMoves);
-        this.start_pos = game.getStartXY();
+        this.start_pos =new int[] {x,y};
         this.goal = game.getFinishXY();
 
     }
@@ -91,9 +91,7 @@ public class Individual extends Avatar {
             // calculate the fitness
             this.fitness = (preFit / (this.maxNrOfMoves * distance));
             this.fitness = Math.pow(this.fitness, 3);
-            System.out.println("Distance " + distance);
         }
-        System.out.println("Fitness " + this.fitness);
     }
 
     /**

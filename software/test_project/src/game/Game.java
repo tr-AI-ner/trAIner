@@ -152,6 +152,14 @@ public class Game {
             this.mutationRate = (float) 0.01;
             this.maxGens = 10;
 
+            mapElements = new ArrayList<>();
+            start = new ElementStart(33,33,Constants.COLOR_MAP_START);
+            finish = new ElementFinish(50,12,Constants.COLOR_MAP_FINISH);
+
+            mapElements.add(start);
+            mapElements.add(finish);
+            // add all map-elements to entities
+            entities.addAll(mapElements);
             this.pop = new Population(this.populationSize, this.mutationRate, this.maxNrOfMoves, this);
             this.currentLifecycle = 0;
             for(int i = 0; i < populationSize; i++){
@@ -161,15 +169,7 @@ public class Game {
             }
 
             this.recordtime = this.maxNrOfMoves +1;
-
-            mapElements = new ArrayList<>();
-
-            theGreatWall = new ElementWall( 50, 5, Constants.COLOR_WALL);
-            theGreatWall2 = new ElementWall(1,1,Constants.COLOR_WALL);
-            mapElements.add(theGreatWall);
-            mapElements.add(theGreatWall2);
-            // add all map-elements to entities
-            entities.addAll(mapElements);
+            
         }
     }
 
@@ -672,19 +672,21 @@ public class Game {
     public int[] getStartXY(){
         for(int i = 0; i < entities.size(); i++){
             if (entities.get(i).getType()==EntityType.MapElement){
-                if(((MapElement)entities.get(i)).getMapType()==MapType.ENEMY){
+                if(((MapElement)entities.get(i)).getMapType()==MapType.START){
+                    System.out.println("start x: " + ((ElementStart)entities.get(i)).getX());
                     return new int[] {((ElementStart)entities.get(i)).getX(), ((ElementStart)entities.get(i)).getY()};
                 }
             }
         }
-        return new int[] {0,0};
+        return new int[] {110,500};
     }
 
 
     public int[] getFinishXY(){
         for(int i = 0; i < entities.size(); i++){
             if (entities.get(i).getType()==EntityType.MapElement){
-                if(((MapElement)entities.get(i)).getMapType()==MapType.ENEMY){
+                if(((MapElement)entities.get(i)).getMapType()==MapType.FINISH){
+                    System.out.println("fin: " + ((ElementFinish)entities.get(i)).getX());
                     return new int[] {((ElementFinish)entities.get(i)).getX(), ((ElementFinish)entities.get(i)).getY()};
                 }
             }

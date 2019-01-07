@@ -39,9 +39,10 @@ public class Population {
     int def_width = Constants.AVATAR_WIDTH;
     int def_height = Constants.AVATAR_HEIGHT;
     // default x/y of the avatar
-    int def_x = ((Constants.WINDOW_MAP_X0+Constants.WINDOW_MAP_WIDTH - (def_width/2)) / 2);
-    int def_y = ((Constants.WINDOW_MAP_HEIGHT+Constants.WINDOW_MAP_Y0 - (def_height/2)) / 2);
-
+//    int def_x = ((Constants.WINDOW_MAP_X0+Constants.WINDOW_MAP_WIDTH - (def_width/2)) / 2);
+//    int def_y = ((Constants.WINDOW_MAP_HEIGHT+Constants.WINDOW_MAP_Y0 - (def_height/2)) / 2);
+    int def_x;
+    int def_y;
     Color color = Constants.COLOR_AVATAR_RED;
 
     // current game
@@ -62,6 +63,8 @@ public class Population {
         this.maxNrOfMoves = maxNrOfMoves;
         this.gene_pool = new ArrayList<>();
         this.game = game;
+        this.def_x = game.getStartXY()[0];
+        this.def_y = game.getStartXY()[1];
         for (int i = 0; i < population.length; i++) {
             population[i] = new Individual(def_x, def_y, def_width, def_height, color, this.maxNrOfMoves, game);
             population[i].setGame(game);
@@ -150,7 +153,6 @@ public class Population {
         this.gene_pool.clear();
 
         double maxFit = getMaxFitness();
-        System.out.println("max fit: " + maxFit);
         for (int i = 0; i < this.population.length; i++) {
             double scaledFitness = scaleMinMax(this.population[i].fitness, 0, maxFit);
             int multiplier = (int)(scaledFitness * 100);
@@ -158,7 +160,6 @@ public class Population {
                 gene_pool.add(this.population[i]);
             }
         }
-        System.out.println("gene pool after: " + this.gene_pool.size());
     }
     
     /**
@@ -169,7 +170,6 @@ public class Population {
      */
     public void reproduction(Game game) {
         Random rand = new Random();
-        System.out.println("gene pool size: " + this.gene_pool.size());
         for(int i = 0; i < this.population.length; i++){
             int randomMommy = rand.nextInt(this.gene_pool.size());
             int randomDaddy = rand.nextInt(this.gene_pool.size());
