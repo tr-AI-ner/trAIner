@@ -25,6 +25,7 @@ import map_builder.MapElement;
 import ui.BottomBar;
 import ui.RightBar;
 import ui.TopBar;
+import ui.Menu;
 
 public class GraphicsManager extends JPanel {
 
@@ -48,6 +49,8 @@ public class GraphicsManager extends JPanel {
 	private BottomBar bottomBar;
 	private RightBar rightBar;
 
+    private Menu menu;
+
 	
 	public GraphicsManager(InputManager inputManager, Map map){
 		//set window size
@@ -55,6 +58,7 @@ public class GraphicsManager extends JPanel {
 		
 		this.inputManager = inputManager;
 		this.map = map;
+        this.setupMenu();
 		this.setupToolbars();
 
 		// set up window configurations
@@ -98,13 +102,19 @@ public class GraphicsManager extends JPanel {
 	public void clear(){
 		graphics.setColor(Constants.COLOR_BACKGROUND);
 		graphics.fillRect(0, 0,setup.getFrameWidth()+12,setup.getFrameHeight()+12);
-		drawWindowSetup();
 	}
+
+    /**
+     * draws the menu
+     */
+    public void drawMenu(){
+        menu.draw(graphics);
+    }
 	
 	/**
 	 * draws the top-, bottom-, & right-bar
 	 */
-	private void drawWindowSetup(){
+	public void drawWindowSetup(){
 		//draw header
 		topBar.draw(graphics);
 		//draw footer
@@ -169,7 +179,13 @@ public class GraphicsManager extends JPanel {
         rightBar.setGame(game);
 	}
 
-
+    /**
+     * Initializes the Menu of the game.
+     */
+    private void setupMenu(){
+        menu = new Menu(0,0,setup.getFrameWidth()+12,setup.getFrameHeight()+12,
+                Constants.COLOR_MAP_LAND, setup, inputManager);
+    }
 
 	public Setup getSetup(){
 		return setup;
@@ -188,6 +204,7 @@ public class GraphicsManager extends JPanel {
 	public TopBar getTopBar(){return topBar;}
 	public BottomBar getBottomBar(){return bottomBar;}
 	public RightBar getRightBar(){return rightBar;}
+	public Menu getMenu(){return menu;}
 
 	public JFrame getFrame(){
 		return frame;
