@@ -28,6 +28,7 @@ public class Individual extends Avatar {
     // objects for the avatar and the genome
     Avatar avatar;
     Genome genome;
+    Game game;
    
 
     // tunable hyper parameters
@@ -56,7 +57,9 @@ public class Individual extends Avatar {
      */
     public Individual(int x, int y, int width, int height, Color color, int maxNrOfMoves, Game game) {
         super(x, y, width, height, color);
-        this.maxNrOfMoves = maxNrOfMoves;
+        this.game = game;
+        this.maxNrOfMoves = game.getMaxNrOfMoves();
+//        game.setMaxNrOfMoves(maxNrOfMoves);
         this.genome = new Genome(maxNrOfMoves);
         this.start_pos =new int[] {x,y};
         this.goal = game.getFinishXY();
@@ -180,7 +183,7 @@ public class Individual extends Avatar {
 
     public void updateGenome(Genome newGenes){
         this.genome = newGenes;
-        this.maxNrOfMoves = newGenes.getMaxNrOfMoves();
+        this.maxNrOfMoves = this.game.getMaxNrOfMoves();
     }
 
     /**

@@ -30,12 +30,15 @@ public class Game {
     //genetic algorithm parameters
     private int populationSize = 1;
     private int speed = 1;
-	private int noOfMoves = 1;
+	private int noOfMoves = 20;
 	private float mutationRate = (float)0.01;
 	private int noOfGenerations = 1;
-    private int incMovesAfterGen = 5;
-    private int increaseMovesBy = 1;
+    private int incMovesAfterGen = 2;
+    private int increaseMovesBy = 10;
     private int noOfTries = 1;
+    private boolean shouldExtend = true;
+    private boolean foundFinish = false;
+    private boolean ai_playing;
 	
 	Avatar avatar;
     ArrayList<Entity> entities;
@@ -138,6 +141,7 @@ public class Game {
      * @param ai_playing true if in game mode when ai is playing
      */
     public Game(GraphicsManager gm, boolean ai_playing) {
+        this.ai_playing = ai_playing;
         if (!ai_playing) {
             new Game(gm);
         } else {
@@ -147,14 +151,14 @@ public class Game {
             this.setup = gm.getSetup();
             gm.getRightBar().setGame(this);
             this.map = gm.getMap();
-            this.maxNrOfMoves = 80;
+            this.maxNrOfMoves = 10;
 
             entities = new ArrayList<>();
             this.populationSize = 500;
             this.mutationRate = (float) 0.01;
-            this.maxGens = 100;
-            this.incMovesAfterGen = 5;
-            this.increaseMovesBy = 45;
+            this.maxGens = 500;
+            this.incMovesAfterGen = 1;
+            this.increaseMovesBy = 10;
             this.currentGen= 1;
 
 
@@ -165,6 +169,19 @@ public class Game {
             mapElements.add(start);
             mapElements.add(finish);
             // add all map-elements to entities
+
+
+            for(int i = 0; i < 36; i++) {
+                theGreatWall = new ElementWall(40, i, Constants.COLOR_WALL);
+                if(i != 18 && i != 17 && i != 13 && i != 14 && i != 15 && i != 16)  mapElements.add(theGreatWall);
+
+            }
+//            for(int i = 0; i < 36; i++) {
+//                theGreatWall = new ElementWall(43, i, Constants.COLOR_WALL);
+//                if(i != 8 && i != 9)  mapElements.add(theGreatWall);
+//            }
+
+
             entities.addAll(mapElements);
             this.pop = new Population(this.populationSize, this.mutationRate, this.maxNrOfMoves, this);
             this.currentLifecycle = 0;
@@ -189,6 +206,7 @@ public class Game {
      * @param mutationRate probability for a genome of an individual to get mutated
      */
     public Game(GraphicsManager gm, boolean ai_playing, int maxNrOfMoves, int populationSize, float mutationRate) {
+        this.ai_playing = ai_playing;
         if (!ai_playing) {
             new Game(gm);
         } else {
@@ -267,11 +285,15 @@ public class Game {
     private void gameLoop(boolean ai_playing) {
         if(this.clock.frameShouldChange()){
             if(this.currentGen < this.maxGens){
-                if((this.currentGen % this.incMovesAfterGen) == 0 && this.currentGen != 1){
+                if((this.currentGen % this.incMovesAfterGen) == 0  && this.shouldExtend ){
                     System.out.println("slow?");
+                    maxNrOfMoves+=this.increaseMovesBy;
+                    recordtime = maxNrOfMoves + 1;
                     this.pop.extendGenes(this.increaseMovesBy);
+                    this.shouldExtend = false;
                     runGA();             
                 }else{
+                    System.out.println(recordtime);
                     runGA();         
                 }
             }
@@ -279,20 +301,25 @@ public class Game {
     }
 
     private void runGA(){
-        if(this.currentLifecycle < this.maxNrOfMoves){
+        if((this.currentLifecycle < this.maxNrOfMoves) && !this.foundFinish){
             this.pop.live(currentLifecycle);
             if(this.pop.reachedGoal() && (this.currentLifecycle < this.recordtime)){
                 this.recordtime = this.currentLifecycle;
             }
             this.currentLifecycle++;
         }else{
+            if(this.foundFinish) {
+                this.foundFinish = false;
+                if(this.recordtime>this.currentLifecycle)
+                this.recordtime = this.currentLifecycle;
+            }
             this.currentLifecycle = 0;
             this.pop.calculateFitness();
             this.pop.selection();
             this.pop.reproduction(this);
             this.pop.resetDaShiat(this);
             this.currentGen++;
-
+            this.shouldExtend = true;
         } 
         this.updateState();
         this.redrawAll();
@@ -422,10 +449,15 @@ public class Game {
      * @author Kasparas
      */
 	public void restart() {
-        for (MapElement element: this.getMapElements()){
+        for (MapElement element: this.getMapElements()) {
             element.reset();
         }
-        avatar.reset();
+        if(this.ai_playing) {
+            this.foundFinish = true;
+            System.out.println("AI PLAYING");
+        } else {
+            avatar.reset();
+        }
     }
 
     /**
@@ -494,7 +526,10 @@ public class Game {
                     // Because of the grid element system we have to check if the elements don't collide on the grid level
                     if(Math.abs(element.getX()  - avatar.getX()) < Constants.MAP_ELEMENT_SIZE
                             && Math.abs(element.getY()  - avatar.getY()) < Constants.MAP_ELEMENT_SIZE) {
-                        this.restart();
+
+                            this.restart();
+
+
                     }
                 }
             }
@@ -734,7 +769,15 @@ public class Game {
     public int getNoOfMoves(){return noOfMoves;}
     public float getMutationRate(){return mutationRate;}
     public int getNoOfGenerations(){return noOfGenerations;}
-    
+
+    public int getMaxNrOfMoves() {
+        return maxNrOfMoves;
+    }
+
+    public void setMaxNrOfMoves(int maxNrOfMoves) {
+        this.maxNrOfMoves = maxNrOfMoves;
+    }
+
     public int getNoOfTries(){return noOfTries;}
 
 }

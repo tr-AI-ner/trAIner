@@ -191,7 +191,6 @@ public class Population {
     
     public void extendGenes(int increase){
         for(int i=0; i<this.population.length; i++){
-            int newLen = this.population[i].maxNrOfMoves + increase;
             Genome oldGene = this.population[i].getGenome();
             Genome newGene = oldGene.getExtendedGene(increase);
             this.population[i].updateGenome(newGene);
