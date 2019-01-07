@@ -1,9 +1,16 @@
 # trAIner
 The immersive java game where you can train your own AI to perform seriously challenging levels!
 
+## Play by yourself!
 ![screenshot1](https://github.com/tr-AI-ner/trAIner/blob/master/doc/Construction/Increment3/screenshot_normal_map.png)
+
+## Let the genetic algorithm solve the map!
 ![ai1](https://github.com/tr-AI-ner/trAIner/blob/master/doc/Construction/Increment3/screenshot_ai_game_mode.png)
+
+## Build your own maps!
 ![build](https://github.com/tr-AI-ner/trAIner/blob/master/doc/Construction/Increment3/screenshot_map_madness_build_mode.png)
+
+
 # Workflow:
 Cheat sheet for using github successfully:)
 
