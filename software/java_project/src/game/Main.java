@@ -1,21 +1,28 @@
 package game;
 
+import functionality.GraphicsManager;
+import functionality.InputManager;
+import functionality.Constants;
+import map_builder.Map;
+
+
 public class Main {
 
-//	private Game game = null;
+	public static int MODE = Constants.MODE_MENU; //0 = Player_Game , 1 = MapBuilder, 2 = Preview mode, 3 = AI_Game, 4 = Challenge mode, 5=Menu
+	private Game game = null;
 
 	public static void main(String[] args) {
 		new Main();
 	}
 
 	public Main() {
-		System.out.println("This trAIner game will be awesome");
 		
-//		game = new Game(); // create the game
-//		GraphicsManager gm = new GraphicsManager(game); //create the panel	
-//		game.init(gm, gm.getInputSystem()); // Initialize all variables in game, including the panel
-		
-//		game.run();	// Run game :)
+		InputManager inputManager = new InputManager();
+		Map map = new Map();
+		GraphicsManager gm = new GraphicsManager(inputManager, map); //create the panel
+
+		game = new Game(gm); // create the game 
+		game.run();	// run game 
 	}
 	
 }

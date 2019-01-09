@@ -1,6 +1,0 @@
-The java_project folder will hold the full trAIner game java project.
-
-The test_project folder will hold a java project that can be used for different tests.
--> for example: testing mouse input, alogrithm execution, the window of the game, ...
-
-
