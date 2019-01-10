@@ -79,7 +79,15 @@ public class RightBar extends UIElement {
 	};
     String plusString = "+";
     String minusString = "-";
-    String numTriesString = "Number of Tries: ";
+    String numOfGen = "Current Gen: ";
+    String maxFit = "Max Fitness: ";
+    
+    // maximum amount of Characters in a row
+    int maxChar = 24;
+    // offset for a new Row, so that strings don`t collide
+    int lineOffsetY = 35;
+    
+    String line="_____________________";
 	
 	// list of the static map elements that should be shown in map-building-mode
 	private MapElement[] staticMapElements = new MapElement[]{
@@ -404,7 +412,8 @@ public class RightBar extends UIElement {
         for (int para = 0; para < gameParameters.length; para++) {
             drawParameter(graphics, para, (para * parameterHeight) + parametersStartY);
         }
-        drawNumberOfTriesString(graphics);
+        drawNumberOfGenerationString(graphics);
+        drawFittestString(graphics);
         drawCheckboxes(graphics);
     }
 
@@ -415,11 +424,24 @@ public class RightBar extends UIElement {
      * @author Patrick
      *
      */
-	private void drawNumberOfTriesString(Graphics graphics){
+	private void drawNumberOfGenerationString(Graphics graphics){
 		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
 		graphics.setFont(font);
-		String numberOfTries = numTriesString+game.getNoOfTries();
-		graphics.drawString(numberOfTries, minusButtonX+rightBarStartX, (gameParameters.length * parameterHeight) + parametersStartY);
+		String numberOfGeneration =numOfGen+ game.getPopulation().getCurrentGeneration()+" out of "+game.getNoOfGenerations()+'\n';
+		graphics.drawString(correctStringLength(numberOfGeneration), minusButtonX+rightBarStartX, (gameParameters.length * parameterHeight) + parametersStartY);
+	}
+
+	private void drawFittestString(Graphics graphics){
+		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
+		graphics.setFont(font);
+		String maxFitness = maxFit+ game.getPopulation().getMaxFitness();
+		graphics.drawString(correctStringLength(line), minusButtonX+rightBarStartX, (gameParameters.length * parameterHeight) + parametersStartY+10);
+		graphics.drawString(correctStringLength(maxFitness), minusButtonX+rightBarStartX, (gameParameters.length * parameterHeight) + parametersStartY+lineOffsetY);
+	}
+	
+	public String correctStringLength(String str) {
+		if (str.length()>maxChar) {str=str.substring(0, maxChar);}
+		return str;
 	}
 
     /**

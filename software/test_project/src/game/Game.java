@@ -779,6 +779,7 @@ public class Game {
     }
 
     public int getNoOfTries(){return noOfTries;}
+    public Population getPopulation() {return pop;}
 
 }
 
