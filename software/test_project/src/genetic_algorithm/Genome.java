@@ -169,7 +169,6 @@ public class Genome {
     
     public Genome getExtendedGene(int increase){
         int newLen = this.maxNrOfMoves + increase;
-        System.out.println(newLen);
         int[][] newGene = new int[newLen][2];
         for(int i=0; i < newLen; i++){
             if(i < this.maxNrOfMoves){

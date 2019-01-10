@@ -55,12 +55,11 @@ public class Individual extends Avatar {
      *@param color  Color color of the individual
      *@param maxNrOfMoves int maximum number of possible moves
      */
-    public Individual(int x, int y, int width, int height, Color color, int maxNrOfMoves, Game game) {
+    public Individual(int x, int y, int width, int height, Color color, Game game) {
         super(x, y, width, height, color);
         this.game = game;
         this.maxNrOfMoves = game.getMaxNrOfMoves();
-//        game.setMaxNrOfMoves(maxNrOfMoves);
-        this.genome = new Genome(maxNrOfMoves);
+        this.genome = new Genome(this.maxNrOfMoves);
         this.start_pos =new int[] {x,y};
         this.goal = game.getFinishXY();
 
