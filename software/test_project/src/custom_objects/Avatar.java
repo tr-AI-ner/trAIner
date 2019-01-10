@@ -126,7 +126,7 @@ public class Avatar extends Entity {
 	/**
 	 * @return if the avatar is touching the finish block
 	 */
-	private boolean finished(){
+	public boolean finished(){
 		for (MapElement element: game.getMapElements()){
 			if (toMoveX+getWidth() > element.getX()
 					&& toMoveX < (element.getX()+element.getWidth())

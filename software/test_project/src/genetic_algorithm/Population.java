@@ -70,7 +70,27 @@ public class Population {
             population[i].setGame(game);
         }
     }
-    
+
+
+    /**
+     * Set the fittest individual
+     *
+     * @return Individual
+     */
+    public void setFittest() {
+        double most_fit = Integer.MIN_VALUE;
+        int most_fit_index = 0;
+
+        for (int i = 0; i < this.population.length; i++) {
+            if (most_fit >= this.population[i].fitness) {
+                most_fit = this.population[i].fitness;
+                most_fit_index = i;
+            }
+        }
+        population[most_fit_index].setFittest(true);
+    }
+
+
     /**
      * search the fittest individual of the population and return it
      * 
@@ -80,7 +100,7 @@ public class Population {
         double most_fit = Integer.MIN_VALUE;
         int most_fit_index = 0;
 
-        for (int i = 0; i > this.population.length; i++) {
+        for (int i = 0; i < this.population.length; i++) {
             if (most_fit >= this.population[i].fitness) {
                 most_fit = this.population[i].fitness;
                 most_fit_index = i;
@@ -97,7 +117,9 @@ public class Population {
     public void live(int currentCycle){
         for(int i = 0; i < this.population.length; i++){
             this.population[i].makeMove(currentCycle);
+            this.population[i].setFittest(false);
         }
+        setFittest();
     }
 
     /**
@@ -109,6 +131,8 @@ public class Population {
         for (int i = 0; i < population.length; i++) {
             this.population[i].calcFitness();
         }
+
+
     }
     
     /**
@@ -147,7 +171,6 @@ public class Population {
         this.gene_pool.clear();
 
         double maxFit = getMaxFitness();
-        System.out.println("maxFit " + maxFit);
 
         for (int i = 0; i < this.population.length; i++) {
             double scaledFitness = scaleMinMax(this.population[i].fitness, 0, maxFit);
@@ -168,7 +191,6 @@ public class Population {
     public void reproduction(Game game) {
         Random rand = new Random();
         for(int i = 0; i < this.population.length; i++){
-            System.out.println("fitness of " + i + this.population[i].getFitness());
 
             int randomMommy = rand.nextInt(this.gene_pool.size());
             int randomDaddy = rand.nextInt(this.gene_pool.size());

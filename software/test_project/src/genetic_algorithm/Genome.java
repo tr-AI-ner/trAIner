@@ -8,12 +8,12 @@ public class Genome {
  *
  * @author Lugges991: Lucas Mahler
  */
-    
-    int numberOfSameMoves = 6;
+
     int[][] gene;
     int step;
     int maxNrOfMoves;
-    int speed = 10;
+    int speed = 20;
+
     /**
      * default constructor
      *
@@ -24,12 +24,9 @@ public class Genome {
         this.step = 0;
         this.maxNrOfMoves = maxNrOfMoves;
         this.gene = new int[maxNrOfMoves][2];
-        int[] move = this.getRandomDirection(); 
+        int[] move = this.getRandomDirection();;
         for(int i=0; i<maxNrOfMoves; i++){
-            move = this.getRandomDirection(); 
-            if(i % numberOfSameMoves == 0){
-                move = this.getRandomDirection();
-            }
+           // move = this.getRandomDirection();
             this.gene[i] = move;
         }
 
@@ -170,11 +167,13 @@ public class Genome {
     public Genome getExtendedGene(int increase){
         int newLen = this.maxNrOfMoves + increase;
         int[][] newGene = new int[newLen][2];
+        int[] move = getRandomDirection();
         for(int i=0; i < newLen; i++){
             if(i < this.maxNrOfMoves){
                 newGene[i] = this.gene[i];
             }else{
-                newGene[i] = getRandomDirection();
+                //newGene[i] = getRandomDirection();
+                newGene[i] = move;
             }
         }
         this.maxNrOfMoves = newLen;

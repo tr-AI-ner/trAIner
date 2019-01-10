@@ -21,6 +21,8 @@ public class Individual extends Avatar {
      *
      */
 
+    //position in the whole population according to fitness
+    boolean isFittest = false;
     // starting fitness
     double fitness = 0;
     // starting best distance (closest distance to finish)
@@ -89,9 +91,10 @@ public class Individual extends Avatar {
         // pre factor determining fluctuation of fitness function
         double preFit = this.maxNrOfMoves * 100;
         // calculate the distance if individual has finished
-        if (this.fin != 0) {
-            this.fitness = (preFit / (this.fin));
-            this.fitness = Math.pow(this.fitness, 3);
+        //if (this.fin != 0) {
+        if (finished()) {
+            this.fitness = (preFit / 1);
+            this.fitness = Math.pow(this.fitness, 10);
         }else
         {
             // calculate the distance of the individual to the goal
@@ -100,10 +103,7 @@ public class Individual extends Avatar {
             // calculate the fitness
             this.fitness = (preFit / (this.maxNrOfMoves * distance));
             this.fitness = Math.pow(this.fitness, 3);
-            if(distance == 0.0){
-                System.out.println("X/gX "+this.getX() +"/"+ goal[0]);
-                System.out.println("Y/gY "+this.getY() +"/"+ goal[1]);
-            }
+
         }
     }
 
@@ -256,5 +256,13 @@ public class Individual extends Avatar {
 
     public void setMaxNrOfMoves(int num){
         this.maxNrOfMoves = num;
+    }
+
+    public boolean isFittest() {
+        return isFittest;
+    }
+
+    public void setFittest(boolean fittest) {
+        isFittest = fittest;
     }
 }

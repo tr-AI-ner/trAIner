@@ -63,6 +63,7 @@ public class InputManager extends Component implements KeyListener, MouseListene
 		if(evt.getKeyCode() == KeyEvent.VK_G) { keyArray[5] = true; } //Change into game mode
 		if(evt.getKeyCode() == KeyEvent.VK_B) { keyArray[6] = true; } //Change into build mode
 		if(evt.getKeyCode() == KeyEvent.VK_E) { keyArray[7] = true; } //Initialize an Empty map
+		if(evt.getKeyCode() == KeyEvent.VK_F) { keyArray[8] = true; } //Initialize an Empty map
 
 	}
 
@@ -81,6 +82,7 @@ public class InputManager extends Component implements KeyListener, MouseListene
 		if(evt.getKeyCode() == KeyEvent.VK_G) { keyArray[5] = false; }
 		if(evt.getKeyCode() == KeyEvent.VK_B) { keyArray[6] = false; }
 		if(evt.getKeyCode() == KeyEvent.VK_E) { keyArray[7] = false; }
+		if(evt.getKeyCode() == KeyEvent.VK_F) { keyArray[8] = false; }
 	}
 
 	@Override

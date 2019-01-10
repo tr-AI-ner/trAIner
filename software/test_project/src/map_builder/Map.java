@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import custom_objects.Avatar;
 import custom_objects.Entity;
 import functionality.Constants;
+import game.Game;
 import game.Main;
+import genetic_algorithm.Individual;
 
 public class Map {
 	
@@ -80,7 +82,23 @@ public class Map {
 		if(Main.MODE != 1 && Main.MODE != 2) {
 			// draw entities which are avatar(s) only, since they're not bound to the grid (they can move freely)
 			for (Entity avatar: entities){
-				if (avatar instanceof Avatar){
+				if(avatar instanceof Individual) {
+				    if(!Game.showAll) {
+				        if(((Individual) avatar).isFittest()) {
+                            avatar.draw(graphics);
+                        }
+                    } else {
+				        if(((Individual) avatar).isFittest()) {
+                            avatar.setColor(Constants.COLOR_AVATAR_BLUE);
+                            avatar.setAlpha(1);
+                        } else {
+                            avatar.setColor(Constants.COLOR_AVATAR_RED);
+                            avatar.setAlpha(0.1);
+                        }
+				        avatar.draw(graphics);
+                    }
+
+				} else if (avatar instanceof Avatar){
 					avatar.draw(graphics);
 				}
 			}
