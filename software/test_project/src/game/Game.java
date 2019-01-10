@@ -39,7 +39,7 @@ public class Game {
     private boolean shouldExtend = true;
     private boolean foundFinish = false;
     private boolean ai_playing;
-	
+    private boolean foundPrevFinish = false;	
 	Avatar avatar;
     ArrayList<Entity> entities;
     ArrayList<MapElement> mapElements;
@@ -54,7 +54,7 @@ public class Game {
     //mutation rate of the population
     //float mutationRate;
     //current lifecycle
-    int currentLifecycle;
+    int currentMove;
     //least nr of steps to complete the map
     int recordtime;
     //max nr of generations
@@ -171,27 +171,17 @@ public class Game {
             // add all map-elements to entities
 
 
-            for(int i = 0; i < 36; i++) {
-                theGreatWall = new ElementWall(40, i, Constants.COLOR_WALL);
-                if(i != 18 && i != 17 && i != 13 && i != 14 && i != 15 && i != 16)  mapElements.add(theGreatWall);
-
-            }
-//            for(int i = 0; i < 36; i++) {
-//                theGreatWall = new ElementWall(43, i, Constants.COLOR_WALL);
-//                if(i != 8 && i != 9)  mapElements.add(theGreatWall);
-//            }
-
-
+           
             entities.addAll(mapElements);
-            this.pop = new Population(this.populationSize, this.mutationRate, this.maxNrOfMoves, this);
-            this.currentLifecycle = 0;
+            this.pop = new Population(this.populationSize, this.mutationRate, this);
+            this.currentMove = 0;
             for(int i = 0; i < populationSize; i++){
                 Individual ind = pop.getIndividual(i);
                 ind.setSetup(setup);
                 entities.add(ind);
             }
 
-            this.recordtime = this.maxNrOfMoves +1;
+            this.recordtime = this.maxNrOfMoves +(this.maxGens * this.increaseMovesBy)+ 1;
             
         }
     }
@@ -222,8 +212,8 @@ public class Game {
             this.populationSize = populationSize;
             this.mutationRate = mutationRate;
 
-            this.pop = new Population(this.populationSize, this.mutationRate, this.maxNrOfMoves, this);
-            this.currentLifecycle = 0;
+            this.pop = new Population(this.populationSize, this.mutationRate, this);
+            this.currentMove = 0;
 
             for(int i = 0; i < populationSize; i++){
                 Individual ind = pop.getIndividual(i);
@@ -231,7 +221,7 @@ public class Game {
                 ind.setGame(this);
                 entities.add(ind);
             }
-            this.recordtime = this.maxNrOfMoves +1;
+            this.recordtime = this.maxNrOfMoves +(this.maxGens * this.increaseMovesBy)+ 1;
             mapElements = new ArrayList<>();
             // help
 
@@ -287,45 +277,83 @@ public class Game {
             if(this.currentGen < this.maxGens){
                 if((this.currentGen % this.incMovesAfterGen) == 0  && this.shouldExtend ){
                     System.out.println("slow?");
-                    maxNrOfMoves+=this.increaseMovesBy;
-                    recordtime = maxNrOfMoves + 1;
+                    this.maxNrOfMoves+=this.increaseMovesBy;
                     this.pop.extendGenes(this.increaseMovesBy);
                     this.shouldExtend = false;
                     runGA();             
                 }else{
-                    System.out.println(recordtime);
                     runGA();         
                 }
             }
         }
     }
 
+    //private void runGA(){
+    //    if(this.currentMove < this.maxNrOfMoves){
+    //        this.pop.live(currentMove);
+    //        if(this.foundFinish && (this.currentMove < this.recordtime)){
+    //            this.recordtime = this.currentMove;
+    //        }
+    //        this.currentMove++;
+    //    }else{
+    //        if(this.foundFinish) {
+    //            this.foundFinish = false;
+    //            if(this.recordtime>this.currentMove)
+    //            this.recordtime = this.currentMove;
+    //        }
+    //        this.currentMove = 0;
+    //        this.pop.calculateFitness();
+    //        this.pop.selection();
+    //        this.pop.reproduction(this);
+    //        this.pop.resetDaShiat(this);
+    //        this.currentGen++;
+    //        this.shouldExtend = true;
+    //    } 
+    //    this.updateState();
+    //    this.redrawAll();
+
+    //}
+
     private void runGA(){
-        if((this.currentLifecycle < this.maxNrOfMoves) && !this.foundFinish){
-            this.pop.live(currentLifecycle);
-            if(this.pop.reachedGoal() && (this.currentLifecycle < this.recordtime)){
-                this.recordtime = this.currentLifecycle;
-            }
-            this.currentLifecycle++;
-        }else{
-            if(this.foundFinish) {
-                this.foundFinish = false;
-                if(this.recordtime>this.currentLifecycle)
-                this.recordtime = this.currentLifecycle;
-            }
-            this.currentLifecycle = 0;
+        if(this.foundFinish){
+            this.maxNrOfMoves = this.recordtime;
+            this.currentMove = 0;
             this.pop.calculateFitness();
             this.pop.selection();
             this.pop.reproduction(this);
             this.pop.resetDaShiat(this);
             this.currentGen++;
-            this.shouldExtend = true;
-        } 
+            this.foundFinish = false;
+            this.shouldExtend = false;
+            System.out.println("im here after i finished");
+
+        //normal behavior
+        }else if(this.currentMove < this.maxNrOfMoves){
+            this.pop.live(currentMove);
+            this.currentMove++;
+            if(this.foundFinish){
+                this.foundPrevFinish = true;
+                this.recordtime = this.currentMove-1;
+                System.out.println(this.recordtime);
+
+            }
+        }else{
+            this.currentMove = 0;
+            this.pop.calculateFitness();
+            this.pop.selection();
+            this.pop.reproduction(this);
+            this.pop.resetDaShiat(this);
+            this.currentGen++;
+            if(this.foundPrevFinish){
+                this.shouldExtend = false;
+            }else{
+                this.shouldExtend = true;
+            }
+            
+        }
         this.updateState();
         this.redrawAll();
-
     }
-
     /**
      * process user input
      *

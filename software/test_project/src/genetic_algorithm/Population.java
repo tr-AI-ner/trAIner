@@ -55,18 +55,18 @@ public class Population {
      * @param mutationRate      float   probability of mutation of a gene
      * @param maxNrOfMoves      int     maximum number of possible moves of an individual in one generation
      */
-    public Population(int populationSize, float mutationRate, int maxNrOfMoves, Game game) {
+    public Population(int populationSize, float mutationRate, Game game) {
         this.populationSize = populationSize;
         this.mutationRate = mutationRate;
         this.population = new Individual[populationSize];
         this.currentGeneration = 0;
-        this.maxNrOfMoves = maxNrOfMoves;
+        this.maxNrOfMoves = game.getMaxNrOfMoves();
         this.gene_pool = new ArrayList<>();
         this.game = game;
         this.def_x = game.getStartXY()[0];
         this.def_y = game.getStartXY()[1];
         for (int i = 0; i < population.length; i++) {
-            population[i] = new Individual(def_x, def_y, def_width, def_height, color, this.maxNrOfMoves, game);
+            population[i] = new Individual(def_x, def_y, def_width, def_height, color, game);
             population[i].setGame(game);
         }
     }
@@ -96,15 +96,7 @@ public class Population {
      */
     public void live(int currentCycle){
         for(int i = 0; i < this.population.length; i++){
-            Individual ind = this.population[i];
-        
-            if(this.population[i].getX() == this.population[i].goal[0] && this.population[i].getY() == this.population[i].goal[1]){
-                System.out.println("Im here now live");
-                this.population[i].fin = currentCycle;
-            }
-            if(this.population[i].fin == 0){
-                this.population[i].makeMove(currentCycle);
-            }
+            this.population[i].makeMove(currentCycle);
         }
     }
 
