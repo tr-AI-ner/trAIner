@@ -163,8 +163,8 @@ public class Game {
 
 
             mapElements = new ArrayList<>();
-            start = new ElementStart(33,33,Constants.COLOR_MAP_START);
-            finish = new ElementFinish(50,12,Constants.COLOR_MAP_FINISH);
+            start = new ElementStart(3,3,Constants.COLOR_MAP_START);
+            finish = new ElementFinish(20,30,Constants.COLOR_MAP_FINISH);
 
             mapElements.add(start);
             mapElements.add(finish);

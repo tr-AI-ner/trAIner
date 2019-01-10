@@ -147,9 +147,12 @@ public class Population {
         this.gene_pool.clear();
 
         double maxFit = getMaxFitness();
+        System.out.println("maxFit " + maxFit);
+
         for (int i = 0; i < this.population.length; i++) {
             double scaledFitness = scaleMinMax(this.population[i].fitness, 0, maxFit);
             int multiplier = (int)(scaledFitness * 100);
+
             for(int j = 0; j < multiplier; j++){
                 gene_pool.add(this.population[i]);
             }
@@ -165,6 +168,8 @@ public class Population {
     public void reproduction(Game game) {
         Random rand = new Random();
         for(int i = 0; i < this.population.length; i++){
+            System.out.println("fitness of " + i + this.population[i].getFitness());
+
             int randomMommy = rand.nextInt(this.gene_pool.size());
             int randomDaddy = rand.nextInt(this.gene_pool.size());
 

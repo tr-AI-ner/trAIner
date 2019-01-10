@@ -95,10 +95,15 @@ public class Individual extends Avatar {
         }else
         {
             // calculate the distance of the individual to the goal
-            double distance = Math.sqrt(Math.abs(Math.pow((this.getX() - goal[0]), 2) - Math.pow((this.getY() - goal[1]), 2)));
+            double distance = Math.sqrt(Math.abs(Math.pow((this.getX() - goal[0]), 2) + Math.pow((this.getY() - goal[1]), 2)));
+
             // calculate the fitness
             this.fitness = (preFit / (this.maxNrOfMoves * distance));
             this.fitness = Math.pow(this.fitness, 3);
+            if(distance == 0.0){
+                System.out.println("X/gX "+this.getX() +"/"+ goal[0]);
+                System.out.println("Y/gY "+this.getY() +"/"+ goal[1]);
+            }
         }
     }
 
