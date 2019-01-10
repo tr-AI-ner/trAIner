@@ -26,6 +26,8 @@ import ui.BottomBar;
 import ui.RightBar;
 import ui.TopBar;
 import ui.Menu;
+import ui.HelpScreen;
+import ui.ExitScreen;
 
 public class GraphicsManager extends JPanel {
 
@@ -50,6 +52,8 @@ public class GraphicsManager extends JPanel {
 	private RightBar rightBar;
 
     private Menu menu;
+    private HelpScreen helpScreen;
+    private ExitScreen exitScreen;
 
 	
 	public GraphicsManager(InputManager inputManager, Map map){
@@ -109,6 +113,20 @@ public class GraphicsManager extends JPanel {
      */
     public void drawMenu(){
         menu.draw(graphics);
+    }
+
+    /**
+     * Draws the exit screen when user wants to switch to a different mode.
+     */
+    public void drawExitScreen(){
+        exitScreen.draw(graphics);
+    }
+
+    /**
+     * Draws the help screen.
+     */
+    public void drawHelpScreen(){
+        helpScreen.draw(graphics);
     }
 	
 	/**
@@ -185,6 +203,10 @@ public class GraphicsManager extends JPanel {
     private void setupMenu(){
         menu = new Menu(0,0,setup.getFrameWidth()+12,setup.getFrameHeight()+12,
                 Constants.COLOR_MAP_LAND, setup, inputManager);
+        helpScreen = new HelpScreen(0,0,setup.getFrameWidth()+12,setup.getFrameHeight()+12,
+                Constants.COLOR_MAP_LAND, setup, inputManager);
+        exitScreen = new ExitScreen(0,0,setup.getFrameWidth()+12,setup.getFrameHeight()+12,
+                Constants.COLOR_MAP_LAND, setup, inputManager);
     }
 
 	public Setup getSetup(){
@@ -205,6 +227,8 @@ public class GraphicsManager extends JPanel {
 	public BottomBar getBottomBar(){return bottomBar;}
 	public RightBar getRightBar(){return rightBar;}
 	public Menu getMenu(){return menu;}
+    public HelpScreen getHelpScreen(){return helpScreen;}
+	public ExitScreen getExitScreen(){return exitScreen;}
 
 	public JFrame getFrame(){
 		return frame;

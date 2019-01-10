@@ -44,8 +44,8 @@ public class BottomBar extends UIElement {
     int exitButtonX = Constants.WINDOW_MAP_WIDTH + (Constants.WINDOW_MAP_MARGIN * 2) + Constants.WINDOW_RIGHT_BAR_WIDTH - (iconWidth*2);
     int exitButtonY = Constants.WINDOW_MAP_HEIGHT + (Constants.WINDOW_MAP_MARGIN * 2) + Constants.WINDOW_HEADER_HEIGHT + ((Constants.WINDOW_HEADER_HEIGHT/2) - (iconWidth/2));
 
-    int settingsButtonX = exitButtonX - (iconWidth*3) + 10;
-    int settingsButtonY = Constants.WINDOW_MAP_HEIGHT + (Constants.WINDOW_MAP_MARGIN * 2) + Constants.WINDOW_HEADER_HEIGHT + ((Constants.WINDOW_HEADER_HEIGHT/2) - (iconWidth/2));
+    int helpButtonX = exitButtonX - (iconWidth*3) + 10;
+    int helpButtonY = Constants.WINDOW_MAP_HEIGHT + (Constants.WINDOW_MAP_MARGIN * 2) + Constants.WINDOW_HEADER_HEIGHT + ((Constants.WINDOW_HEADER_HEIGHT/2) - (iconWidth/2));
 
     int previewButtonWidth = 90, previewButtonHeight = 30;
     int previewButtonX = (getWidth() / 2) - (previewButtonWidth / 2);
@@ -53,7 +53,7 @@ public class BottomBar extends UIElement {
 	
     private Rectangle playButton = new Rectangle(playButtonX, playButtonY, iconWidth, iconWidth);
 	private Rectangle pauseButton = new Rectangle(pauseButtonX, pauseButtonY, iconWidth, iconWidth);
-	private Rectangle settingsButton = new Rectangle(settingsButtonX, settingsButtonY, iconWidth, iconWidth);
+	private Rectangle helpButton = new Rectangle(helpButtonX, helpButtonY, iconWidth, iconWidth);
     Rectangle exitButton = new Rectangle(exitButtonX, exitButtonY, iconWidth, iconWidth);
 	private RoundRectangle2D previewButton = new RoundRectangle2D.Float(previewButtonX, previewButtonY, previewButtonWidth, previewButtonHeight, 
             Constants.BUTTON_ARCH_WH, Constants.BUTTON_ARCH_WH);
@@ -62,7 +62,7 @@ public class BottomBar extends UIElement {
     String dirName = "../resources/";
     String pathPlayButton = "playicon.png";
     String pathPauseButton = "pauseicon.png";
-    String pathSettingsButton = "settings.png";
+    String pathHelpButton = "question.png";
     String pathExitButton = "exit.png";
 
     String namePreviewButton = "Preview";
@@ -70,7 +70,7 @@ public class BottomBar extends UIElement {
 	int fontSize = 16;
 	Font font = new Font(Constants.DEFAULT_FONT, Font.PLAIN, fontSize);
 
-    BufferedImage exitImg, settingsImg, pauseImg, playImg;
+    BufferedImage exitImg, helpImg, pauseImg, playImg;
 
 	public BottomBar(int x, int y, int width, int height, Color backgroundColor, Setup setup, InputManager inputManager) {
 		super(x, y, width, height, backgroundColor, setup, inputManager);
@@ -78,7 +78,7 @@ public class BottomBar extends UIElement {
 		try {
             playImg = ImageIO.read(new File(dirName, pathPlayButton));
             pauseImg = ImageIO.read(new File(dirName, pathPauseButton));
-            settingsImg = ImageIO.read(new File(dirName, pathSettingsButton));
+            helpImg = ImageIO.read(new File(dirName, pathHelpButton));
             exitImg = ImageIO.read(new File(dirName, pathExitButton));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -99,7 +99,7 @@ public class BottomBar extends UIElement {
             drawPlayButton(graphics);
 		    drawPauseButton(graphics);
         }
-        drawSettingsButton(graphics);
+        drawHelpButton(graphics);
         drawExitButton(graphics);
 		
 		//draw other UI-elements here...
@@ -186,20 +186,20 @@ public class BottomBar extends UIElement {
 	}
 
 	
-    // Draws the settings button
-	private void drawSettingsButton(Graphics graphics){
+    // Draws the help button
+	private void drawHelpButton(Graphics graphics){
 		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
         int offset = 6;
-        graphics.drawOval(settingsButtonX-((offset+2)/2), settingsButtonY-((offset+2)/2), iconWidth+offset, iconWidth+offset);
+        graphics.drawOval(helpButtonX-((offset+2)/2), helpButtonY-((offset+2)/2), iconWidth+offset, iconWidth+offset);
 
         try {
-		    graphics.drawImage(settingsImg, settingsButtonX+(offset/2), settingsButtonY+(offset/2), iconWidth-offset, iconWidth-offset, null);
+		    graphics.drawImage(helpImg, helpButtonX+(offset/2), helpButtonY+(offset/2), iconWidth-offset, iconWidth-offset, null);
         } catch (Exception e){
             e.printStackTrace();
         }
 	}
 
-    // Draws the settings button
+    // Draws the exit button
 	private void drawExitButton(Graphics graphics){
 		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
         int offset = 6;
@@ -224,8 +224,8 @@ public class BottomBar extends UIElement {
         return previewButton.contains(mouseClickedX, mouseClickedY);
     }
     
-    public boolean isSettingsButtonClicked(int mouseClickedX, int mouseClickedY){
-        return settingsButton.contains(mouseClickedX, mouseClickedY);
+    public boolean isHelpButtonClicked(int mouseClickedX, int mouseClickedY){
+        return helpButton.contains(mouseClickedX, mouseClickedY);
     }
     public boolean isExitButtonClicked(int mouseX, int mouseY){
         return exitButton.contains(mouseX, mouseY);

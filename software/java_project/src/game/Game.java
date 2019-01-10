@@ -133,7 +133,7 @@ public class Game {
 	}
 
     /**
-     * process user input
+     * Processing user input, e.g. mouse clicks and keyboard presses.
      *
      * @author Kasparas
      * @author Rahul
@@ -143,25 +143,16 @@ public class Game {
      */
 	private void processUserInput() {
 		//Enters menu when escape is pressed
-		if(inputManager.getKeyResult()[Constants.KEY_ESCAPE]) {Main.MODE = Constants.MODE_MENU;}
+		if(inputManager.getKeyResult()[Constants.KEY_ESCAPE]) {
+            if(Main.MODE != Constants.MODE_MENU && Main.MODE != Constants.MODE_HELP){
+                Main.PREVIOUS_MODE = Main.MODE;
+            }
+            Main.MODE = Constants.MODE_MENU;
+        }
 
         //Handle user input if menu is open
         if(Main.MODE == Constants.MODE_MENU){
-                if (inputManager.getKeyResult()[Constants.KEY_UP]) {
-                    graphicsManager.getMenu().changeSelectedButton(true);
-                }
-                if (inputManager.getKeyResult()[Constants.KEY_DOWN]) {
-                    graphicsManager.getMenu().changeSelectedButton(false);
-                }
-                if (inputManager.getKeyResult()[Constants.KEY_ENTER]){
-                    Main.MODE = graphicsManager.getMenu().getSelectedMode(); 
-                }
-                if(inputManager.isMouseClicked()){
-                    int clickedButtonMode = graphicsManager.getMenu().getMouseSelectedMode(inputManager.getMouseClickedX(),inputManager.getMouseClickedY());
-                    if (clickedButtonMode > -1){
-                        Main.MODE = clickedButtonMode;
-                    }
-                }
+            graphicsManager.getMenu().processUserInput(this);
         } else {
             //Switches between the game and the build mode
             if(inputManager.getKeyResult()[Constants.KEY_G]) { Main.MODE = Constants.MODE_PLAYER_GAME; }
@@ -239,10 +230,18 @@ public class Game {
             // check for parameter changes by user and process them
             processParameterChanges(graphicsManager.getRightBar().getParameterChanges());
             
-            // 	Exit Button to exit the game
+            // 	Exit Button to open memu 
             if (inputManager.isMouseClicked()
                     && graphicsManager.getBottomBar().isExitButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
-                System.exit(0);
+                if(Main.MODE != Constants.MODE_MENU && Main.MODE != Constants.MODE_HELP){
+                    Main.PREVIOUS_MODE = Main.MODE;
+                }
+                Main.MODE = Constants.MODE_MENU;
+            }
+            // 	Help Button to open help screen
+            if (inputManager.isMouseClicked()
+                    && graphicsManager.getBottomBar().isHelpButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
+                Main.MODE = Constants.MODE_HELP;
             }
             // 	building mode Button
             if (inputManager.isMouseClicked()
@@ -267,7 +266,8 @@ public class Game {
                 }
                 //  Pause Button to pause the game
                 if (graphicsManager.getBottomBar().isPauseButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
-                    System.out.println("Pause Button Clicked");
+                    Main.PREVIOUS_MODE = Main.MODE;
+                    Main.MODE = Constants.MODE_MENU;
                 }
             }
         }
@@ -297,6 +297,8 @@ public class Game {
      *      2 - Preview Mode
      *      3 - AI Game
      *      4 - Challenge Mode
+     *      5 - Menu Mode
+     *      6 - Help Screen
      * 
      * @author Patrick
      */
@@ -318,6 +320,8 @@ public class Game {
                 break;
             case Constants.MODE_MENU:
                 break;
+            case Constants.MODE_HELP:
+                break;
         }
         cleanUp();
     }
@@ -332,6 +336,9 @@ public class Game {
 		
         if (Main.MODE == Constants.MODE_MENU){
             graphicsManager.drawMenu();
+        } 
+        else if (Main.MODE == Constants.MODE_HELP){
+            graphicsManager.drawHelpScreen();
         } else {
             // draw all bars
             graphicsManager.drawWindowSetup();

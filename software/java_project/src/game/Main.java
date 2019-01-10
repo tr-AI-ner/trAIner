@@ -8,8 +8,22 @@ import map_builder.Map;
 
 public class Main {
 
-	public static int MODE = Constants.MODE_MENU; //0 = Player_Game , 1 = MapBuilder, 2 = Preview mode, 3 = AI_Game, 4 = Challenge mode, 5=Menu
-	private Game game = null;
+    /**
+     * Modes:
+     *      0: Player Game
+     *      1: Map Builder
+     *      2: Preview Mode
+     *      3: AI Game
+     *      4: Challenge Mode
+     *      5: Menu
+     *      6: Help Screen
+     *      7: Exit Screen
+     */
+	public static int MODE = Constants.MODE_MENU; 
+    public static int PREVIOUS_MODE = Constants.MODE_MENU;
+    public static int NEXT_MODE = Constants.MODE_MENU;
+
+    private Game game = null;
 
 	public static void main(String[] args) {
 		new Main();
