@@ -290,8 +290,9 @@ public class Menu extends UIElement{
         if (getInputManager().getKeyResult()[Constants.KEY_ENTER] && canSelectButtonAgain(lastEnterPressed)){
             if(selectedButton==0 && !resumeEnabled){}
             else {
-                Main.MODE = getSelectedMode(selectedButton); 
-                Main.PREVIOUS_MODE = Main.MODE;
+                game.changeMode(getSelectedMode(selectedButton), true); 
+                //Main.MODE = getSelectedMode(selectedButton); 
+                //Main.PREVIOUS_MODE = Main.MODE;
                 resumeEnabled = true;
                 selectedButton = -1;
             }
@@ -300,8 +301,9 @@ public class Menu extends UIElement{
         if(getInputManager().isMouseClicked()){
             int clickedButtonMode = getMouseSelectedMode(getInputManager().getMouseClickedX(),getInputManager().getMouseClickedY());
             if (clickedButtonMode > -1){
-                Main.MODE = clickedButtonMode;
-                Main.PREVIOUS_MODE = Main.MODE;
+                game.changeMode(clickedButtonMode, true);
+                //Main.MODE = clickedButtonMode;
+                //Main.PREVIOUS_MODE = Main.MODE;
                 resumeEnabled = true;
                 selectedButton = -1;
             }

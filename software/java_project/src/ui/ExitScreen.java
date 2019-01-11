@@ -82,9 +82,32 @@ public class ExitScreen extends UIElement {
 		graphics.drawRoundRect(x,y,buttonWidth,buttonHeight,Constants.BUTTON_ARCH_WH,Constants.BUTTON_ARCH_WH);
     }
 
+    /**
+     * Sets message of exit screen according to old and new mode.
+     *
+     * @param oldMode from which to switch from
+     * @param newMode from which to switch to
+     */
+    public void setText(int oldMode, int newMode){
+        String s1 = "Would you like to exit the ";
+        String s2 = " to start the ";
+        this.message = s1 + getModeText(oldMode) + s2 + getModeText(newMode);
+    }
 
-
-
+    /**
+     * Gets string of a mode.
+     *
+     * @param mode 
+     * @return the mode string
+     */
+    private String getModeText(int mode){
+        switch (mode){
+            case Constants.MODE_PLAYER_GAME: return "Player Game Mode";
+            case Constants.MODE_AI_GAME: return "AI Game Mode";
+            case Constants.MODE_MAP_BUILDER: return "Build Mode";
+            default: return "";
+        }
+    }
 
 
 }
