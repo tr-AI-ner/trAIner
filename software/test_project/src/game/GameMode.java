@@ -51,21 +51,21 @@ public class GameMode {
      *      7: Exit Screen
      *
      */
-    public void changeMode(int mode, boolean fromMenu){
-        System.out.println("changeMode... currently: "+getModeString(MODE)+", PREVIOUS_MODE="+getModeString(PREVIOUS_MODE)+", should change to mode: "+getModeString(mode));
+    public void changeMode(int mode, boolean fromBar){
         switch(mode){
             case Constants.MODE_PLAYER_GAME:
-                System.out.println("changeMode - PLAYER, mode: "+getModeString(mode)); 
                 if(MODE==Constants.MODE_PLAYER_GAME 
                     || PREVIOUS_MODE==Constants.MODE_PLAYER_GAME
                     || PREVIOUS_MODE==Constants.MODE_NONE){
                     MODE = Constants.MODE_PLAYER_GAME;
-                    PREVIOUS_MODE = MODE;
+                    PREVIOUS_MODE = Constants.MODE_PLAYER_GAME;
                 }
-                else if(PREVIOUS_MODE != Constants.MODE_PLAYER_GAME){
+                else if(PREVIOUS_MODE != Constants.MODE_PLAYER_GAME
+                        || (MODE == Constants.MODE_AI_GAME)
+                        || (MODE == Constants.MODE_MAP_BUILDER)){
                     if (graphicsManager.getExitScreen().wasYesSelected()){
                         MODE = Constants.MODE_PLAYER_GAME;
-                        PREVIOUS_MODE = Constants.MODE_NONE;
+                        PREVIOUS_MODE = Constants.MODE_PLAYER_GAME;
                         NEXT_MODE = Constants.MODE_NONE;
                         graphicsManager.getExitScreen().resetYesSelected();
                     } else {
@@ -74,19 +74,20 @@ public class GameMode {
                 }
                 break;
             case Constants.MODE_MAP_BUILDER:
-                System.out.println("changeMode - BULDER, mode: "+getModeString(mode)); 
                 if(MODE==Constants.MODE_MAP_BUILDER 
                   || PREVIOUS_MODE==Constants.MODE_MAP_BUILDER
                   || MODE==Constants.MODE_PREVIEW
                   || PREVIOUS_MODE==Constants.MODE_NONE){
                     MODE = Constants.MODE_MAP_BUILDER;
-                    PREVIOUS_MODE = MODE;
+                    PREVIOUS_MODE = Constants.MODE_MAP_BUILDER;
                     game.reloadBuildState();
                 }
-                else if(PREVIOUS_MODE != Constants.MODE_MAP_BUILDER){
+                else if(PREVIOUS_MODE != Constants.MODE_MAP_BUILDER
+                        || (MODE == Constants.MODE_PLAYER_GAME)
+                        || (MODE == Constants.MODE_AI_GAME)){
                     if (graphicsManager.getExitScreen().wasYesSelected()){
                         MODE = Constants.MODE_MAP_BUILDER;
-                        PREVIOUS_MODE = Constants.MODE_NONE;
+                        PREVIOUS_MODE = Constants.MODE_MAP_BUILDER;
                         NEXT_MODE = Constants.MODE_NONE;
                         graphicsManager.getExitScreen().resetYesSelected();
                     } else {
@@ -95,7 +96,6 @@ public class GameMode {
                 }
                 break;
             case Constants.MODE_PREVIEW:
-                System.out.println("changeMode - Preview, mode: "+getModeString(mode)); 
                 if(MODE == Constants.MODE_MAP_BUILDER)
                     MODE = Constants.MODE_PREVIEW;
                 else {
@@ -104,17 +104,18 @@ public class GameMode {
                 }
                 break;
             case Constants.MODE_AI_GAME:
-                System.out.println("changeMode - AI game, mode: "+getModeString(mode)); 
                 if(MODE==Constants.MODE_AI_GAME 
                   || PREVIOUS_MODE==Constants.MODE_AI_GAME
                   || PREVIOUS_MODE==Constants.MODE_NONE){
                     MODE = Constants.MODE_AI_GAME;
-                    PREVIOUS_MODE = MODE;
+                    PREVIOUS_MODE = Constants.MODE_AI_GAME;
                 }
-                else if(PREVIOUS_MODE != Constants.MODE_AI_GAME){
+                else if(PREVIOUS_MODE != Constants.MODE_AI_GAME
+                        || (MODE == Constants.MODE_PLAYER_GAME)
+                        || (MODE == Constants.MODE_MAP_BUILDER)){
                     if (graphicsManager.getExitScreen().wasYesSelected()){
                         MODE = Constants.MODE_AI_GAME;
-                        PREVIOUS_MODE = Constants.MODE_NONE;
+                        PREVIOUS_MODE = Constants.MODE_AI_GAME;
                         NEXT_MODE = Constants.MODE_NONE;
                         graphicsManager.getExitScreen().resetYesSelected();
                     } else {
@@ -123,10 +124,8 @@ public class GameMode {
                 }
                 break;
             case Constants.MODE_CHALLENGE:
-                System.out.println("changeMode - challenge, mode: "+getModeString(mode)); 
                 break;
             case Constants.MODE_MENU:
-                System.out.println("changeMode - menu, mode: "+getModeString(mode)); 
                 if(MODE==Constants.MODE_AI_GAME
                   || MODE==Constants.MODE_PLAYER_GAME
                   || MODE==Constants.MODE_MAP_BUILDER){
@@ -135,22 +134,31 @@ public class GameMode {
                 MODE = Constants.MODE_MENU;
                 break;
             case Constants.MODE_HELP:
-                System.out.println("changeMode - help, mode: "+getModeString(mode)); 
-                PREVIOUS_MODE = MODE;
+                if(MODE==Constants.MODE_AI_GAME
+                  || MODE==Constants.MODE_PLAYER_GAME
+                  || MODE==Constants.MODE_MAP_BUILDER){
+                    PREVIOUS_MODE = MODE;
+                }
                 MODE = Constants.MODE_HELP;
+                graphicsManager.getHelpScreen().setLastOpenedTime(System.currentTimeMillis());
                 break;
             case Constants.MODE_EXIT:
-                System.out.println("changeMode - exit, mode: "+getModeString(mode)); 
                 System.exit(0);
                 break;
             default: 
                 System.out.println("default case... mode: "+getModeString(mode));
                 break;
         }
-        System.out.println("ChangeMode done, MODE="+getModeString(MODE)+", PREVIOUS_MODE="+getModeString(PREVIOUS_MODE)+", NEXT_MODE="+getModeString(NEXT_MODE));
     }
 
-    private String getModeString(int mode){
+    /**
+     * Get string representation of a mode for debugging purposes.
+     *
+     * @param mode integer value of constants
+     *
+     * @return the string representation
+     */
+    public String getModeString(int mode){
         switch (mode){
             case -1: return "NONE"; 
             case 0: return "PLAYER_GAME"; 

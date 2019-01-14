@@ -216,6 +216,45 @@ public class BottomBar extends UIElement {
         }
 	}
 
+    /**
+     * Process the user input for the bottom bar.
+     * E.g. button clicks for 
+     *      Preview,
+     *      Exit,
+     *      Help,
+     *      Play,
+     *      Pause
+     */
+    public void processUserInput(){
+        // check if preview button was clicked
+        if((gameMode.getMode()==Constants.MODE_MAP_BUILDER || gameMode.getMode()==Constants.MODE_PREVIEW) && getInputManager().isMouseClicked() 
+                && isPreviewButtonClicked(getInputManager().getMouseClickedX(), getInputManager().getMouseClickedY())){
+            gameMode.changeMode(Constants.MODE_PREVIEW, false);
+        }
+
+        // 	Exit Button to open memu 
+        if (getInputManager().isMouseClicked()
+                && isExitButtonClicked(getInputManager().getMouseClickedX(), getInputManager().getMouseClickedY())) {
+            gameMode.changeMode(Constants.MODE_MENU, false);
+        }
+        // 	Help Button to open help screen
+        if (getInputManager().isMouseClicked()
+                && isHelpButtonClicked(getInputManager().getMouseClickedX(), getInputManager().getMouseClickedY())) {
+            gameMode.changeMode(Constants.MODE_HELP, false);
+        }
+
+        if (gameMode.getMode() != Constants.MODE_MAP_BUILDER && gameMode.getMode() != Constants.MODE_PREVIEW && getInputManager().isMouseClicked()){
+            // 	Play Button to play the game
+            if (isPlayButtonClicked(getInputManager().getMouseClickedX(), getInputManager().getMouseClickedY())) {
+                System.out.println("Play Button Clicked");
+            }
+            //  Pause Button to pause the game
+            if (isPauseButtonClicked(getInputManager().getMouseClickedX(), getInputManager().getMouseClickedY())) {
+                gameMode.changeMode(Constants.MODE_MENU, false);
+            }
+        }
+    }
+
 	public boolean isPlayButtonClicked(int mouseClickedX, int mouseClickedY){
 	    return playButton.contains(mouseClickedX, mouseClickedY);
     }

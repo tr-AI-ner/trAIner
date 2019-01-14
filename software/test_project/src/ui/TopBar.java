@@ -282,6 +282,32 @@ public class TopBar extends UIElement {
 		int y2 = Constants.WINDOW_HEADER_HEIGHT - (y1);
 		graphics.drawLine(x1, y1, x1, y2);
 	}
+    
+    /**
+     * Process user input for the top bar.
+     * E.g. button clicks for
+     *      AI Gameplay,
+     *      Player Gameplay,
+     *      Building Mode
+     *
+     */
+    public void processUserInput(){
+        // 	building mode Button
+        if (getInputManager().isMouseClicked()
+                && isBuildModeButtonClicked(getInputManager().getMouseClickedX(), getInputManager().getMouseClickedY())) {
+            gameMode.changeMode(Constants.MODE_MAP_BUILDER, true);
+        }
+        // 	game-play mode Button
+        if (getInputManager().isMouseClicked()
+                && isGamePlayModeButtonClicked(getInputManager().getMouseClickedX(), getInputManager().getMouseClickedY())) {
+            gameMode.changeMode(Constants.MODE_PLAYER_GAME, true);
+        }
+        // 	AI mode Button
+        if (getInputManager().isMouseClicked()
+                && isBrainButtonClicked(getInputManager().getMouseClickedX(), getInputManager().getMouseClickedY())) {
+            gameMode.changeMode(Constants.MODE_AI_GAME, true);
+        }
+    }
 
 	/**
 	 * Takes away .csv extention from a filename for The MapName at the TopBar

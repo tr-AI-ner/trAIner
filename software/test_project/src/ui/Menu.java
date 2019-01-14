@@ -29,7 +29,7 @@ public class Menu extends UIElement{
     int buttonSpace = 20;
 
     String[] buttonNames = new String[]{
-        "Resume", "New AI Game", "Player Game", "Build Map", "Help", "Exit"
+        "Resume", "AI Game", "Player Game", "Build Map", "Help", "Exit"
     };
 	
     private RoundRectangle2D[] buttons;
@@ -230,22 +230,10 @@ public class Menu extends UIElement{
                 else
                     return Constants.MODE_MENU;
             case 1: 
-                //if (Main.PREVIOUS_MODE != Constants.MODE_AI_GAME){
-                //    Main.NEXT_MODE = Constants.MODE_AI_GAME;
-                //    return Constants.MODE_EXIT;
-                //}
                 return Constants.MODE_AI_GAME;
             case 2: 
-                //if (Main.PREVIOUS_MODE != Constants.MODE_PLAYER_GAME){
-                //    Main.NEXT_MODE = Constants.MODE_PLAYER_GAME;
-                //    return Constants.MODE_EXIT;
-                //}
                 return Constants.MODE_PLAYER_GAME;
             case 3: 
-                //if (Main.PREVIOUS_MODE != Constants.MODE_MAP_BUILDER){
-                //    Main.NEXT_MODE = Constants.MODE_MAP_BUILDER;
-                //    return Constants.MODE_EXIT;
-                //}
                 return Constants.MODE_MAP_BUILDER;
             case 4: return Constants.MODE_HELP;
             case 5: System.exit(0);
@@ -293,9 +281,8 @@ public class Menu extends UIElement{
         if (getInputManager().getKeyResult()[Constants.KEY_ENTER] && canSelectButtonAgain(lastEnterPressed)){
             if(selectedButton==0 && !resumeEnabled){}
             else {
-                gameMode.changeMode(getSelectedMode(selectedButton), true); 
-                //Main.MODE = getSelectedMode(selectedButton); 
-                //Main.PREVIOUS_MODE = Main.MODE;
+                int selectedMode = getSelectedMode(selectedButton);
+                gameMode.changeMode(selectedMode, false); 
                 resumeEnabled = true;
                 selectedButton = -1;
             }
@@ -304,9 +291,7 @@ public class Menu extends UIElement{
         if(getInputManager().isMouseClicked()){
             int clickedButtonMode = getMouseSelectedMode(getInputManager().getMouseClickedX(),getInputManager().getMouseClickedY());
             if (clickedButtonMode > -1){
-                gameMode.changeMode(clickedButtonMode, true);
-                //Main.MODE = clickedButtonMode;
-                //Main.PREVIOUS_MODE = Main.MODE;
+                gameMode.changeMode(clickedButtonMode, false);
                 resumeEnabled = true;
                 selectedButton = -1;
             }

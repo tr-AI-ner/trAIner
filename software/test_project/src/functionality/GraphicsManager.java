@@ -207,7 +207,7 @@ public class GraphicsManager extends JPanel {
         menu = new Menu(0,0,setup.getFrameWidth()+12,setup.getFrameHeight()+12,
                 Constants.COLOR_MAP_LAND, setup, inputManager, gameMode);
         helpScreen = new HelpScreen(0,0,setup.getFrameWidth()+12,setup.getFrameHeight()+12,
-                Constants.COLOR_MAP_LAND, setup, inputManager);
+                Constants.COLOR_MAP_LAND, setup, inputManager, gameMode);
         exitScreen = new ExitScreen(0,0,setup.getFrameWidth()+12,setup.getFrameHeight()+12,
                 Constants.COLOR_MAP_LAND, setup, inputManager, gameMode);
     }

@@ -59,7 +59,7 @@ public class Game {
 		this.inputManager = gm.getInputManager();
 		this.setup = gm.getSetup();
 		this.map = gm.getMap();
-        this.gameMode = new GameMode(gm);
+        this.gameMode = gm.getGameMode();
 
 
 		entities = new ArrayList<>();
@@ -128,7 +128,7 @@ public class Game {
 	// Main game loop
 	private void gameLoop(){
 		if(this.clock.frameShouldChange()) { // if fps right (ifnot, sleep, or do nothing), and update clock
-			this.processUserInput(); // Process user input		
+			this.processUserInput(); // Process user input	
 			this.updateState(); // Update state
 			this.redrawAll();//graphicsManager); // Redraw everything
 		}
@@ -146,35 +146,32 @@ public class Game {
 	private void processUserInput() {
 		//Enters menu when escape is pressed
 		if(inputManager.getKeyResult()[Constants.KEY_ESCAPE]) {
-            //if(Main.MODE != Constants.MODE_MENU && Main.MODE != Constants.MODE_HELP){
-            //    Main.PREVIOUS_MODE = Main.MODE;
-            //}
-            //Main.MODE = Constants.MODE_MENU;
             gameMode.changeMode(Constants.MODE_MENU, false);
         }
 
         //Handle user input if menu is open
         if(gameMode.getMode() == Constants.MODE_MENU){
             graphicsManager.getMenu().processUserInput();
-        } 
+        }
+        //Handle user input if help screen is open
+        else if(gameMode.getMode() == Constants.MODE_HELP){
+            graphicsManager.getHelpScreen().processUserInput();
+        }
+        // Hanlde user input if exit screen is open
         else if (gameMode.getMode() == Constants.MODE_EXIT){
             graphicsManager.getExitScreen().processUserInput();
         } else {
             //Switches between the game and the build mode
             if(inputManager.getKeyResult()[Constants.KEY_G]) { 
-                //Main.MODE = Constants.MODE_PLAYER_GAME; 
                 gameMode.changeMode(Constants.MODE_PLAYER_GAME, false);
             }
             if(inputManager.getKeyResult()[Constants.KEY_B]) { 
-                //Main.MODE = Constants.MODE_MAP_BUILDER; 
-                //reloadBuildState();
                 gameMode.changeMode(Constants.MODE_MAP_BUILDER, false);
             }
             // loads an empty map
             if(inputManager.getKeyResult()[Constants.KEY_E]) { mapSaverLoader.initEmptyMap(); }
             // switch to AI mode
             if(inputManager.getKeyResult()[Constants.KEY_A]) { 
-                //Main.MODE = Constants.MODE_AI_GAME; 
                 gameMode.changeMode(Constants.MODE_AI_GAME, false);
             }
 
@@ -228,72 +225,15 @@ public class Game {
                 }
             }
 
-            // check if preview button was clicked
-            if((gameMode.getMode()==Constants.MODE_MAP_BUILDER || gameMode.getMode()==Constants.MODE_PREVIEW) && inputManager.isMouseClicked() 
-                    && graphicsManager.getBottomBar().isPreviewButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())){
-                //if(Main.MODE==Constants.MODE_MAP_BUILDER){ 
-                //    Main.MODE = Constants.MODE_PREVIEW;
-                //}
-                //else if(Main.MODE == Constants.MODE_PREVIEW){ 
-                //    Main.MODE = Constants.MODE_MAP_BUILDER;
-                //    reloadBuildState();
-                //}
-                gameMode.changeMode(Constants.MODE_PREVIEW, false);
-            }
-
             // check for parameter changes by user and process them
             processParameterChanges(graphicsManager.getRightBar().getParameterChanges());
             
-            // 	Exit Button to open memu 
-            if (inputManager.isMouseClicked()
-                    && graphicsManager.getBottomBar().isExitButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
-                //if(Main.MODE != Constants.MODE_MENU && Main.MODE != Constants.MODE_HELP){
-                //    Main.PREVIOUS_MODE = Main.MODE;
-                //}
-                gameMode.changeMode(Constants.MODE_MENU, false);
-                //Main.MODE = Constants.MODE_MENU;
-            }
-            // 	Help Button to open help screen
-            if (inputManager.isMouseClicked()
-                    && graphicsManager.getBottomBar().isHelpButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
-                gameMode.changeMode(Constants.MODE_HELP, false);
-                //Main.MODE = Constants.MODE_HELP;
-            }
-            // 	building mode Button
-            if (inputManager.isMouseClicked()
-                    && graphicsManager.getTopBar().isBuildModeButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
-                gameMode.changeMode(Constants.MODE_MAP_BUILDER, false);
-                //Main.MODE = Constants.MODE_MAP_BUILDER;
-            }
-            // 	game-play mode Button
-            if (inputManager.isMouseClicked()
-                    && graphicsManager.getTopBar().isGamePlayModeButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
-                gameMode.changeMode(Constants.MODE_PLAYER_GAME, false);
-                //Main.MODE = Constants.MODE_PLAYER_GAME;
-            }
-            // 	AI mode Button
-            if (inputManager.isMouseClicked()
-                    && graphicsManager.getTopBar().isBrainButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
-                gameMode.changeMode(Constants.MODE_AI_GAME, false);
-                //Main.MODE = Constants.MODE_AI_GAME;
-            }
+            graphicsManager.getTopBar().processUserInput();
+            graphicsManager.getBottomBar().processUserInput();
 
-            if (gameMode.getMode() != Constants.MODE_MAP_BUILDER && gameMode.getMode() != Constants.MODE_PREVIEW && inputManager.isMouseClicked()){
-                // 	Play Button to play the game
-                if (graphicsManager.getBottomBar().isPlayButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
-                    System.out.println("Play Button Clicked");
-                }
-                //  Pause Button to pause the game
-                if (graphicsManager.getBottomBar().isPauseButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
-                    gameMode.changeMode(Constants.MODE_MENU, false);
-                    //Main.PREVIOUS_MODE = Main.MODE;
-                    //Main.MODE = Constants.MODE_MENU;
-                }
-            }
         }
 
         inputManager.setMouseClicked(false);
-
 	}
 
     /**
@@ -347,7 +287,7 @@ public class Game {
     }
 
     /**
-     * redraws the full window
+     * Redraws the full window according to current mode.
      *
      */
 	private void redrawAll(){
@@ -355,18 +295,14 @@ public class Game {
 		graphicsManager.clear();
 		
         if (gameMode.getMode() == Constants.MODE_MENU){
-            System.out.println("redrawAll - drawing menu... mode: "+gameMode.getMode());
             graphicsManager.drawMenu();
         } 
         else if (gameMode.getMode() == Constants.MODE_EXIT){
-            System.out.println("redrawAll - drawing exit... mode: "+gameMode.getMode());
             graphicsManager.drawExitScreen();
         } 
         else if (gameMode.getMode() == Constants.MODE_HELP){
-            System.out.println("redrawAll - drawing help... mode: "+gameMode.getMode());
             graphicsManager.drawHelpScreen();
         } else {
-            System.out.println("redrawAll - drawing game... mode: "+gameMode.getMode());
             // draw all bars
             graphicsManager.drawWindowSetup();
 
