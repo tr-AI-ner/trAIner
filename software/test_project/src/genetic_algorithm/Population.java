@@ -96,7 +96,7 @@ public class Population {
      */
     public void live(int currentCycle){
         for(int i = 0; i < this.population.length; i++){
-            this.population[i].makeMove(currentCycle);
+           this.population[i].makeMove(currentCycle);
         }
     }
 
@@ -168,7 +168,6 @@ public class Population {
     public void reproduction(Game game) {
         Random rand = new Random();
         for(int i = 0; i < this.population.length; i++){
-            System.out.println("fitness of " + i + this.population[i].getFitness());
 
             int randomMommy = rand.nextInt(this.gene_pool.size());
             int randomDaddy = rand.nextInt(this.gene_pool.size());
@@ -207,6 +206,7 @@ public class Population {
     public void resetDaShiat(Game game){
         for(int i = 0; i < this.population.length; i++){
             this.population[i].reset();
+            this.population[i].setFitness(0.0);
         }
     }
     

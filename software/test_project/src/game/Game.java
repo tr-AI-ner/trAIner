@@ -276,7 +276,6 @@ public class Game {
         if(this.clock.frameShouldChange()){
             if(this.currentGen < this.maxGens){
                 if((this.currentGen % this.incMovesAfterGen) == 0  && this.shouldExtend ){
-                    System.out.println("slow?");
                     this.maxNrOfMoves+=this.increaseMovesBy;
                     this.pop.extendGenes(this.increaseMovesBy);
                     this.shouldExtend = false;

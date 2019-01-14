@@ -1,5 +1,7 @@
 package genetic_algorithm;
 
+import map_builder.MapElement;
+import map_builder.MapType;
 import java.lang.Math;
 import custom_objects.Avatar;
 import java.util.Random;
@@ -179,10 +181,22 @@ public class Individual extends Avatar {
      * move the individual according to the next direction in the gene
      *
      */
-    public void makeMove(int maxNrOfMovestep){
+    public int[] makeMove(int currentMove){
         int direction[] = new int[2];
-        direction = this.getGenome().getGenes()[maxNrOfMovestep]; 
+        direction = this.getGenome().getGenes()[currentMove]; 
+        for (MapElement element: game.getMapElements()){
+                if (direction[0]+getWidth() > element.getX()
+                        && direction[0] < (element.getX()+element.getWidth())
+                        && (direction[1]+getHeight() > element.getY()
+                        && direction[1] < (element.getY()+element.getHeight()))
+                        && element.getMapType() == MapType.FINISH
+                ) {
+                    setFin(currentMove +1);
+                    System.out.println("fin in " + getFin());
+                }
+        }
         this.move(direction[0], direction[1]);
+        return direction;
     }
 
     public void updateGenome(Genome newGenes){
@@ -233,6 +247,8 @@ public class Individual extends Avatar {
     public void setFin(int fin) {
         this.fin = fin;
     }
+
+    public int getFin(){return this.fin;}
 
     public int[] getStart_pos() {
         return start_pos;

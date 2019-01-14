@@ -127,6 +127,7 @@ public class Avatar extends Entity {
 	 * @return if the avatar is touching the finish block
 	 */
 	private boolean finished(){
+
 		for (MapElement element: game.getMapElements()){
 			if (toMoveX+getWidth() > element.getX()
 					&& toMoveX < (element.getX()+element.getWidth())
@@ -134,6 +135,7 @@ public class Avatar extends Entity {
 					&& toMoveY < (element.getY()+element.getHeight()))
 					&& element.getMapType() == MapType.FINISH
 			) {
+                System.out.println("in avatar finished");
 				return true;
 			}
 		}
