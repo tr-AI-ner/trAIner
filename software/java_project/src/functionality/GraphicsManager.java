@@ -20,6 +20,7 @@ import javax.swing.JPanel;
 import custom_objects.Avatar;
 import custom_objects.Entity;
 import game.Game;
+import game.GameMode;
 import map_builder.Map;
 import map_builder.MapElement;
 import ui.BottomBar;
@@ -45,6 +46,7 @@ public class GraphicsManager extends JPanel {
 	Setup setup = new Setup();
 	InputManager inputManager;
 	Map map;
+    GameMode gameMode;
 
 	// the 3 bars for the game (these should only be accessed if needed, never overridden)
 	private TopBar topBar;
@@ -147,7 +149,7 @@ public class GraphicsManager extends JPanel {
 	 */
 	public void drawMap(ArrayList<Entity> entities){
 		//draw map
-		map.draw(graphics, entities);
+		map.draw(graphics, entities, gameMode);
 	}
 
     /**
@@ -181,19 +183,19 @@ public class GraphicsManager extends JPanel {
 	 */
 	private void setupToolbars(){
 		topBar = new TopBar(0, 0, setup.getFrameWidth()+12, Constants.WINDOW_HEADER_HEIGHT, 
-				Constants.COLOR_HEADER_1, setup, inputManager, "map name"); // TODO change with the loaded map name
+				Constants.COLOR_HEADER_1, setup, inputManager, "map name", gameMode); // TODO change with the loaded map name
 		
 		bottomBar = new BottomBar(0, 
 				Constants.WINDOW_HEADER_HEIGHT+(Constants.WINDOW_MAP_MARGIN*2)+Constants.WINDOW_MAP_HEIGHT, 
 				setup.getFrameWidth()+12, 
 				Constants.WINDOW_HEADER_HEIGHT, 
-				Constants.COLOR_HEADER_1, setup, inputManager);
+				Constants.COLOR_HEADER_1, setup, inputManager, gameMode);
 		
 		rightBar = new RightBar((Constants.WINDOW_MAP_MARGIN*2)+Constants.WINDOW_MAP_WIDTH, 
 				Constants.WINDOW_HEADER_HEIGHT, 
 				Constants.WINDOW_RIGHT_BAR_WIDTH, 
 				Constants.WINDOW_RIGHT_BAR_HEIGHT, 
-				Constants.COLOR_MAP_LAND, setup, inputManager);
+				Constants.COLOR_MAP_LAND, setup, inputManager, gameMode);
         rightBar.setGame(game);
 	}
 
@@ -201,12 +203,13 @@ public class GraphicsManager extends JPanel {
      * Initializes the Menu of the game.
      */
     private void setupMenu(){
+        gameMode = new GameMode(this);
         menu = new Menu(0,0,setup.getFrameWidth()+12,setup.getFrameHeight()+12,
-                Constants.COLOR_MAP_LAND, setup, inputManager);
+                Constants.COLOR_MAP_LAND, setup, inputManager, gameMode);
         helpScreen = new HelpScreen(0,0,setup.getFrameWidth()+12,setup.getFrameHeight()+12,
                 Constants.COLOR_MAP_LAND, setup, inputManager);
         exitScreen = new ExitScreen(0,0,setup.getFrameWidth()+12,setup.getFrameHeight()+12,
-                Constants.COLOR_MAP_LAND, setup, inputManager);
+                Constants.COLOR_MAP_LAND, setup, inputManager, gameMode);
     }
 
 	public Setup getSetup(){
@@ -217,7 +220,10 @@ public class GraphicsManager extends JPanel {
 		return map;
 	}
 
-    public void setGame(Game game){this.game = game;}
+    public void setGame(Game game){
+        this.game = game;
+        gameMode.setGame(game);
+    }
 
 	public InputManager getInputManager(){
 		return inputManager;
@@ -229,6 +235,7 @@ public class GraphicsManager extends JPanel {
 	public Menu getMenu(){return menu;}
     public HelpScreen getHelpScreen(){return helpScreen;}
 	public ExitScreen getExitScreen(){return exitScreen;}
+	public GameMode getGameMode(){return gameMode;}
 
 	public JFrame getFrame(){
 		return frame;

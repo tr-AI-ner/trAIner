@@ -14,7 +14,7 @@ import java.awt.geom.RoundRectangle2D;
 import functionality.Constants;
 import functionality.Setup;
 import functionality.InputManager;
-import game.Main;
+import game.GameMode;
 import game.Game;
 
 public class ExitScreen extends UIElement {
@@ -39,8 +39,11 @@ public class ExitScreen extends UIElement {
 
     boolean yesSelected = false;
 
-	public ExitScreen(int x, int y, int width, int height, Color backgroundColor, Setup setup, InputManager inputManager) {
+    GameMode gameMode;
+
+	public ExitScreen(int x, int y, int width, int height, Color backgroundColor, Setup setup, InputManager inputManager, GameMode gameMode) {
 		super(x, y, width, height, backgroundColor, setup, inputManager);
+        this.gameMode = gameMode;
 
         int offsetX = 10;
         yesButtonX = (width/2) - buttonWidth - offsetX;
@@ -121,7 +124,7 @@ public class ExitScreen extends UIElement {
         }
     }
 
-    public void processUserInput(Game game){
+    public void processUserInput(){
         if (getInputManager().getKeyResult()[Constants.KEY_LEFT]) {
             changeSelectedButton(true);
         }
@@ -132,12 +135,13 @@ public class ExitScreen extends UIElement {
             if (selectedButton == SEL_BTN_YES){
                 System.out.println("Yes pressed with enter");
                 yesSelected = true;
-                game.changeMode(Main.NEXT_MODE, true);
+                gameMode.changeMode(gameMode.getNextMode(), true);
             }
             else if (selectedButton == SEL_BTN_NO){
                 System.out.println("No pressed with enter");
-                Main.NEXT_MODE = Constants.MODE_NONE;
-                game.changeMode(Constants.MODE_MENU, true);
+                gameMode.resetNextMode();
+                //Main.NEXT_MODE = Constants.MODE_NONE;
+                gameMode.changeMode(Constants.MODE_MENU, true);
             }
             selectedButton = -1;
             lastEnterPressed = System.currentTimeMillis();
@@ -146,11 +150,12 @@ public class ExitScreen extends UIElement {
             int clickedButtonMode = getMouseSelectedMode(getInputManager().getMouseClickedX(),getInputManager().getMouseClickedY());
             if (clickedButtonMode == SEL_BTN_YES){
                 yesSelected = true;
-                game.changeMode(Main.NEXT_MODE, true);
+                gameMode.changeMode(gameMode.getNextMode(), true);
             }
             else if (clickedButtonMode == SEL_BTN_NO){
-                Main.NEXT_MODE = Constants.MODE_NONE;
-                game.changeMode(Constants.MODE_MENU, true);
+                //Main.NEXT_MODE = Constants.MODE_NONE;
+                gameMode.resetNextMode();
+                gameMode.changeMode(Constants.MODE_MENU, true);
             }
             selectedButton = -1;
         }

@@ -17,7 +17,7 @@ import functionality.Constants;
 import functionality.GraphicsManager;
 import functionality.InputManager;
 import functionality.Setup;
-import game.Main;
+import game.GameMode;
 import game.Game;
 import map_builder.ElementBlackHole;
 import map_builder.ElementEnemy;
@@ -41,6 +41,7 @@ import map_builder.MapType;
 public class RightBar extends UIElement {
 	
     Game game = null;
+    GameMode gameMode;
 
 	// Height and width of the buttons
 	int plusMinusButtonWidth = 20;
@@ -108,8 +109,9 @@ public class RightBar extends UIElement {
 	int fontSize = 16;
 	Font font = new Font(Constants.DEFAULT_FONT, Font.PLAIN, fontSize);
 
-	public RightBar(int x, int y, int width, int height, Color backgroundColor, Setup setup, InputManager inputManager) {
+	public RightBar(int x, int y, int width, int height, Color backgroundColor, Setup setup, InputManager inputManager, GameMode gameMode) {
 		super(x, y, width, height, backgroundColor, setup, inputManager);
+        this.gameMode = gameMode;
 
 		// Loop for creating all the buttons
 		for(int i = 0; i < buttonsPositions.length; i++){
@@ -211,7 +213,7 @@ public class RightBar extends UIElement {
      */
     public int getParameterChanges(){
         // only change parameters in game mode or if mouse is clicked
-        if(Main.MODE != Constants.MODE_PLAYER_GAME || !getInputManager().isMouseClicked()) return -1;
+        if(gameMode.getMode() != Constants.MODE_PLAYER_GAME || !getInputManager().isMouseClicked()) return -1;
 
         //population size changes
         if(isSizePlusButtonClicked(getInputManager().getMouseClickedX(), 
@@ -278,7 +280,7 @@ public class RightBar extends UIElement {
 	public void draw(Graphics graphics) {
 		drawBackground(graphics);
 		// decide whether to draw list with map-elements or configurations for AI game-play
-		switch (Main.MODE){
+		switch (gameMode.getMode()){
 			case Constants.MODE_PLAYER_GAME:
 				drawParametersList(graphics);
                 break;

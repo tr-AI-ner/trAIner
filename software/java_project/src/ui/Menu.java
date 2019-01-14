@@ -8,6 +8,7 @@ import functionality.Setup;
 import functionality.InputManager;
 import game.Main;
 import game.Game;
+import game.GameMode;
 
 /**
  * This class is responsible for drawing the menu of the game.
@@ -43,8 +44,11 @@ public class Menu extends UIElement{
     // when first starting the game, resume button should not be enabled
     boolean resumeEnabled = false;
 
-	public Menu(int x, int y, int width, int height, Color backgroundColor, Setup setup, InputManager inputManager) {
+    GameMode gameMode;
+
+	public Menu(int x, int y, int width, int height, Color backgroundColor, Setup setup, InputManager inputManager, GameMode gameMode) {
 		super(x, y, width, height, backgroundColor, setup, inputManager);
+        this.gameMode = gameMode;
         initMenu();
     }
 
@@ -135,7 +139,7 @@ public class Menu extends UIElement{
      * @param selected - whether the button is selected or not
      */
     private void drawSingleButton(int index, Graphics graphics, int x, int y, int width, int height, String text, boolean selected){
-        boolean isActiveMode = (index!=5 && index!=0 && getSelectedMode(index)==Main.PREVIOUS_MODE);
+        boolean isActiveMode = (index!=5 && index!=0 && getSelectedMode(index)==gameMode.getPreviousMode());
         if (index==0 && !resumeEnabled){
             graphics.setColor(Constants.COLOR_COPYRIGHT);
         } else {
@@ -222,7 +226,7 @@ public class Menu extends UIElement{
         switch (selButton){
             case 0:
                 if(resumeEnabled)
-                    return Main.PREVIOUS_MODE;
+                    return gameMode.getPreviousMode();
                 else
                     return Constants.MODE_MENU;
             case 1: 
@@ -279,7 +283,7 @@ public class Menu extends UIElement{
     /**
      * Processes mouse clicks and keyboard presses of user in Menu Mode.
      */
-    public void processUserInput(Game game){
+    public void processUserInput(){
         if (getInputManager().getKeyResult()[Constants.KEY_UP]) {
             changeSelectedButton(true);
         }
@@ -289,7 +293,7 @@ public class Menu extends UIElement{
         if (getInputManager().getKeyResult()[Constants.KEY_ENTER] && canSelectButtonAgain(lastEnterPressed)){
             if(selectedButton==0 && !resumeEnabled){}
             else {
-                game.changeMode(getSelectedMode(selectedButton), true); 
+                gameMode.changeMode(getSelectedMode(selectedButton), true); 
                 //Main.MODE = getSelectedMode(selectedButton); 
                 //Main.PREVIOUS_MODE = Main.MODE;
                 resumeEnabled = true;
@@ -300,7 +304,7 @@ public class Menu extends UIElement{
         if(getInputManager().isMouseClicked()){
             int clickedButtonMode = getMouseSelectedMode(getInputManager().getMouseClickedX(),getInputManager().getMouseClickedY());
             if (clickedButtonMode > -1){
-                game.changeMode(clickedButtonMode, true);
+                gameMode.changeMode(clickedButtonMode, true);
                 //Main.MODE = clickedButtonMode;
                 //Main.PREVIOUS_MODE = Main.MODE;
                 resumeEnabled = true;

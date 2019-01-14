@@ -22,6 +22,7 @@ public class Game {
 	private Clock clock; // Clock (time manager)
 	Setup setup;
 	private Map map;
+    private GameMode gameMode;
     
     // will hold a selected element when user places new element in map in map-builder-mode
     private MapElement clickedMapElement = null;
@@ -58,6 +59,7 @@ public class Game {
 		this.inputManager = gm.getInputManager();
 		this.setup = gm.getSetup();
 		this.map = gm.getMap();
+        this.gameMode = new GameMode(gm);
 
 
 		entities = new ArrayList<>();
@@ -148,32 +150,32 @@ public class Game {
             //    Main.PREVIOUS_MODE = Main.MODE;
             //}
             //Main.MODE = Constants.MODE_MENU;
-            changeMode(Constants.MODE_MENU, false);
+            gameMode.changeMode(Constants.MODE_MENU, false);
         }
 
         //Handle user input if menu is open
-        if(Main.MODE == Constants.MODE_MENU){
-            graphicsManager.getMenu().processUserInput(this);
+        if(gameMode.getMode() == Constants.MODE_MENU){
+            graphicsManager.getMenu().processUserInput();
         } 
-        else if (Main.MODE == Constants.MODE_EXIT){
-            graphicsManager.getExitScreen().processUserInput(this);
+        else if (gameMode.getMode() == Constants.MODE_EXIT){
+            graphicsManager.getExitScreen().processUserInput();
         } else {
             //Switches between the game and the build mode
             if(inputManager.getKeyResult()[Constants.KEY_G]) { 
                 //Main.MODE = Constants.MODE_PLAYER_GAME; 
-                changeMode(Constants.MODE_PLAYER_GAME, false);
+                gameMode.changeMode(Constants.MODE_PLAYER_GAME, false);
             }
             if(inputManager.getKeyResult()[Constants.KEY_B]) { 
                 //Main.MODE = Constants.MODE_MAP_BUILDER; 
                 //reloadBuildState();
-                changeMode(Constants.MODE_MAP_BUILDER, false);
+                gameMode.changeMode(Constants.MODE_MAP_BUILDER, false);
             }
             // loads an empty map
             if(inputManager.getKeyResult()[Constants.KEY_E]) { mapSaverLoader.initEmptyMap(); }
             // switch to AI mode
             if(inputManager.getKeyResult()[Constants.KEY_A]) { 
                 //Main.MODE = Constants.MODE_AI_GAME; 
-                changeMode(Constants.MODE_AI_GAME, false);
+                gameMode.changeMode(Constants.MODE_AI_GAME, false);
             }
 
             // check if user clicked on save button
@@ -185,7 +187,7 @@ public class Game {
                 mapSaverLoader.loadButtonLogic();
             }
 
-            if (Main.MODE==Constants.MODE_PLAYER_GAME){
+            if (gameMode.getMode()==Constants.MODE_PLAYER_GAME){
                 //moves in the desired direction
                 if (inputManager.getKeyResult()[Constants.KEY_UP]) {
                     avatar.move(0, (-setup.getNewEntitySpeed()));
@@ -202,7 +204,7 @@ public class Game {
             }
 
             //handle mouse clicks during building mode
-            if(Main.MODE==Constants.MODE_MAP_BUILDER && inputManager.isMouseClicked()){
+            if(gameMode.getMode()==Constants.MODE_MAP_BUILDER && inputManager.isMouseClicked()){
                 //Check for clicks on blocks on right bar
                 if (graphicsManager.getRightBar().isRightBarClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
                     MapElement clickedElement = graphicsManager.getRightBar().getSelectedElement(
@@ -227,7 +229,7 @@ public class Game {
             }
 
             // check if preview button was clicked
-            if((Main.MODE==Constants.MODE_MAP_BUILDER || Main.MODE==Constants.MODE_PREVIEW) && inputManager.isMouseClicked() 
+            if((gameMode.getMode()==Constants.MODE_MAP_BUILDER || gameMode.getMode()==Constants.MODE_PREVIEW) && inputManager.isMouseClicked() 
                     && graphicsManager.getBottomBar().isPreviewButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())){
                 //if(Main.MODE==Constants.MODE_MAP_BUILDER){ 
                 //    Main.MODE = Constants.MODE_PREVIEW;
@@ -236,7 +238,7 @@ public class Game {
                 //    Main.MODE = Constants.MODE_MAP_BUILDER;
                 //    reloadBuildState();
                 //}
-                changeMode(Constants.MODE_PREVIEW, false);
+                gameMode.changeMode(Constants.MODE_PREVIEW, false);
             }
 
             // check for parameter changes by user and process them
@@ -248,42 +250,42 @@ public class Game {
                 //if(Main.MODE != Constants.MODE_MENU && Main.MODE != Constants.MODE_HELP){
                 //    Main.PREVIOUS_MODE = Main.MODE;
                 //}
-                changeMode(Constants.MODE_MENU, false);
+                gameMode.changeMode(Constants.MODE_MENU, false);
                 //Main.MODE = Constants.MODE_MENU;
             }
             // 	Help Button to open help screen
             if (inputManager.isMouseClicked()
                     && graphicsManager.getBottomBar().isHelpButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
-                changeMode(Constants.MODE_HELP, false);
+                gameMode.changeMode(Constants.MODE_HELP, false);
                 //Main.MODE = Constants.MODE_HELP;
             }
             // 	building mode Button
             if (inputManager.isMouseClicked()
                     && graphicsManager.getTopBar().isBuildModeButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
-                changeMode(Constants.MODE_MAP_BUILDER, false);
+                gameMode.changeMode(Constants.MODE_MAP_BUILDER, false);
                 //Main.MODE = Constants.MODE_MAP_BUILDER;
             }
             // 	game-play mode Button
             if (inputManager.isMouseClicked()
                     && graphicsManager.getTopBar().isGamePlayModeButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
-                changeMode(Constants.MODE_PLAYER_GAME, false);
+                gameMode.changeMode(Constants.MODE_PLAYER_GAME, false);
                 //Main.MODE = Constants.MODE_PLAYER_GAME;
             }
             // 	AI mode Button
             if (inputManager.isMouseClicked()
                     && graphicsManager.getTopBar().isBrainButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
-                changeMode(Constants.MODE_AI_GAME, false);
+                gameMode.changeMode(Constants.MODE_AI_GAME, false);
                 //Main.MODE = Constants.MODE_AI_GAME;
             }
 
-            if (Main.MODE != Constants.MODE_MAP_BUILDER && Main.MODE != Constants.MODE_PREVIEW && inputManager.isMouseClicked()){
+            if (gameMode.getMode() != Constants.MODE_MAP_BUILDER && gameMode.getMode() != Constants.MODE_PREVIEW && inputManager.isMouseClicked()){
                 // 	Play Button to play the game
                 if (graphicsManager.getBottomBar().isPlayButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
                     System.out.println("Play Button Clicked");
                 }
                 //  Pause Button to pause the game
                 if (graphicsManager.getBottomBar().isPauseButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
-                    changeMode(Constants.MODE_MENU, false);
+                    gameMode.changeMode(Constants.MODE_MENU, false);
                     //Main.PREVIOUS_MODE = Main.MODE;
                     //Main.MODE = Constants.MODE_MENU;
                 }
@@ -321,7 +323,7 @@ public class Game {
      * @author Patrick
      */
 	private void updateState(){
-	    switch(Main.MODE){
+	    switch(gameMode.getMode()){
             case Constants.MODE_PLAYER_GAME:
                 moveElements();
                 break;
@@ -352,15 +354,19 @@ public class Game {
 		//clear full window
 		graphicsManager.clear();
 		
-        if (Main.MODE == Constants.MODE_MENU){
+        if (gameMode.getMode() == Constants.MODE_MENU){
+            System.out.println("redrawAll - drawing menu... mode: "+gameMode.getMode());
             graphicsManager.drawMenu();
         } 
-        else if (Main.MODE == Constants.MODE_EXIT){
+        else if (gameMode.getMode() == Constants.MODE_EXIT){
+            System.out.println("redrawAll - drawing exit... mode: "+gameMode.getMode());
             graphicsManager.drawExitScreen();
         } 
-        else if (Main.MODE == Constants.MODE_HELP){
+        else if (gameMode.getMode() == Constants.MODE_HELP){
+            System.out.println("redrawAll - drawing help... mode: "+gameMode.getMode());
             graphicsManager.drawHelpScreen();
         } else {
+            System.out.println("redrawAll - drawing game... mode: "+gameMode.getMode());
             // draw all bars
             graphicsManager.drawWindowSetup();
 
@@ -381,7 +387,7 @@ public class Game {
      * @author Kasparas
      */
     private void moveElements(){
-		if(Main.MODE == Constants.MODE_PLAYER_GAME || Main.MODE == Constants.MODE_PREVIEW) {
+		if(gameMode.getMode() == Constants.MODE_PLAYER_GAME || gameMode.getMode() == Constants.MODE_PREVIEW) {
             for (MapElement element: this.getMapElements()){
                 if(element.getMapType() == MapType.PLASMA_BALL || element.getMapType() == MapType.ENEMY) {
                     if(element.getMapType() == MapType.ENEMY) {
@@ -400,146 +406,6 @@ public class Game {
         map.updateEntitiesInMap(entities);
     }
 
-    /**
-     * Switches between modes of the game.
-     *
-     * @param mode :
-     *     -1: None
-     *      0: Player Game
-     *      1: Map Builder
-     *      2: Preview Mode
-     *      3: AI Game
-     *      4: Challenge Mode
-     *      5: Menu
-     *      6: Help Screen
-     *      7: Exit Screen
-     *
-     */
-    public void changeMode(int mode, boolean fromMenu){
-        System.out.println("changeMode... currently: "+getModeString(Main.MODE)+", Main.PREVIOUS_MODE="+getModeString(Main.PREVIOUS_MODE)+", should change to mode: "+getModeString(mode));
-        switch(mode){
-            case Constants.MODE_PLAYER_GAME:
-                System.out.println("changeMode - PLAYER, mode: "+getModeString(mode)); 
-                if(Main.MODE==Constants.MODE_PLAYER_GAME 
-                    || Main.PREVIOUS_MODE==Constants.MODE_PLAYER_GAME
-                    || Main.PREVIOUS_MODE==Constants.MODE_NONE){
-                    Main.MODE = Constants.MODE_PLAYER_GAME;
-                    Main.PREVIOUS_MODE = Main.MODE;
-                }
-                else if(Main.PREVIOUS_MODE != Constants.MODE_PLAYER_GAME){
-                    if (graphicsManager.getExitScreen().wasYesSelected()){
-                        Main.MODE = Constants.MODE_PLAYER_GAME;
-                        Main.PREVIOUS_MODE = Constants.MODE_NONE;
-                        Main.NEXT_MODE = Constants.MODE_NONE;
-                        graphicsManager.getExitScreen().resetYesSelected();
-                    } else {
-                        showExitScreen(Main.PREVIOUS_MODE, mode);
-                    }
-                }
-                break;
-            case Constants.MODE_MAP_BUILDER:
-                System.out.println("changeMode - BULDER, mode: "+getModeString(mode)); 
-                if(Main.MODE==Constants.MODE_MAP_BUILDER 
-                  || Main.PREVIOUS_MODE==Constants.MODE_MAP_BUILDER
-                  || Main.MODE==Constants.MODE_PREVIEW
-                  || Main.PREVIOUS_MODE==Constants.MODE_NONE){
-                    Main.MODE = Constants.MODE_MAP_BUILDER;
-                    Main.PREVIOUS_MODE = Main.MODE;
-                    reloadBuildState();
-                }
-                else if(Main.PREVIOUS_MODE != Constants.MODE_MAP_BUILDER){
-                    if (graphicsManager.getExitScreen().wasYesSelected()){
-                        Main.MODE = Constants.MODE_MAP_BUILDER;
-                        Main.PREVIOUS_MODE = Constants.MODE_NONE;
-                        Main.NEXT_MODE = Constants.MODE_NONE;
-                        graphicsManager.getExitScreen().resetYesSelected();
-                    } else {
-                        showExitScreen(Main.PREVIOUS_MODE, mode);
-                    }
-                }
-                break;
-            case Constants.MODE_PREVIEW:
-                System.out.println("changeMode - Preview, mode: "+getModeString(mode)); 
-                if(Main.MODE == Constants.MODE_MAP_BUILDER)
-                    Main.MODE = Constants.MODE_PREVIEW;
-                else {
-                    Main.MODE = Constants.MODE_MAP_BUILDER;
-                    reloadBuildState();
-                }
-                break;
-            case Constants.MODE_AI_GAME:
-                System.out.println("changeMode - AI game, mode: "+getModeString(mode)); 
-                if(Main.MODE==Constants.MODE_AI_GAME 
-                  || Main.PREVIOUS_MODE==Constants.MODE_AI_GAME
-                  || Main.PREVIOUS_MODE==Constants.MODE_NONE){
-                    Main.MODE = Constants.MODE_AI_GAME;
-                    Main.PREVIOUS_MODE = Main.MODE;
-                }
-                else if(Main.PREVIOUS_MODE != Constants.MODE_AI_GAME){
-                    if (graphicsManager.getExitScreen().wasYesSelected()){
-                        Main.MODE = Constants.MODE_AI_GAME;
-                        Main.PREVIOUS_MODE = Constants.MODE_NONE;
-                        Main.NEXT_MODE = Constants.MODE_NONE;
-                        graphicsManager.getExitScreen().resetYesSelected();
-                    } else {
-                        showExitScreen(Main.PREVIOUS_MODE, mode);
-                    }
-                }
-                break;
-            case Constants.MODE_CHALLENGE:
-                System.out.println("changeMode - challenge, mode: "+getModeString(mode)); 
-                break;
-            case Constants.MODE_MENU:
-                System.out.println("changeMode - menu, mode: "+getModeString(mode)); 
-                if(Main.MODE==Constants.MODE_AI_GAME
-                  || Main.MODE==Constants.MODE_PLAYER_GAME
-                  || Main.MODE==Constants.MODE_MAP_BUILDER){
-                    Main.PREVIOUS_MODE = Main.MODE;        
-                }
-                Main.MODE = Constants.MODE_MENU;
-                break;
-            case Constants.MODE_HELP:
-                System.out.println("changeMode - help, mode: "+getModeString(mode)); 
-                Main.PREVIOUS_MODE = Main.MODE;
-                Main.MODE = Constants.MODE_HELP;
-                break;
-            case Constants.MODE_EXIT:
-                System.out.println("changeMode - exit, mode: "+getModeString(mode)); 
-                System.exit(0);
-                break;
-            default: 
-                System.out.println("default case... mode: "+getModeString(mode));
-                break;
-        }
-        System.out.println("ChangeMode done, Main.MODE="+getModeString(Main.MODE)+", Main.PREVIOUS_MODE="+getModeString(Main.PREVIOUS_MODE)+", Main.NEXT_MODE="+getModeString(Main.NEXT_MODE));
-    }
-
-    private String getModeString(int mode){
-        switch (mode){
-            case -1: return "NONE"; 
-            case 0: return "PLAYER_GAME"; 
-            case 1: return "MAP_BUILDER"; 
-            case 2: return "PREVIEW"; 
-            case 3: return "AI_GAME"; 
-            case 4: return "CHALLENGE"; 
-            case 5: return "MENU"; 
-            case 6: return "HELP"; 
-            case 7: return "EXIT"; 
-        }
-        return "Undefined mode: "+mode;
-    }
-
-    /**
-     * Shows the exit screen in case a different game/build session should be opened.
-     *
-     * @param oldMode from which to switch from
-     * @param newMode from which to switch to
-     */
-    private void showExitScreen(int oldMode, int newMode){
-        graphicsManager.getExitScreen().setText(oldMode, newMode);
-        Main.NEXT_MODE = newMode;
-        Main.MODE = Constants.MODE_EXIT;
-    }
 
     /**
      * process a parameter change when user clicked on a minus or plus button
@@ -576,7 +442,7 @@ public class Game {
      */
     private void removeMapElement(){
         //exit if game is not in building mode or right mouse button was not clicked
-        if(Main.MODE != Constants.MODE_MAP_BUILDER /*|| inputManager.getMouseButton() != 3*/) return;
+        if(gameMode.getMode() != Constants.MODE_MAP_BUILDER /*|| inputManager.getMouseButton() != 3*/) return;
 
         int removeX = inputManager.getMouseClickedX()-Constants.WINDOW_MAP_X0;
         int removeY = inputManager.getMouseClickedY()-Constants.WINDOW_MAP_Y0;
@@ -696,7 +562,7 @@ public class Game {
      * Reloads the original coordinates of the elements when switchin preview mode off.
      *
      */
-    private void reloadBuildState(){
+    public void reloadBuildState(){
         for(int i=0; i<entities.size(); i++){
             if (entities.get(i).getType()==EntityType.MapElement){
                 if(((MapElement)entities.get(i)).getMapType()==MapType.ENEMY){
@@ -718,7 +584,7 @@ public class Game {
     private void cleanUp(){
         //if player is not in building mode and an element is still underneath the mouse
         //will be removed
-        if(Main.MODE != Constants.MODE_MAP_BUILDER && clickedMapElement != null) clickedMapElement=null;
+        if(gameMode.getMode() != Constants.MODE_MAP_BUILDER && clickedMapElement != null) clickedMapElement=null;
     }
 
 	public Avatar getAvatar(){return avatar;}

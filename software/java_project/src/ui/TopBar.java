@@ -21,6 +21,7 @@ import functionality.FontLoader;
 import functionality.InputManager;
 import functionality.Setup;
 import game.Main;
+import game.GameMode;
 import ui.UIElement;
 
 /**
@@ -75,9 +76,12 @@ public class TopBar extends UIElement {
                 Constants.BUTTON_WIDTH,Constants.BUTTON_HEIGHT,Constants.BUTTON_ARCH_WH,Constants.BUTTON_ARCH_WH
             );
 
-	public TopBar(int x, int y, int width, int height, Color backgroundColor, Setup setup, InputManager inputManager, String mapName) {
+    GameMode gameMode;
+
+	public TopBar(int x, int y, int width, int height, Color backgroundColor, Setup setup, InputManager inputManager, String mapName, GameMode gameMode) {
 		super(x, y, width, height, backgroundColor, setup, inputManager);
 		this.mapName = mapName;
+        this.gameMode = gameMode;
 
         try {
             gameplayInactiveImg = ImageIO.read(new File(dirName, pathGameplayInactiveButton));
@@ -210,7 +214,7 @@ public class TopBar extends UIElement {
 
     // Draws the game play button
 	private void drawGameplayButton(Graphics graphics){
-        if (Main.MODE == Constants.MODE_PLAYER_GAME){
+        if (gameMode.getMode() == Constants.MODE_PLAYER_GAME){
 		    graphics.setColor(Constants.COLOR_AVATAR_RED);
         } else {
 		    graphics.setColor(Constants.COLOR_AVATAR_WHITE);
@@ -218,7 +222,7 @@ public class TopBar extends UIElement {
         int offset = 6;
         graphics.drawOval(BUTTON_GAMEPLAY_X-((offset+2)/2), BUTTONS_Y-((offset+2)/2), iconWidth+offset, iconWidth+offset);
         try {
-            if (Main.MODE == Constants.MODE_PLAYER_GAME)
+            if (gameMode.getMode() == Constants.MODE_PLAYER_GAME)
 		        graphics.drawImage(gameplayActiveImg, BUTTON_GAMEPLAY_X+(offset/2), BUTTONS_Y+(offset/2), iconWidth-offset, iconWidth-offset, null);
             else
 		        graphics.drawImage(gameplayInactiveImg, BUTTON_GAMEPLAY_X+(offset/2), BUTTONS_Y+(offset/2), iconWidth-offset, iconWidth-offset, null);
@@ -229,7 +233,7 @@ public class TopBar extends UIElement {
     
     // Draws the build mode button
 	private void drawBuildButton(Graphics graphics){
-        if (Main.MODE == Constants.MODE_MAP_BUILDER){
+        if (gameMode.getMode() == Constants.MODE_MAP_BUILDER){
 		    graphics.setColor(Constants.COLOR_AVATAR_RED);
         } else {
 		    graphics.setColor(Constants.COLOR_AVATAR_WHITE);
@@ -237,7 +241,7 @@ public class TopBar extends UIElement {
         int offset = 6;
         graphics.drawOval(BUTTON_BUILD_X-((offset+2)/2), BUTTONS_Y-((offset+2)/2), iconWidth+offset, iconWidth+offset);
         try {
-            if(Main.MODE == Constants.MODE_MAP_BUILDER) graphics.drawImage(buildActiveImg, BUTTON_BUILD_X+(offset/2), BUTTONS_Y+(offset/2), iconWidth-offset, iconWidth-offset, null);
+            if(gameMode.getMode() == Constants.MODE_MAP_BUILDER) graphics.drawImage(buildActiveImg, BUTTON_BUILD_X+(offset/2), BUTTONS_Y+(offset/2), iconWidth-offset, iconWidth-offset, null);
 		    else graphics.drawImage(buildInactiveImg, BUTTON_BUILD_X+(offset/2), BUTTONS_Y+(offset/2), iconWidth-offset, iconWidth-offset, null);
         } catch (Exception e){
             e.printStackTrace();
@@ -247,7 +251,7 @@ public class TopBar extends UIElement {
     
     // Draws the brain/AI button
 	private void drawBrainButton(Graphics graphics){
-        if (Main.MODE == Constants.MODE_AI_GAME){
+        if (gameMode.getMode() == Constants.MODE_AI_GAME){
 		    graphics.setColor(Constants.COLOR_AVATAR_RED);
         } else {
 		    graphics.setColor(Constants.COLOR_AVATAR_WHITE);
@@ -255,7 +259,7 @@ public class TopBar extends UIElement {
         int offset = 6;
         graphics.drawOval(BUTTON_BRAIN_X-((offset+2)/2), BUTTONS_Y-((offset+2)/2), iconWidth+offset, iconWidth+offset);
         try {
-            if (Main.MODE == Constants.MODE_AI_GAME){
+            if (gameMode.getMode() == Constants.MODE_AI_GAME){
 		        graphics.drawImage(brainActiveImg, BUTTON_BRAIN_X+(offset/2), BUTTONS_Y+(offset/2), iconWidth-offset, iconWidth-offset, null);
             } else {
 		        graphics.drawImage(brainInactiveImg, BUTTON_BRAIN_X+(offset/2), BUTTONS_Y+(offset/2), iconWidth-offset, iconWidth-offset, null);

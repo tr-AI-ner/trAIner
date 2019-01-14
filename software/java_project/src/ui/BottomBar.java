@@ -14,6 +14,7 @@ import functionality.Setup;
 import functionality.InputManager;
 import functionality.FontLoader;
 import game.Main;
+import game.GameMode;
 
 import javax.imageio.ImageIO;
 
@@ -72,8 +73,11 @@ public class BottomBar extends UIElement {
 
     BufferedImage exitImg, helpImg, pauseImg, playImg;
 
-	public BottomBar(int x, int y, int width, int height, Color backgroundColor, Setup setup, InputManager inputManager) {
+    GameMode gameMode;
+
+	public BottomBar(int x, int y, int width, int height, Color backgroundColor, Setup setup, InputManager inputManager, GameMode gameMode) {
 		super(x, y, width, height, backgroundColor, setup, inputManager);
+        this.gameMode = gameMode;
 
 		try {
             playImg = ImageIO.read(new File(dirName, pathPlayButton));
@@ -93,7 +97,7 @@ public class BottomBar extends UIElement {
 	public void draw(Graphics graphics) {
 		drawBackground(graphics);
 		drawCopyright(graphics);
-		if (Main.MODE == Constants.MODE_MAP_BUILDER || Main.MODE == Constants.MODE_PREVIEW){
+		if (gameMode.getMode() == Constants.MODE_MAP_BUILDER || gameMode.getMode() == Constants.MODE_PREVIEW){
             drawPreviewButton(graphics);
         } else {
             drawPlayButton(graphics);
@@ -175,7 +179,7 @@ public class BottomBar extends UIElement {
 				+ graphics.getFontMetrics(font).getAscent();
 		int nameX = previewButtonX + (previewButtonWidth/6);
 		
-        if(Main.MODE == Constants.MODE_PREVIEW){
+        if(gameMode.getMode() == Constants.MODE_PREVIEW){
 		    graphics.fillRoundRect(previewButtonX,previewButtonY,previewButtonWidth,previewButtonHeight,Constants.BUTTON_ARCH_WH,Constants.BUTTON_ARCH_WH);
             graphics.setColor(Constants.COLOR_HEADER_2);
             graphics.drawString(namePreviewButton, nameX, nameY);
