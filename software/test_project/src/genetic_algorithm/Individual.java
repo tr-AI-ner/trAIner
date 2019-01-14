@@ -1,7 +1,6 @@
 package genetic_algorithm;
 
-import map_builder.MapElement;
-import map_builder.MapType;
+import map_builder.*;
 import java.lang.Math;
 import custom_objects.Avatar;
 import java.util.Random;
@@ -91,9 +90,10 @@ public class Individual extends Avatar {
         // pre factor determining fluctuation of fitness function
         double preFit = this.maxNrOfMoves * 100;
         // calculate the distance if individual has finished
-        if (this.fin != 0) {
-            this.fitness = (preFit / (this.fin));
-            this.fitness = Math.pow(this.fitness, 3);
+        if (getFinAI() != 0) {
+            System.out.println("YAAAAAAAAAAAAAY");
+            this.fitness = (preFit / (getFinAI()));
+            this.fitness *= 2;
         }else
         {
             // calculate the distance of the individual to the goal
@@ -181,22 +181,10 @@ public class Individual extends Avatar {
      * move the individual according to the next direction in the gene
      *
      */
-    public int[] makeMove(int currentMove){
+    public void makeMove(int currentMove){
         int direction[] = new int[2];
         direction = this.getGenome().getGenes()[currentMove]; 
-        for (MapElement element: game.getMapElements()){
-                if (direction[0]+getWidth() > element.getX()
-                        && direction[0] < (element.getX()+element.getWidth())
-                        && (direction[1]+getHeight() > element.getY()
-                        && direction[1] < (element.getY()+element.getHeight()))
-                        && element.getMapType() == MapType.FINISH
-                ) {
-                    setFin(currentMove +1);
-                    System.out.println("fin in " + getFin());
-                }
-        }
         this.move(direction[0], direction[1]);
-        return direction;
     }
 
     public void updateGenome(Genome newGenes){

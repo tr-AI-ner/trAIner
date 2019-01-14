@@ -164,7 +164,7 @@ public class Game {
 
             mapElements = new ArrayList<>();
             start = new ElementStart(3,3,Constants.COLOR_MAP_START);
-            finish = new ElementFinish(20,30,Constants.COLOR_MAP_FINISH);
+            this.finish = new ElementFinish(20,30,Constants.COLOR_MAP_FINISH);
 
             mapElements.add(start);
             mapElements.add(finish);
@@ -806,6 +806,8 @@ public class Game {
     }
 
     public int getNoOfTries(){return noOfTries;}
+
+    public ElementFinish getFinish(){ return finish;}
 
 }
 

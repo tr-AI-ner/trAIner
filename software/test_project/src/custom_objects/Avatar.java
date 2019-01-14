@@ -14,7 +14,8 @@ public class Avatar extends Entity {
 	
 	private int toMoveX = getX();
 	private int toMoveY = getY();
-	
+    
+    private int finAI = 0;
 	private Setup setup;
 	private Game game;
 	private ElementBlackHole currentlyTouched;
@@ -63,7 +64,8 @@ public class Avatar extends Entity {
 					}
 
 				} else if(finished()) {
-					toMoveX = game.getStart().getX();
+					this.finAI = 1;
+                    toMoveX = game.getStart().getX();
 					toMoveY = game.getStart().getY();
 					game.restart();
 				}
@@ -203,6 +205,10 @@ public class Avatar extends Entity {
 	public void setGame(Game game){
 		this.game = game;
 	}
+
+    public int getFinAI(){return this.finAI;}
+
+    public void setFinAI(int finAI){this.finAI = finAI;}
 	
 	public void setToStart(ElementStart start) {
 		setX(start.getGridX());
