@@ -27,16 +27,16 @@ public class Game {
     // will hold a selected element when user places new element in map in map-builder-mode
     private MapElement clickedMapElement = null;
 
-    public static boolean showAll = false;
+    public static boolean showAll = true;
 
     //genetic algorithm parameters
     private int populationSize = 1;
     private int speed = 1;
-	private int noOfMoves = 20;
-	private float mutationRate = (float)0.02;
+	private int noOfMoves = 790; // deprecated?
+	private float mutationRate = (float)0.01;
 	private int noOfGenerations = 1;
-    private int incMovesAfterGen = 2;
-    private int increaseMovesBy = 10;
+    private int incMovesAfterGen = 1;
+    private int increaseMovesBy = 15;
     private int noOfTries = 1;
     private boolean shouldExtend = true;
     private boolean foundFinish = false;
@@ -153,38 +153,38 @@ public class Game {
             this.setup = gm.getSetup();
             gm.getRightBar().setGame(this);
             this.map = gm.getMap();
-            this.maxNrOfMoves = 20;
+            this.maxNrOfMoves = 40;
 
             entities = new ArrayList<>();
-            this.populationSize = 15000;
+            this.populationSize = 1000;
             this.mutationRate = (float) 0.01;
             this.maxGens = 500;
-            this.incMovesAfterGen = 3;
-            this.increaseMovesBy = 15;
+            this.incMovesAfterGen = 2;
+            this.increaseMovesBy = 40;
             this.currentGen= 1;
 
 
             mapElements = new ArrayList<>();
-            start = new ElementStart(3,25,Constants.COLOR_MAP_START);
+            start = new ElementStart(5,18,Constants.COLOR_MAP_START);
             finish = new ElementFinish(55,5,Constants.COLOR_MAP_FINISH);
 
-            for(int i = 5; i < 36; i++) {
+            for(int i = 5; i < 31; i++) {
                 theGreatWall = new ElementWall(13, i, Constants.COLOR_WALL);
                 mapElements.add(theGreatWall);
             }
 
-            for(int i = 0; i < 32; i++) {
+            for(int i = 0; i < 31; i++) {
                 theGreatWall = new ElementWall(20, i, Constants.COLOR_WALL);
                 if(i != 12 && i != 13 && i != 14 && i != 15)  mapElements.add(theGreatWall);
 
             }
 
-            for(int i = 5; i < 32; i++) {
+            for(int i = 5; i < 36; i++) {
                 theGreatWall = new ElementWall(25, i, Constants.COLOR_WALL);
                 mapElements.add(theGreatWall);
             }
 
-            for(int i = 0; i < 32; i++) {
+            for(int i = 0; i < 31; i++) {
                 theGreatWall = new ElementWall(47, i, Constants.COLOR_WALL);
                 if(i != 9 && i != 10 && i != 11 && i != 12)  mapElements.add(theGreatWall);
             }
@@ -193,12 +193,24 @@ public class Game {
                 theGreatWall = new ElementWall(53, i, Constants.COLOR_WALL);
                 mapElements.add(theGreatWall);
             }
-            for(int i = 20; i < 36; i++) {
-                theGreatWall = new ElementWall(i, 10, Constants.COLOR_WALL);
+
+
+            for(int i = 14; i < 47; i++) {
+                theGreatWall = new ElementWall(i, 30, Constants.COLOR_WALL);
                 mapElements.add(theGreatWall);
             }
 
+            blackHole = new ElementBlackHole(58,20,Constants.COLOR_BLACK_HOLE);
+            blackHole2 = new ElementBlackHole(20,
+                    34,
+                    Constants.COLOR_BLACK_HOLE);
 
+
+            blackHole.setAttachedBlackHole(blackHole2);
+            blackHole2.setAttachedBlackHole(blackHole);
+
+            mapElements.add(blackHole);
+            mapElements.add(blackHole2);
             mapElements.add(start);
             mapElements.add(finish);
             // add all map-elements to entities

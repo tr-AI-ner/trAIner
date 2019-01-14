@@ -41,7 +41,7 @@ public class Individual extends Avatar {
     // start position
     int[] start_pos;
     // speed of the individuals movement
-    int speed = 15;
+    int speed = 5;
     // length of the gene, that is number of directions in the gene array i.e maximum
     // number of possible moves
     int maxNrOfMoves;
