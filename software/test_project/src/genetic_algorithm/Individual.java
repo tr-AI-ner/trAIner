@@ -93,8 +93,9 @@ public class Individual extends Avatar {
         // calculate the distance if individual has finished
         //if (this.fin != 0) {
         if (finished()) {
+            System.out.println("Finsihed");
             this.fitness = (preFit / 1);
-            this.fitness = Math.pow(this.fitness, 10);
+            this.fitness = Math.pow(this.fitness, 20);
         }else
         {
             // calculate the distance of the individual to the goal
