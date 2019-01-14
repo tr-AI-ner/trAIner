@@ -5,7 +5,7 @@ import java.awt.geom.RoundRectangle2D;
 
 public final class Constants {
 
-	public static final long FRAME_MINIMUM_MILLIS = 10;
+	//public static final long FRAME_MINIMUM_MILLIS = 10;
 
     // modes
     public static final int MODE_NONE = -1; 
@@ -17,6 +17,7 @@ public final class Constants {
     public static final int MODE_MENU = 5; 
     public static final int MODE_HELP = 6; 
     public static final int MODE_EXIT = 7;
+	public static final long FRAME_MINIMUM_MILLIS = 1;
 	
 	// basic window sizes
 	public static final int WINDOW_MAP_WIDTH = 1024; //1024 or 960

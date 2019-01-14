@@ -29,8 +29,9 @@ public class Avatar extends Entity {
 	}
 	
 	public void move(int incX, int incY){
-		this.toMoveX = (int) (this.toMoveX != 0 ? this.toMoveX : this.getX() + incX); 
-		this.toMoveY = (int) (this.toMoveY != 0 ? this.toMoveY : this.getY() + incY); 
+		this.toMoveX = (int) (this.toMoveX == 0 ? this.toMoveX : this.getX() + incX); //POSSIBLE BUGS WITH KEYBOARD MODE AS OUR GAME WAS BUILT ON LIES
+		this.toMoveY = (int) (this.toMoveY == 0 ? this.toMoveY : this.getY() + incY);//POSSIBLE BUGS WITH KEYBOARD MODE AS OUR GAME WAS BUILT ON LIES
+
 		
 		if(incY == 0) // left-arrow right-arrow
 			this.toMoveX = (this.getX() + incX);
@@ -77,7 +78,7 @@ public class Avatar extends Entity {
 		this.setY(toMoveY);
 	}
 	
-	/**
+    /**
 	 *  checks if avatar collides with any objects or border,
 	 *  if so returns true
 	 * @return
@@ -125,7 +126,7 @@ public class Avatar extends Entity {
 	/**
 	 * @return if the avatar is touching the finish block
 	 */
-	private boolean finished(){
+	public boolean finished(){
 		for (MapElement element: game.getMapElements()){
 			if (toMoveX+getWidth() > element.getX()
 					&& toMoveX < (element.getX()+element.getWidth())
@@ -143,6 +144,7 @@ public class Avatar extends Entity {
 	 * @return if avatar collides with another map-element
 	 */
 	private boolean collidingWithMapElement(){
+
 		for (MapElement element: game.getMapElements()){
 			if (toMoveX+getWidth() > element.getX() 
 					&& toMoveX < (element.getX()+element.getWidth())

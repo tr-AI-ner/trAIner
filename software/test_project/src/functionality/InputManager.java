@@ -67,6 +67,16 @@ public class InputManager extends Component implements KeyListener, MouseListene
 		if(evt.getKeyCode() == KeyEvent.VK_A) { keyArray[Constants.KEY_A] = true; } //Change into AI mode
 		if(evt.getKeyCode() == KeyEvent.VK_ENTER) { keyArray[Constants.KEY_ENTER] = true; } //Select option in menu
         //System.out.println(evt.getKeyCode());
+		//if(evt.getKeyCode() == KeyEvent.VK_UP) { keyArray[0] = true; } //up-arrow goes UP
+		//if(evt.getKeyCode() == KeyEvent.VK_DOWN) { keyArray[1] = true; } //down-arrow goes DOWN
+		//if(evt.getKeyCode() == KeyEvent.VK_LEFT) { keyArray[2] = true; } //left-arrow goes LEFT
+		//if(evt.getKeyCode() == KeyEvent.VK_RIGHT) { keyArray[3] = true; } //right-arrow goes RIGHT
+		//if(evt.getKeyCode() == KeyEvent.VK_ESCAPE) { keyArray[4] = true; } //ESC CLOSE_GAME
+		//if(evt.getKeyCode() == KeyEvent.VK_G) { keyArray[5] = true; } //Change into game mode
+		//if(evt.getKeyCode() == KeyEvent.VK_B) { keyArray[6] = true; } //Change into build mode
+		//if(evt.getKeyCode() == KeyEvent.VK_E) { keyArray[7] = true; } //Initialize an Empty map
+		//if(evt.getKeyCode() == KeyEvent.VK_F) { keyArray[8] = true; } //Initialize an Empty map
+
 	}
 
 	/**
@@ -86,6 +96,15 @@ public class InputManager extends Component implements KeyListener, MouseListene
 		if(evt.getKeyCode() == KeyEvent.VK_E) { keyArray[Constants.KEY_E] = false; }
 		if(evt.getKeyCode() == KeyEvent.VK_A) { keyArray[Constants.KEY_A] = false; }
 		if(evt.getKeyCode() == KeyEvent.VK_ENTER) { keyArray[Constants.KEY_ENTER] = false; } 
+		//if(evt.getKeyCode() == KeyEvent.VK_UP) { keyArray[0] = false; }
+		//if(evt.getKeyCode() == KeyEvent.VK_DOWN) { keyArray[1] = false; }
+		//if(evt.getKeyCode() == KeyEvent.VK_LEFT) { keyArray[2] = false; }
+		//if(evt.getKeyCode() == KeyEvent.VK_RIGHT) { keyArray[3] = false; }
+		//if(evt.getKeyCode() == KeyEvent.VK_ESCAPE) { keyArray[4] = false; }
+		//if(evt.getKeyCode() == KeyEvent.VK_G) { keyArray[5] = false; }
+		//if(evt.getKeyCode() == KeyEvent.VK_B) { keyArray[6] = false; }
+		//if(evt.getKeyCode() == KeyEvent.VK_E) { keyArray[7] = false; }
+		//if(evt.getKeyCode() == KeyEvent.VK_F) { keyArray[8] = false; }
 	}
 
 	@Override
