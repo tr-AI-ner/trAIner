@@ -223,6 +223,7 @@ public class GraphicsManager extends JPanel {
     public void setGame(Game game){
         this.game = game;
         gameMode.setGame(game);
+        topBar.setGame(game);
     }
 
 	public InputManager getInputManager(){

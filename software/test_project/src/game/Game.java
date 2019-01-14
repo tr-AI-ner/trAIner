@@ -12,7 +12,6 @@ import functionality.GraphicsManager;
 import functionality.InputManager;
 import functionality.Setup;
 import map_builder.*;
-import map_saver.MapSaverLoader;
 
 
 public class Game {
@@ -41,8 +40,6 @@ public class Game {
     ArrayList<Entity> entities;
     ArrayList<MapElement> mapElements;
 	ElementWall theGreatWall;
-
-	MapSaverLoader mapSaverLoader;
 
 	ElementPlasmaBall ball;
     ElementEnemy theEnemy;
@@ -76,8 +73,6 @@ public class Game {
 		entities.add(avatar);
 		
 		mapElements = new ArrayList<>();
-
-		mapSaverLoader = new MapSaverLoader(this);
 
 		start = new ElementStart(33,33,Constants.COLOR_MAP_START);
         finish = new ElementFinish(50,12,Constants.COLOR_MAP_FINISH);
@@ -168,21 +163,12 @@ public class Game {
             if(inputManager.getKeyResult()[Constants.KEY_B]) { 
                 gameMode.changeMode(Constants.MODE_MAP_BUILDER, false);
             }
-            // loads an empty map
-            if(inputManager.getKeyResult()[Constants.KEY_E]) { mapSaverLoader.initEmptyMap(); }
-            // switch to AI mode
             if(inputManager.getKeyResult()[Constants.KEY_A]) { 
                 gameMode.changeMode(Constants.MODE_AI_GAME, false);
             }
-
-            // check if user clicked on save button
-            if (inputManager.isMouseClicked()  && mapSaverLoader.saveButtonClicked()){
-                mapSaverLoader.saveButtonLogic();
-            }
-            //check if user clicked on load button
-            if (inputManager.isMouseClicked()  && mapSaverLoader.loadButtonClicked()){
-                mapSaverLoader.loadButtonLogic();
-            }
+            // loads an empty map
+            //if(inputManager.getKeyResult()[Constants.KEY_E]) { mapSaverLoader.initEmptyMap(); }
+            // switch to AI mode
 
             if (gameMode.getMode()==Constants.MODE_PLAYER_GAME){
                 //moves in the desired direction

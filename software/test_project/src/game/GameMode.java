@@ -185,9 +185,8 @@ public class GameMode {
         MODE = Constants.MODE_EXIT;
     }
 
-    public void setGame(Game game){
-        this.game = game;
-    }
+    public void setGame(Game game){this.game = game;}
+    public Game getGame(){return game;}
 
     public int getPreviousMode(){return PREVIOUS_MODE;}
     public int getMode(){return MODE;}

@@ -20,9 +20,10 @@ import functionality.Constants;
 import functionality.FontLoader;
 import functionality.InputManager;
 import functionality.Setup;
-import game.Main;
+import game.Game;
 import game.GameMode;
 import ui.UIElement;
+import map_saver.MapSaverLoader;
 
 /**
  * this will be the header of the game
@@ -77,11 +78,15 @@ public class TopBar extends UIElement {
             );
 
     GameMode gameMode;
+    Game game;
+	MapSaverLoader mapSaverLoader;
 
 	public TopBar(int x, int y, int width, int height, Color backgroundColor, Setup setup, InputManager inputManager, String mapName, GameMode gameMode) {
 		super(x, y, width, height, backgroundColor, setup, inputManager);
 		this.mapName = mapName;
         this.gameMode = gameMode;
+
+		mapSaverLoader = new MapSaverLoader(gameMode.getGame());
 
         try {
             gameplayInactiveImg = ImageIO.read(new File(dirName, pathGameplayInactiveButton));
@@ -110,7 +115,6 @@ public class TopBar extends UIElement {
 
 		drawMapName(graphics);
         drawButtons(graphics);
-		//draw other UI-elements here...
 	}
 
     private void drawButtons(Graphics graphics){
@@ -288,10 +292,21 @@ public class TopBar extends UIElement {
      * E.g. button clicks for
      *      AI Gameplay,
      *      Player Gameplay,
-     *      Building Mode
+     *      Building Mode,
+     *      Save button
+     *      Load button
      *
      */
     public void processUserInput(){
+        // check if user clicked on save button
+        if (getInputManager().isMouseClicked()  && mapSaverLoader.saveButtonClicked()){
+            mapSaverLoader.saveButtonLogic();
+        }
+        //check if user clicked on load button
+        if (getInputManager().isMouseClicked()  && mapSaverLoader.loadButtonClicked()){
+            mapSaverLoader.loadButtonLogic();
+        }
+
         // 	building mode Button
         if (getInputManager().isMouseClicked()
                 && isBuildModeButtonClicked(getInputManager().getMouseClickedX(), getInputManager().getMouseClickedY())) {
@@ -315,6 +330,11 @@ public class TopBar extends UIElement {
 	public void setMapName(String mapName) {
 		this.mapName=mapName;
 	}
+
+    public void setGame(Game game){
+        this.game=game;
+        this.mapSaverLoader = new MapSaverLoader(this.game);
+    }
 
     public RoundRectangle2D getSaveButton() {
         return saveButton;
