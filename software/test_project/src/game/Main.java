@@ -35,7 +35,8 @@ public class Main {
 		InputManager inputManager = new InputManager();
 		Map map = new Map();
 		GraphicsManager gm = new GraphicsManager(inputManager, map); //create the panel
-		game = new Game(gm,true); // create the game
+		game = new Game(gm); // create the game
+		//game = new Game(gm,true); // create the game
 			
 //		game.init(gm, gm.getInputSystem()); // Initialize all variables in game, including the panel
 		
