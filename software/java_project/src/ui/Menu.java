@@ -280,7 +280,6 @@ public class Menu extends UIElement{
      * Processes mouse clicks and keyboard presses of user in Menu Mode.
      */
     public void processUserInput(Game game){
-         
         if (getInputManager().getKeyResult()[Constants.KEY_UP]) {
             changeSelectedButton(true);
         }
