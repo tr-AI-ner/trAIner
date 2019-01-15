@@ -77,35 +77,16 @@ public class Game {
 		start = new ElementStart(33,33,Constants.COLOR_MAP_START);
         finish = new ElementFinish(50,12,Constants.COLOR_MAP_FINISH);
 
-		for(int i = 0; i < 36; i++) {
-            theGreatWall = new ElementWall(15, i, Constants.COLOR_WALL);
-            if(i != 30 && i != 31)  mapElements.add(theGreatWall);
-        }
-        for(int i = 0; i < 36; i++) {
-            theGreatWall = new ElementWall(43, i, Constants.COLOR_WALL);
-            mapElements.add(theGreatWall);
-        }
-
-		ball = new ElementPlasmaBall(13,7,Constants.COLOR_PLASMA_BALL);
-
-        theEnemy = new ElementEnemy(30, 30, Constants.COLOR_ENEMY);
-
-        blackHole = new ElementBlackHole(52,2,Constants.COLOR_BLACK_HOLE);
-        blackHole2 = new ElementBlackHole(4,
-                25,
-                       Constants.COLOR_BLACK_HOLE);
-
-
-        blackHole.setAttachedBlackHole(blackHole2);
-        blackHole2.setAttachedBlackHole(blackHole);
+        //blackHole = new ElementBlackHole(52,2,Constants.COLOR_BLACK_HOLE);
+        //blackHole2 = new ElementBlackHole(4,
+        //        25,
+        //               Constants.COLOR_BLACK_HOLE);
+        //blackHole.setAttachedBlackHole(blackHole2);
+        //blackHole2.setAttachedBlackHole(blackHole);
 
 
         mapElements.add(start);
         mapElements.add(finish);
-		mapElements.add(ball);
-        mapElements.add(theEnemy);
-        mapElements.add(blackHole);
-        mapElements.add(blackHole2);
 
 		// add all map-elements to entities
 		entities.addAll(mapElements);

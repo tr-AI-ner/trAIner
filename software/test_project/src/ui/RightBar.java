@@ -92,7 +92,7 @@ public class RightBar extends UIElement {
 	// list of the dynamic map elements that should be shown in map-building-mode
 	private MapElement[] dynamicMapElements = new MapElement[]{
 			new ElementEnemy(0, 0, Constants.COLOR_ENEMY),
-			new ElementLaser(0, 0, Constants.COLOR_LASER),
+			//new ElementLaser(0, 0, Constants.COLOR_LASER),
 			new ElementPlasmaBall(0,0, Constants.COLOR_PLASMA_BALL)
 	}; 
 
@@ -102,7 +102,7 @@ public class RightBar extends UIElement {
 	
 	// string representations of the map elements
 	private String[] staticNames = new String[]{"Start", "Finish", "Wall", "Black Hole"};
-	private String[] dynamicNames = new String[]{"Enemy", "Laser", "Plasma Ball"};
+	private String[] dynamicNames = new String[]{"Enemy", /*"Laser",*/ "Plasma Ball"};
 	private final String[] headers = new String[]{"Static", "Dynamic"};
 	
 	// font for list items & headers text

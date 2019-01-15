@@ -24,7 +24,9 @@ public class HelpScreen extends UIElement {
     String helpText = "Press Esc to open the Menu.\n\n"+
                         "Player Game\t->\tPlay the game with the avatar by moving around with the arrow keys\n\n"+
                         "AI Game\t->\tLet the AI play the game.\n\n"+
-                        "Build Mode\t->\tBuild your own maps.";
+                        "Build Mode\t->\tBuild your own maps.\n\n"+
+                        "Load maps by pressing the 'Load' button.\n"+
+                        "Save custom built maps by pressing the 'Save' button.";
     int helpY = 50;
     
     String closeButtonText = "Close";
