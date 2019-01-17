@@ -244,14 +244,20 @@ public class Game {
     private void gameLoop(boolean ai_playing) {
         if(this.clock.frameShouldChange()){
             if(ai_playing){
-                if(this.currentGen < this.maxGens){
-                    if((this.currentGen % this.incMovesAfterGen) == 0  && this.shouldExtend ){
-                        this.maxNrOfMoves+=this.increaseMovesBy;
-                        this.pop.extendGenes(this.increaseMovesBy);
-                        this.shouldExtend = false;
-                        runGA();             
+                if(aiRunning){
+                    if(this.currentGen < this.maxGens){
+                        if((this.currentGen % this.incMovesAfterGen) == 0  && this.shouldExtend ){
+                            this.maxNrOfMoves+=this.increaseMovesBy;
+                            this.pop.extendGenes(this.increaseMovesBy);
+                            this.shouldExtend = false;
+                            runGA();             
+                        }else{
+                            runGA();         
+                        }
                     }else{
-                        runGA();         
+                        this.processUserInput(); // Process user input	
+                        this.updateState(); // Update state
+                        this.redrawAll();//graphicsManager); // Redraw everything
                     }
                 }else{
                     gameMode.changeMode(8,false);
