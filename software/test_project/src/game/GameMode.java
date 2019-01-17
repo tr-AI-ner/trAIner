@@ -149,6 +149,9 @@ public class GameMode {
                 break;
             case Constants.MODE_FINISH:
                 if(MODE==Constants.MODE_AI_GAME){
+                    PREVIOUS_MODE = MODE;
+                    MODE = Constants.MODE_FINISH;
+
                 }
                 if (MODE==Constants.MODE_PLAYER_GAME){
                     PREVIOUS_MODE = MODE;
