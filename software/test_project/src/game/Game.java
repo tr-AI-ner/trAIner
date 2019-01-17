@@ -42,7 +42,7 @@ public class Game {
     private boolean ai_playing;
     private boolean foundPrevFinish = false;	
     // true if genetic algorithm is running
-    private boolean aiRunning;
+    private boolean aiRunning=true;
 	Avatar avatar;
     ArrayList<Entity> entities;
     ArrayList<MapElement> mapElements;
