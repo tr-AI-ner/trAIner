@@ -341,103 +341,133 @@ public class Game {
      *
      */
 	private void processUserInput() {
-		//Exits when escape is pressed
-		if(inputManager.getKeyResult()[4]) {System.exit(0);}
-		//Switches between the game and the build mode
-		if(inputManager.getKeyResult()[5]) { Main.MODE = 0; }
-		if(inputManager.getKeyResult()[6]) { 
-            Main.MODE = 1; 
-            reloadBuildState();
-        }
-		// loads an empty map
-		if(inputManager.getKeyResult()[7]) { mapSaverLoader.initEmptyMap(); }
-        // check if user clicked on save button
-        if (inputManager.isMouseClicked()  && mapSaverLoader.saveButtonClicked()){
-            mapSaverLoader.saveButtonLogic();
-        }
-        //check if user clicked on load button
-        if (inputManager.isMouseClicked()  && mapSaverLoader.loadButtonClicked()){
-            mapSaverLoader.loadButtonLogic();
-        }
+		//Enters menu when escape is pressed
+		if(inputManager.getKeyResult()[Constants.KEY_ESCAPE]) {Main.MODE = Constants.MODE_MENU;}
 
-        if (Main.MODE==0){
-            //moves in the desired direction
-            if (inputManager.getKeyResult()[0]) {
-                avatar.move(0, (-setup.getNewEntitySpeed()));
+        //Handle user input if menu is open
+        if(Main.MODE == Constants.MODE_MENU){
+                if (inputManager.getKeyResult()[Constants.KEY_UP]) {
+                    graphicsManager.getMenu().changeSelectedButton(true);
+                }
+                if (inputManager.getKeyResult()[Constants.KEY_DOWN]) {
+                    graphicsManager.getMenu().changeSelectedButton(false);
+                }
+                if (inputManager.getKeyResult()[Constants.KEY_ENTER]){
+                    Main.MODE = graphicsManager.getMenu().getSelectedMode(); 
+                }
+                if(inputManager.isMouseClicked()){
+                    int clickedButtonMode = graphicsManager.getMenu().getMouseSelectedMode(inputManager.getMouseClickedX(),inputManager.getMouseClickedY());
+                    if (clickedButtonMode > -1){
+                        Main.MODE = clickedButtonMode;
+                    }
+                }
+        } else {
+            //Switches between the game and the build mode
+            if(inputManager.getKeyResult()[Constants.KEY_G]) { Main.MODE = Constants.MODE_PLAYER_GAME; }
+            if(inputManager.getKeyResult()[Constants.KEY_B]) { 
+                Main.MODE = Constants.MODE_MAP_BUILDER; 
+                reloadBuildState();
             }
-            if (inputManager.getKeyResult()[1]) {
-                avatar.move(0, (+setup.getNewEntitySpeed()));
-            }
-            if (inputManager.getKeyResult()[2]) {
-                avatar.move((-setup.getNewEntitySpeed()), 0);
-            }
-            if (inputManager.getKeyResult()[3]) {
-                avatar.move((+setup.getNewEntitySpeed()), 0);
-            }
-        }
+            // loads an empty map
+            if(inputManager.getKeyResult()[Constants.KEY_E]) { mapSaverLoader.initEmptyMap(); }
+            // switch to AI mode
+            if(inputManager.getKeyResult()[Constants.KEY_A]) { Main.MODE = Constants.MODE_AI_GAME; }
 
-        //handle mouse clicks during building mode
-        if(Main.MODE==1 && inputManager.isMouseClicked()){
-            //Check for clicks on blocks on right bar
-            if (graphicsManager.getRightBar().isRightBarClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
-                MapElement clickedElement = graphicsManager.getRightBar().getSelectedElement(
-                        inputManager.getMouseClickedX(), inputManager.getMouseClickedY());
-                inputManager.setMouseClicked(false);
-                if (clickedElement != null){
-                    this.clickedMapElement = clickedElement;
+            // check if user clicked on save button
+            if (inputManager.isMouseClicked()  && mapSaverLoader.saveButtonClicked()){
+                mapSaverLoader.saveButtonLogic();
+            }
+            //check if user clicked on load button
+            if (inputManager.isMouseClicked()  && mapSaverLoader.loadButtonClicked()){
+                mapSaverLoader.loadButtonLogic();
+            }
+
+            if (Main.MODE==Constants.MODE_PLAYER_GAME){
+                //moves in the desired direction
+                if (inputManager.getKeyResult()[Constants.KEY_UP]) {
+                    avatar.move(0, (-setup.getNewEntitySpeed()));
+                }
+                if (inputManager.getKeyResult()[Constants.KEY_DOWN]) {
+                    avatar.move(0, (+setup.getNewEntitySpeed()));
+                }
+                if (inputManager.getKeyResult()[Constants.KEY_LEFT]) {
+                    avatar.move((-setup.getNewEntitySpeed()), 0);
+                }
+                if (inputManager.getKeyResult()[Constants.KEY_RIGHT]) {
+                    avatar.move((+setup.getNewEntitySpeed()), 0);
                 }
             }
 
-            // check for right mouse button click
-            if(inputManager.getMouseButton()==3){
-                if(this.clickedMapElement==null){removeMapElement();}
-                else
-                    this.clickedMapElement = null; 
-                inputManager.setMouseClicked(false);
-            }
-            // check for placing a map element on map
-            if(clickedMapElement != null && inputManager.getMouseButton()==1){
-                addMapElement();
-            }
-        }
+            //handle mouse clicks during building mode
+            if(Main.MODE==Constants.MODE_MAP_BUILDER && inputManager.isMouseClicked()){
+                //Check for clicks on blocks on right bar
+                if (graphicsManager.getRightBar().isRightBarClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
+                    MapElement clickedElement = graphicsManager.getRightBar().getSelectedElement(
+                            inputManager.getMouseClickedX(), inputManager.getMouseClickedY());
+                    inputManager.setMouseClicked(false);
+                    if (clickedElement != null){
+                        this.clickedMapElement = clickedElement;
+                    }
+                }
 
-        // check if preview button was clicked
-        if((Main.MODE==1 || Main.MODE==2) && inputManager.isMouseClicked() 
-                && graphicsManager.getBottomBar().isPreviewButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())){
-            if(Main.MODE==1){ 
-                Main.MODE = 2;
+                // check for right mouse button click
+                if(inputManager.getMouseButton()==3){
+                    if(this.clickedMapElement==null){removeMapElement();}
+                    else
+                        this.clickedMapElement = null; 
+                    inputManager.setMouseClicked(false);
+                }
+                // check for placing a map element on map
+                if(clickedMapElement != null && inputManager.getMouseButton()==1){
+                    addMapElement();
+                }
             }
-            else if(Main.MODE == 2){ 
-                Main.MODE = 1;
-                reloadBuildState();
-            }
-        }
 
-        // check for parameter changes by user and process them
-        processParameterChanges(graphicsManager.getRightBar().getParameterChanges());
-		
-        // 	Exit Button to exit the game
-		if (inputManager.isMouseClicked()
-				&& graphicsManager.getTopBar().isExitButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
-			System.exit(0);
-		}
-        // 	building mode Button to exit the game
-		if (inputManager.isMouseClicked()
-				&& graphicsManager.getTopBar().isBuildModeButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
-			Main.MODE = 1;
-		}
-        // 	game-play mode Button to exit the game
-		if (inputManager.isMouseClicked()
-				&& graphicsManager.getTopBar().isGamePlayModeButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
-			Main.MODE = 0;
-		}
-
-        if (Main.MODE != 1 && Main.MODE != 2 && inputManager.isMouseClicked()){
-            // 	Play Button to play the game
-            if (graphicsManager.getBottomBar().isPlayButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
+            // check if preview button was clicked
+            if((Main.MODE==Constants.MODE_MAP_BUILDER || Main.MODE==Constants.MODE_PREVIEW) && inputManager.isMouseClicked() 
+                    && graphicsManager.getBottomBar().isPreviewButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())){
+                if(Main.MODE==Constants.MODE_MAP_BUILDER){ 
+                    Main.MODE = Constants.MODE_PREVIEW;
+                }
+                else if(Main.MODE == Constants.MODE_PREVIEW){ 
+                    Main.MODE = Constants.MODE_MAP_BUILDER;
+                    reloadBuildState();
+                }
             }
-            //  Pause Button to pause the game
-            if (graphicsManager.getBottomBar().isPauseButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
+
+            // check for parameter changes by user and process them
+            processParameterChanges(graphicsManager.getRightBar().getParameterChanges());
+            
+            // 	Exit Button to exit the game
+            if (inputManager.isMouseClicked()
+                    && graphicsManager.getBottomBar().isExitButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
+                System.exit(0);
+            }
+            // 	building mode Button
+            if (inputManager.isMouseClicked()
+                    && graphicsManager.getTopBar().isBuildModeButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
+                Main.MODE = Constants.MODE_MAP_BUILDER;
+            }
+            // 	game-play mode Button
+            if (inputManager.isMouseClicked()
+                    && graphicsManager.getTopBar().isGamePlayModeButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
+                Main.MODE = Constants.MODE_PLAYER_GAME;
+            }
+            // 	AI mode Button
+            if (inputManager.isMouseClicked()
+                    && graphicsManager.getTopBar().isBrainButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
+                Main.MODE = Constants.MODE_AI_GAME;
+            }
+
+            if (Main.MODE != Constants.MODE_MAP_BUILDER && Main.MODE != Constants.MODE_PREVIEW && inputManager.isMouseClicked()){
+                // 	Play Button to play the game
+                if (graphicsManager.getBottomBar().isPlayButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
+                    System.out.println("Play Button Clicked");
+                }
+                //  Pause Button to pause the game
+                if (graphicsManager.getBottomBar().isPauseButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
+                    System.out.println("Pause Button Clicked");
+                }
             }
         }
 
@@ -475,19 +505,21 @@ public class Game {
      */
 	private void updateState(){
 	    switch(Main.MODE){
-            case 0:
+            case Constants.MODE_PLAYER_GAME:
                 moveElements();
                 break;
-            case 1:
+            case Constants.MODE_MAP_BUILDER:
                 break;
-            case 2:
+            case Constants.MODE_PREVIEW:
                 moveElements();
                 break;
-            case 3:
+            case Constants.MODE_AI_GAME:
                 moveElements();
                 break;
-            case 4:
+            case Constants.MODE_CHALLENGE:
                 moveElements();
+                break;
+            case Constants.MODE_MENU:
                 break;
         }
         cleanUp();
@@ -501,14 +533,21 @@ public class Game {
 		//clear full window
 		graphicsManager.clear();
 		
-		// draw all entities
-		graphicsManager.drawMap(entities);
-		
-        // draw selected map element when in building mode
-        graphicsManager.drawBuilderElement(clickedMapElement);
+        if (Main.MODE == Constants.MODE_MENU){
+            graphicsManager.drawMenu();
+        } else {
+            // draw all bars
+            graphicsManager.drawWindowSetup();
 
-		//swap buffers to make changes visible
-		graphicsManager.redraw();
+            // draw all entities
+            graphicsManager.drawMap(entities);
+            
+            // draw selected map element when in building mode
+            graphicsManager.drawBuilderElement(clickedMapElement);
+        }
+
+        //swap buffers to make changes visible
+        graphicsManager.redraw();
 	}
 
     /**
@@ -517,7 +556,7 @@ public class Game {
      * @author Kasparas
      */
     private void moveElements(){
-		if(Main.MODE == 0 || Main.MODE == 2) {
+		if(Main.MODE == Constants.MODE_PLAYER_GAME || Main.MODE == Constants.MODE_PREVIEW) {
             for (MapElement element: this.getMapElements()){
                 if(element.getMapType() == MapType.PLASMA_BALL || element.getMapType() == MapType.ENEMY) {
                     if(element.getMapType() == MapType.ENEMY) {
@@ -574,7 +613,7 @@ public class Game {
      */
     private void removeMapElement(){
         //exit if game is not in building mode or right mouse button was not clicked
-        if(Main.MODE != 1 /*|| inputManager.getMouseButton() != 3*/) return;
+        if(Main.MODE != Constants.MODE_MAP_BUILDER /*|| inputManager.getMouseButton() != 3*/) return;
 
         int removeX = inputManager.getMouseClickedX()-Constants.WINDOW_MAP_X0;
         int removeY = inputManager.getMouseClickedY()-Constants.WINDOW_MAP_Y0;
@@ -711,7 +750,7 @@ public class Game {
     private void cleanUp(){
         //if player is not in building mode and an element is still underneath the mouse
         //will be removed
-        if(Main.MODE != 1 && clickedMapElement != null) clickedMapElement=null;
+        if(Main.MODE != Constants.MODE_MAP_BUILDER && clickedMapElement != null) clickedMapElement=null;
     }
 
     /**

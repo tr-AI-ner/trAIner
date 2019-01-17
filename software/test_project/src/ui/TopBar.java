@@ -20,7 +20,7 @@ import functionality.Constants;
 import functionality.FontLoader;
 import functionality.InputManager;
 import functionality.Setup;
-
+import game.Main;
 import ui.UIElement;
 
 /**
@@ -42,47 +42,37 @@ public class TopBar extends UIElement {
 	int BUTTON_SAVE_X = 200, BUTTON_SAVE_Y =35;
 	int BUTTON_LOAD_X = 120, BUTTON_LOAD_Y =35;
     int BUTTON_OFFSET_X=15, BUTTON_OFFSET_Y=20;
-    int BUTTON_EXIT_X = Constants.WINDOW_MAP_WIDTH + (Constants.WINDOW_MAP_MARGIN * 2) + Constants.WINDOW_RIGHT_BAR_WIDTH - (iconWidth*2);
-    int BUTTON_EXIT_Y = ((Constants.WINDOW_HEADER_HEIGHT/2) - (iconWidth/2)) - 3;
 
-    int BUTTON_BUILD_X = BUTTON_EXIT_X - (iconWidth*3) + 10;
-    int BUTTON_BUILD_Y = ((Constants.WINDOW_HEADER_HEIGHT/2) - (iconWidth/2)) - 3;
-	
+    int BUTTONS_Y = ((Constants.WINDOW_HEADER_HEIGHT/2) - (iconWidth/2)) - 3;
+    int BUTTON_BUILD_X = Constants.WINDOW_MAP_WIDTH + (Constants.WINDOW_MAP_MARGIN * 2) + Constants.WINDOW_RIGHT_BAR_WIDTH - (iconWidth*2);
     int BUTTON_GAMEPLAY_X = BUTTON_BUILD_X - (iconWidth*3) + 10;
-    int BUTTON_GAMEPLAY_Y = ((Constants.WINDOW_HEADER_HEIGHT/2) - (iconWidth/2)) - 3;
+    int BUTTON_BRAIN_X = BUTTON_GAMEPLAY_X - (iconWidth*3) + 10;
 
     // directory name where images should be loaded from 
     String dirName = "../resources/";
-    String pathExitButton = "exit.png";
-    String pathGameplayButton = "play_game.png";
-    String pathBuilButton = "build_mode.png";
+    String pathGameplayInactiveButton = "play_game_inactive.png", pathGameplayActiveButton = "play_game_active.png";
+    String pathBuildInactiveButton = "build_mode_inactive.png", pathBuildActiveButton = "build_mode_active.png";
+    String pathBrainInactiveButton = "brain_inactive.png", pathBrainActiveButton = "brain_active.png";
 	
-    BufferedImage exitImg;
-    BufferedImage gameplayImg;
-    BufferedImage buildImg;
+    BufferedImage gameplayInactiveImg, gameplayActiveImg, buildInactiveImg, buildActiveImg, brainInactiveImg, brainActiveImg;
 
-    Rectangle exitButton = new Rectangle(BUTTON_EXIT_X, BUTTON_EXIT_Y, iconWidth, iconWidth);
-    Rectangle gamePlayButton = new Rectangle(BUTTON_GAMEPLAY_X, BUTTON_GAMEPLAY_Y, iconWidth, iconWidth);
-    Rectangle buildButton = new Rectangle(BUTTON_BUILD_X, BUTTON_BUILD_Y, iconWidth, iconWidth);
-
+    Rectangle gamePlayButton = new Rectangle(BUTTON_GAMEPLAY_X, BUTTONS_Y, iconWidth, iconWidth);
+    Rectangle buildButton = new Rectangle(BUTTON_BUILD_X, BUTTONS_Y, iconWidth, iconWidth);
+    Rectangle brainButton = new Rectangle(BUTTON_BRAIN_X, BUTTONS_Y, iconWidth, iconWidth);
 	
-    // arch width and height of rounded corner of a button
-	int BUTTON_ARCH_WH = 30;
-	int BUTTON_WIDTH = 70, BUTTON_HEIGHT =30;
-
 	int fontSize = 16;
     Font font = new Font(Constants.DEFAULT_FONT, Font.PLAIN, fontSize);
-	//Font font = FontLoader.getFont("ChakraPetch-SemiBold.ttf"); //TODO: not laoding for everybody
+	//Font font = FontLoader.getFont("ChakraPetch-SemiBold.ttf"); //TODO: not loading for everybody
 	String mapName;
 
 	private RoundRectangle2D saveButton = new RoundRectangle2D.Float(
                 BUTTON_SAVE_X-BUTTON_OFFSET_X, BUTTON_SAVE_Y-BUTTON_OFFSET_Y,
-			    BUTTON_WIDTH, BUTTON_HEIGHT, BUTTON_ARCH_WH, BUTTON_ARCH_WH
+			    Constants.BUTTON_WIDTH, Constants.BUTTON_HEIGHT, Constants.BUTTON_ARCH_WH, Constants.BUTTON_ARCH_WH
             );
 	private RoundRectangle2D loadButton = new RoundRectangle2D.Float(
                 BUTTON_LOAD_X-BUTTON_OFFSET_X,
                 BUTTON_LOAD_Y-BUTTON_OFFSET_Y,
-                BUTTON_WIDTH,BUTTON_HEIGHT,BUTTON_ARCH_WH,BUTTON_ARCH_WH
+                Constants.BUTTON_WIDTH,Constants.BUTTON_HEIGHT,Constants.BUTTON_ARCH_WH,Constants.BUTTON_ARCH_WH
             );
 
 	public TopBar(int x, int y, int width, int height, Color backgroundColor, Setup setup, InputManager inputManager, String mapName) {
@@ -90,9 +80,12 @@ public class TopBar extends UIElement {
 		this.mapName = mapName;
 
         try {
-            exitImg = ImageIO.read(new File(dirName, pathExitButton));
-            gameplayImg = ImageIO.read(new File(dirName, pathGameplayButton));
-            buildImg = ImageIO.read(new File(dirName, pathBuilButton));
+            gameplayInactiveImg = ImageIO.read(new File(dirName, pathGameplayInactiveButton));
+            gameplayActiveImg = ImageIO.read(new File(dirName, pathGameplayActiveButton));
+            buildInactiveImg = ImageIO.read(new File(dirName, pathBuildInactiveButton));
+            buildActiveImg = ImageIO.read(new File(dirName, pathBuildActiveButton));
+            brainInactiveImg = ImageIO.read(new File(dirName, pathBrainInactiveButton));
+            brainActiveImg = ImageIO.read(new File(dirName, pathBrainActiveButton));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -120,9 +113,9 @@ public class TopBar extends UIElement {
 		drawLoadButton(graphics);
 		drawSaveButton(graphics);
 
-        drawExitButton(graphics);
         drawGameplayButton(graphics);
         drawBuildButton(graphics);
+        drawBrainButton(graphics);
     }
 	
 	/**
@@ -197,7 +190,7 @@ public class TopBar extends UIElement {
 		BUTTON_SAVE_Y= getY() + ((getHeight() - graphics.getFontMetrics(font).getHeight()) / 2)
 				+ graphics.getFontMetrics(font).getAscent();
 		graphics.drawString("SAVE", BUTTON_SAVE_X, BUTTON_SAVE_Y);
-		graphics.drawRoundRect(BUTTON_SAVE_X-BUTTON_OFFSET_X,BUTTON_SAVE_Y-BUTTON_OFFSET_Y,BUTTON_WIDTH,BUTTON_HEIGHT,BUTTON_ARCH_WH,BUTTON_ARCH_WH);
+		graphics.drawRoundRect(BUTTON_SAVE_X-BUTTON_OFFSET_X,BUTTON_SAVE_Y-BUTTON_OFFSET_Y,Constants.BUTTON_WIDTH,Constants.BUTTON_HEIGHT,Constants.BUTTON_ARCH_WH,Constants.BUTTON_ARCH_WH);
 	}
 
 	/**
@@ -212,28 +205,23 @@ public class TopBar extends UIElement {
 		BUTTON_LOAD_Y = getY() + ((getHeight() - graphics.getFontMetrics(font).getHeight()) / 2)
 				+ graphics.getFontMetrics(font).getAscent();
 		graphics.drawString("LOAD", BUTTON_LOAD_X, BUTTON_LOAD_Y);
-		graphics.drawRoundRect(BUTTON_LOAD_X-BUTTON_OFFSET_X,BUTTON_LOAD_Y-BUTTON_OFFSET_Y,BUTTON_WIDTH,BUTTON_HEIGHT,BUTTON_ARCH_WH,BUTTON_ARCH_WH);
+		graphics.drawRoundRect(BUTTON_LOAD_X-BUTTON_OFFSET_X,BUTTON_LOAD_Y-BUTTON_OFFSET_Y,Constants.BUTTON_WIDTH,Constants.BUTTON_HEIGHT,Constants.BUTTON_ARCH_WH,Constants.BUTTON_ARCH_WH);
 	}
 
-    // Draws the settings button
-	private void drawExitButton(Graphics graphics){
-		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
-        int offset = 6;
-        graphics.drawOval(BUTTON_EXIT_X-((offset+2)/2), BUTTON_EXIT_Y-((offset+2)/2), iconWidth+offset, iconWidth+offset);
-
-        try {
-		    graphics.drawImage(exitImg, BUTTON_EXIT_X+(offset/2), BUTTON_EXIT_Y+(offset/2), iconWidth-offset, iconWidth-offset, null);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-	}
     // Draws the game play button
 	private void drawGameplayButton(Graphics graphics){
-		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
+        if (Main.MODE == Constants.MODE_PLAYER_GAME){
+		    graphics.setColor(Constants.COLOR_AVATAR_RED);
+        } else {
+		    graphics.setColor(Constants.COLOR_AVATAR_WHITE);
+        }
         int offset = 6;
-        graphics.drawOval(BUTTON_GAMEPLAY_X-((offset+2)/2), BUTTON_GAMEPLAY_Y-((offset+2)/2), iconWidth+offset, iconWidth+offset);
+        graphics.drawOval(BUTTON_GAMEPLAY_X-((offset+2)/2), BUTTONS_Y-((offset+2)/2), iconWidth+offset, iconWidth+offset);
         try {
-		    graphics.drawImage(gameplayImg, BUTTON_GAMEPLAY_X+(offset/2), BUTTON_GAMEPLAY_Y+(offset/2), iconWidth-offset, iconWidth-offset, null);
+            if (Main.MODE == Constants.MODE_PLAYER_GAME)
+		        graphics.drawImage(gameplayActiveImg, BUTTON_GAMEPLAY_X+(offset/2), BUTTONS_Y+(offset/2), iconWidth-offset, iconWidth-offset, null);
+            else
+		        graphics.drawImage(gameplayInactiveImg, BUTTON_GAMEPLAY_X+(offset/2), BUTTONS_Y+(offset/2), iconWidth-offset, iconWidth-offset, null);
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -241,11 +229,37 @@ public class TopBar extends UIElement {
     
     // Draws the build mode button
 	private void drawBuildButton(Graphics graphics){
-		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
+        if (Main.MODE == Constants.MODE_MAP_BUILDER){
+		    graphics.setColor(Constants.COLOR_AVATAR_RED);
+        } else {
+		    graphics.setColor(Constants.COLOR_AVATAR_WHITE);
+        }
         int offset = 6;
-        graphics.drawOval(BUTTON_BUILD_X-((offset+2)/2), BUTTON_BUILD_Y-((offset+2)/2), iconWidth+offset, iconWidth+offset);
+        graphics.drawOval(BUTTON_BUILD_X-((offset+2)/2), BUTTONS_Y-((offset+2)/2), iconWidth+offset, iconWidth+offset);
         try {
-		    graphics.drawImage(buildImg, BUTTON_BUILD_X+(offset/2), BUTTON_BUILD_Y+(offset/2), iconWidth-offset, iconWidth-offset, null);
+            if(Main.MODE == Constants.MODE_MAP_BUILDER) graphics.drawImage(buildActiveImg, BUTTON_BUILD_X+(offset/2), BUTTONS_Y+(offset/2), iconWidth-offset, iconWidth-offset, null);
+		    else graphics.drawImage(buildInactiveImg, BUTTON_BUILD_X+(offset/2), BUTTONS_Y+(offset/2), iconWidth-offset, iconWidth-offset, null);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+	}
+
+    
+    // Draws the brain/AI button
+	private void drawBrainButton(Graphics graphics){
+        if (Main.MODE == Constants.MODE_AI_GAME){
+		    graphics.setColor(Constants.COLOR_AVATAR_RED);
+        } else {
+		    graphics.setColor(Constants.COLOR_AVATAR_WHITE);
+        }
+        int offset = 6;
+        graphics.drawOval(BUTTON_BRAIN_X-((offset+2)/2), BUTTONS_Y-((offset+2)/2), iconWidth+offset, iconWidth+offset);
+        try {
+            if (Main.MODE == Constants.MODE_AI_GAME){
+		        graphics.drawImage(brainActiveImg, BUTTON_BRAIN_X+(offset/2), BUTTONS_Y+(offset/2), iconWidth-offset, iconWidth-offset, null);
+            } else {
+		        graphics.drawImage(brainInactiveImg, BUTTON_BRAIN_X+(offset/2), BUTTONS_Y+(offset/2), iconWidth-offset, iconWidth-offset, null);
+            }
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -280,14 +294,15 @@ public class TopBar extends UIElement {
         return loadButton;
     }
 
-    public boolean isExitButtonClicked(int mouseX, int mouseY){
-        return exitButton.contains(mouseX, mouseY);
-    }
     public boolean isGamePlayModeButtonClicked(int mouseX, int mouseY){
         return gamePlayButton.contains(mouseX, mouseY);
     }
     public boolean isBuildModeButtonClicked(int mouseX, int mouseY){
         return buildButton.contains(mouseX, mouseY);
+    }
+
+    public boolean isBrainButtonClicked(int mouseX, int mouseY){
+        return brainButton.contains(mouseX, mouseY);
     }
 
 }
