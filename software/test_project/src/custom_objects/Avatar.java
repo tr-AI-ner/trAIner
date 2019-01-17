@@ -45,7 +45,7 @@ public class Avatar extends Entity {
 	public void move(int incX, int incY){
 		this.toMoveX = this.toMoveX == 0 ? this.toMoveX : this.getX() + incX; 
         this.toMoveY = this.toMoveY == 0 ? this.toMoveY : this.getY() + incY;
-		
+	
 		if(incY == 0) // left-arrow right-arrow
 			this.toMoveX = (this.getX() + incX);
 		else if(incX == 0)  // up-arrow down-arrow
