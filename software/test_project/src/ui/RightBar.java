@@ -1,4 +1,5 @@
 package ui;
+import java.util.Collections;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -6,12 +7,10 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
-import java.awt.geom.RoundRectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.*;
 import java.awt.*;
-import java.util.Arrays;
 
 import functionality.Constants;
 import functionality.GraphicsManager;
@@ -29,6 +28,7 @@ import map_builder.ElementWall;
 import map_builder.MapElement;
 import map_builder.MapType;
 
+import javax.swing.JProgressBar;
 /**
  * This class is responsible for the right bar of the game.
  * 
@@ -55,7 +55,7 @@ public class RightBar extends UIElement {
     // start x position of parameter name
 	int parameterStringX = 15;
     //int parametersStartY = 100;
-    int parametersStartY = Constants.WINDOW_MAP_Y0;
+    int parametersStartY = Constants.WINDOW_MAP_Y0-90;
 
     // y start position of first parameter
     int buttonStartY = parametersStartY;
@@ -63,6 +63,10 @@ public class RightBar extends UIElement {
     // offset so that the button is drawn beneath the string for each parameter
     int buttonOffsetY = 22;
 	
+    int betweenStrings=35;
+    int rightBarOffestY=60;
+    
+    
 	// height of each list item & header (in pixels) (for map-building mode)
 	final int listItemHeight = 50;
     final int listItemIndentX = 15;
@@ -70,7 +74,7 @@ public class RightBar extends UIElement {
 
 	// Array to create the rectangles
 	int buttonsPositions [][]= new int[10][2];
-
+	
 	// To create the all the buttons
 	private Rectangle[] allButtons = new Rectangle[10];
 
@@ -79,17 +83,22 @@ public class RightBar extends UIElement {
 	};
     String plusString = "+";
     String minusString = "-";
-    String numOfGen = "Current Gen: ";
+    String numOfGen = "Gen: ";
     String maxFit = "Max Fitness: ";
-    
     // maximum amount of Characters in a row
-    int maxChar = 24;
+    int maxChar = 23;
     // offset for a new Row, so that strings don`t collide
     int lineOffsetY = 35;
+    String line="____________________";
+    boolean [] finished=new boolean[50];
+    //ArrayList finished= new ArrayList();
     
-    String line="_____________________";
-	
-	// list of the static map elements that should be shown in map-building-mode
+
+    
+    int oldRM=9999999;
+    List<Integer> list = new ArrayList<Integer>();
+    List<Integer> hlist = new ArrayList<Integer>();
+    // list of the static map elements that should be shown in map-building-mode
 	private MapElement[] staticMapElements = new MapElement[]{
 			new ElementStart(0, 0, Constants.COLOR_MAP_START),
 			new ElementFinish(0, 0, Constants.COLOR_MAP_FINISH),
@@ -118,7 +127,6 @@ public class RightBar extends UIElement {
 
 	public RightBar(int x, int y, int width, int height, Color backgroundColor, Setup setup, InputManager inputManager) {
 		super(x, y, width, height, backgroundColor, setup, inputManager);
-
 		// Loop for creating all the buttons
 		for(int i = 0; i < buttonsPositions.length; i++){
 			if (i % 2 == 0){
@@ -141,6 +149,20 @@ public class RightBar extends UIElement {
         for (int rect=0; rect < elementsY.length; rect++){
             elementsY[rect] = getY()+(rect*listItemHeight);
         }
+	}
+	
+	//clear array and other values
+	public boolean contains(boolean[] arr) {
+		for(int i=0;i<arr.length;i++) {
+			if(arr[i]==true) {return true;}
+		}
+		return false;
+	}	
+	public int firstOccurance(boolean[] arr) {
+		for(int i=0;i<arr.length;i++) {
+			if(arr[i]==true) {return i;}
+		}
+		return 0;
 	}
 
     /**
@@ -287,12 +309,14 @@ public class RightBar extends UIElement {
 		drawBackground(graphics);
 		// decide whether to draw list with map-elements or configurations for AI game-play
 		switch (Main.MODE){
-			case 0:
+			case 2:
 				drawParametersList(graphics);
                 break;
 			case 1:
 				drawMapBuilderList(graphics);
 				break;
+			case 0:
+				drawAIGameModeList(graphics);
 			default:
 				break;
 		}
@@ -414,7 +438,51 @@ public class RightBar extends UIElement {
         }
         drawNumberOfGenerationString(graphics);
         drawFittestString(graphics);
+        drawRecordTime(graphics);
         drawCheckboxes(graphics);
+    }
+    
+    private void drawAIGameModeList(Graphics graphics){
+		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
+		graphics.setFont(font);
+    	graphics.drawString("Population Size: "+String.format("%1$9s",game.getPopulationSize())+"x", minusButtonX+rightBarStartX, parametersStartY+rightBarOffestY+betweenStrings*4);
+    	graphics.drawString("Speed: "+String.format("%1$27s",game.getSpeed())+"x", minusButtonX+rightBarStartX, parametersStartY+rightBarOffestY+betweenStrings*1);
+    	graphics.drawString("Maximum Moves: "+String.format("%1$9s",game.getNoOfMoves()+"x"), minusButtonX+rightBarStartX,parametersStartY+rightBarOffestY+betweenStrings*3);
+    	graphics.drawString("Mutation Rate: "+String.format("%1$13s",game.getMutationRate()+"x"), minusButtonX+rightBarStartX,  parametersStartY+rightBarOffestY+betweenStrings*2);
+    	graphics.drawString("Max Generations: "+String.format("%1$9s",game.getNoOfGenerations()+"x"), minusButtonX+rightBarStartX,  parametersStartY+rightBarOffestY+betweenStrings*5);
+    	graphics.drawString("Current Move: "+game.getCurentMoove(), minusButtonX+rightBarStartX,  parametersStartY+betweenStrings*10);
+    	drawBarMoves(graphics);
+    	drawBar(graphics);
+    	drawNumberOfGenerationString(graphics);
+        drawFittestString(graphics);
+        drawRecordTime(graphics);
+        drawCheckboxes(graphics);
+		drawChart(graphics);
+    }
+    
+    public void drawBar(Graphics graphics) {
+    	int current =game.getPopulation().getCurrentGeneration();
+    	int total = game.getNoOfGenerations();
+
+    	for (int i=0; i<game.getNoOfGenerations();i++) {
+    		if (i==current) {finished[i]=game.hasFinished();}
+    		if(i<current) {
+    			if(finished[i]==true) {graphics.setColor(Color.GREEN);}
+    			if(finished[i]==false) {graphics.setColor(Color.RED);}
+    		}
+    		else {
+    			graphics.setColor(Color.BLACK);
+    		}
+    	graphics.fillRect(rightBarStartX+9+200*i/total, parametersStartY+betweenStrings*7+15, 200/total, 15);
+    	}
+    	
+    }
+    
+    public void drawBarMoves(Graphics graphics) {
+    		graphics.setColor(Color.GREEN);
+    		graphics.fillRect(rightBarStartX+9, parametersStartY+betweenStrings*9-8, 200*game.getCurentMoove()/game.getMaxNrOfMoves(), 15);
+			graphics.setColor(Color.BLACK);
+    		graphics.fillRect(rightBarStartX+9+200*game.getCurentMoove()/game.getMaxNrOfMoves(), parametersStartY+betweenStrings*9-8, 200-200*game.getCurentMoove()/game.getMaxNrOfMoves(), 15);
     }
 
     /**
@@ -427,18 +495,31 @@ public class RightBar extends UIElement {
 	private void drawNumberOfGenerationString(Graphics graphics){
 		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
 		graphics.setFont(font);
-		String numberOfGeneration =numOfGen+ game.getPopulation().getCurrentGeneration()+" out of "+game.getNoOfGenerations()+'\n';
-		graphics.drawString(correctStringLength(numberOfGeneration), minusButtonX+rightBarStartX, (gameParameters.length * parameterHeight) + parametersStartY);
+		String numberOfGeneration = numOfGen+ String.format("%05d", game.getPopulation().getCurrentGeneration())+" out of  "+String.format("%05d",game.getNoOfGenerations());
+	//	graphics.drawString(correctStringLength(line), minusButtonX+rightBarStartX, parametersStartY+rightBarOffestY+betweenStrings*7);
+		graphics.drawString(numberOfGeneration, minusButtonX+rightBarStartX,  parametersStartY+betweenStrings*8+15);
 	}
 
 	private void drawFittestString(Graphics graphics){
 		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
 		graphics.setFont(font);
-		String maxFitness = maxFit+ game.getPopulation().getMaxFitness();
-		graphics.drawString(correctStringLength(line), minusButtonX+rightBarStartX, (gameParameters.length * parameterHeight) + parametersStartY+10);
-		graphics.drawString(correctStringLength(maxFitness), minusButtonX+rightBarStartX, (gameParameters.length * parameterHeight) + parametersStartY+lineOffsetY);
+		String maxFitness = maxFit+Math.round(game.getPopulation().getMaxFitness());
+	//	graphics.drawString(correctStringLength(line), minusButtonX+rightBarStartX, (gameParameters.length * parameterHeight) + parametersStartY+10);
+		graphics.drawString(correctStringLength(maxFitness), minusButtonX+rightBarStartX,  parametersStartY+rightBarOffestY+betweenStrings*9+5);
+
 	}
 	
+	private void drawRecordTime(Graphics graphics){
+		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
+		graphics.setFont(font);
+		String recordTime = "Best Time: "+ String.format("%1$7s", game.getRecordTime())+" moves";
+	//	graphics.drawString(correctStringLength(line), minusButtonX+rightBarStartX, (gameParameters.length * parameterHeight) + parametersStartY+47);
+		graphics.drawString(recordTime, minusButtonX+rightBarStartX,  parametersStartY+rightBarOffestY+betweenStrings*10);
+
+	}
+	
+	
+
 	public String correctStringLength(String str) {
 		if (str.length()>maxChar) {str=str.substring(0, maxChar);}
 		return str;
@@ -488,23 +569,25 @@ public class RightBar extends UIElement {
         //draw the value of each parameter
         int parameterX = rightBarStartX+((minusButtonX+plusButtonX) / 2 + (fontSize / 2));
         switch (type){
-            case 0:
-                graphics.drawString(game.getPopulationSize()+"x", parameterX, (y+buttonOffsetY)+((plusMinusButtonWidth/2)+beautyFactor));
-                break;
-            case 1: 
-                graphics.drawString(game.getSpeed()+"x", parameterX, (y+buttonOffsetY)+((plusMinusButtonWidth/2)+beautyFactor));
-                break;
-            case 2: 
-                graphics.drawString(game.getNoOfMoves()+"x", parameterX, (y+buttonOffsetY)+((plusMinusButtonWidth/2)+beautyFactor));
-                break;
-            case 3:
-                graphics.drawString(game.getMutationRate()+"x", parameterX, (y+buttonOffsetY)+((plusMinusButtonWidth/2)+beautyFactor));
-                break;
-            default: 
-                graphics.drawString(game.getNoOfGenerations()+"x", parameterX, (y+buttonOffsetY)+((plusMinusButtonWidth/2)+beautyFactor));
-                break;
+        case 0:
+            graphics.drawString(game.getPopulationSize()+"x", parameterX, (y+buttonOffsetY)+((plusMinusButtonWidth/2)+beautyFactor));
+            break;
+        case 1: 
+            graphics.drawString(game.getSpeed()+"x", parameterX, (y+buttonOffsetY)+((plusMinusButtonWidth/2)+beautyFactor));
+            break;
+        case 2: 
+            graphics.drawString(game.getNoOfMoves()+"x", parameterX, (y+buttonOffsetY)+((plusMinusButtonWidth/2)+beautyFactor));
+            break;
+        case 3:
+            graphics.drawString(game.getMutationRate()+"x", parameterX, (y+buttonOffsetY)+((plusMinusButtonWidth/2)+beautyFactor));
+            break;
+        default: 
+            graphics.drawString(game.getNoOfGenerations()+"x", parameterX, (y+buttonOffsetY)+((plusMinusButtonWidth/2)+beautyFactor));
+            break;
+    }
         }
-	}
+          
+	
 
 
     public void setGame(Game game){this.game = game;}
@@ -544,5 +627,54 @@ public class RightBar extends UIElement {
 	public boolean isGenerationPlusButtonClicked(int mouseClickedX, int mouseClickedY) {
 		return allButtons[9].contains(mouseClickedX, mouseClickedY);
 	}
-
+	public void drawChart(Graphics graphics) {
+		int current =game.getPopulation().getCurrentGeneration();
+		if(current>200) {
+			current=current%200;
+		}
+		int newRM=game.getRecordTime();
+		if (newRM>1000) {
+			newRM=1000;
+		}
+		list.add(newRM);
+		int width=200/game.getNoOfGenerations();
+		if (width<1) {
+			width=1;
+		}
+		oldRM=Collections.max(list);
+		if (contains(finished)) {
+			int i =firstOccurance(finished);
+			oldRM=hlist.get(i);
+		}
+		int height=newRM*200/oldRM;	
+		if (height >200) {
+			height=200;
+		}
+		int loops=game.getNoOfGenerations();
+		if (loops>200) {
+			loops=200;
+		}
+		if (list.size()<loops) {
+			for (int i=0;i<loops;i++) {
+				list.add(i, height);
+			}
+		}
+		for (int i=0; i<loops;i++) {
+    		if (i==current) {
+    			hlist.add(i,height);}
+    		if(i<=current) {
+    			if (finished[i]==false) {
+    				graphics.setColor(Constants.COLOR_RIGHT_BAR_HEADER);
+    			}
+    			else {
+    				graphics.setColor(Color.GREEN);
+    			}
+				int a=200-hlist.get(i);
+				graphics.fillRect(rightBarStartX+10+width*i, parametersStartY+430+a, width, hlist.get(i));
+			}
+    	}
+		graphics.setColor(Color.WHITE);
+		graphics.drawString("Visualisation of Genes", rightBarStartX+15, 630);
+		graphics.drawString("      (smaller => faster)", rightBarStartX+20, 655);
+	}
 }
