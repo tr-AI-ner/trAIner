@@ -79,7 +79,8 @@ public class GameMode {
                 if(MODE==Constants.MODE_MAP_BUILDER 
                   || PREVIOUS_MODE==Constants.MODE_MAP_BUILDER
                   || MODE==Constants.MODE_PREVIEW
-                  || PREVIOUS_MODE==Constants.MODE_NONE){
+                  || PREVIOUS_MODE==Constants.MODE_NONE
+                  || MODE==Constants.MODE_FINISH){
                     MODE = Constants.MODE_MAP_BUILDER;
                     PREVIOUS_MODE = Constants.MODE_MAP_BUILDER;
                     game.reloadBuildState();

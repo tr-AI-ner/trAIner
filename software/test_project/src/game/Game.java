@@ -124,9 +124,8 @@ public class Game {
 		if(inputManager.getKeyResult()[Constants.KEY_ESCAPE]) {
             gameMode.changeMode(Constants.MODE_MENU, false);
         }
-
         //Handle user input if menu is open
-        if(gameMode.getMode() == Constants.MODE_MENU){
+        else if(gameMode.getMode() == Constants.MODE_MENU){
             graphicsManager.getMenu().processUserInput();
         }
         //Handle user input if help screen is open
@@ -135,7 +134,7 @@ public class Game {
         }
         //Handle user input if finish screen is open
         else if(gameMode.getMode() == Constants.MODE_FINISH){
-            graphicsManager.getFinishScreen().processUserInput();
+            graphicsManager.getFinishScreen().processUserInput(this);
         }
         // Hanlde user input if exit screen is open
         else if (gameMode.getMode() == Constants.MODE_EXIT){
@@ -151,12 +150,8 @@ public class Game {
             if(inputManager.getKeyResult()[Constants.KEY_A]) { 
                 gameMode.changeMode(Constants.MODE_AI_GAME, false);
             }
-            // loads an empty map
-            //if(inputManager.getKeyResult()[Constants.KEY_E]) { mapSaverLoader.initEmptyMap(); }
-            // switch to AI mode
-
+            //moves player avatar in the desired direction
             if (gameMode.getMode()==Constants.MODE_PLAYER_GAME){
-                //moves in the desired direction
                 if (inputManager.getKeyResult()[Constants.KEY_UP]) {
                     avatar.move(0, (-setup.getNewEntitySpeed()));
                 }
@@ -213,12 +208,17 @@ public class Game {
      *
      * @author Kasparas
      */
-	public void playerFinished() {
+	public void restart() {
         for (MapElement element: this.getMapElements()){
             element.reset();
         }
         avatar.reset();
-        gameMode.changeMode(Constants.MODE_FINISH, false);
+    }
+
+    public void playerFinished(){
+        if (gameMode.getMode() == Constants.MODE_PLAYER_GAME){
+            gameMode.changeMode(Constants.MODE_FINISH, false);
+        }
     }
 
 
@@ -310,7 +310,7 @@ public class Game {
                     // Because of the grid element system we have to check if the elements don't collide on the grid level
                     if(Math.abs(element.getX()  - avatar.getX()) < Constants.MAP_ELEMENT_SIZE
                             && Math.abs(element.getY()  - avatar.getY()) < Constants.MAP_ELEMENT_SIZE) {
-                        this.playerFinished();
+                        this.restart();
                     }
                 }
             }

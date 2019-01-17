@@ -28,6 +28,9 @@ public class ElementEnemy extends MapElement {
         temp = gridX;
 	}
 
+    /**
+     * Copy constructor
+     */
     public ElementEnemy(ElementEnemy object){
         super(object.getGridX(), object.getGridY(), MapType.ENEMY, object.getColor());
         sourceX = object.getGridX();
@@ -35,6 +38,9 @@ public class ElementEnemy extends MapElement {
         this.temp = object.getGridX();
     }
 
+    /**
+     * Make enemy move horizontally.
+     */
     public void update() {
         if (getGridX() >= Constants.GRID_COLUMNS-1){
             forward = false;
@@ -66,10 +72,20 @@ public class ElementEnemy extends MapElement {
             for(int i=0; i<collidingElems.size(); i++){
                 MapElement elem = mapElements.get(collidingElems.get(i));
                 if(elem.getGridX() < this.getGridX() && Math.abs(elem.getGridX()-this.getGridX())<leftDistance){
-                    leftColliding = i;
+                    if (leftColliding < 0){
+                        leftColliding = i;
+                    } else {
+                        if (mapElements.get(leftColliding).getGridX() < i)
+                            leftColliding = i;
+                    }
                 }
                 if(elem.getGridX() > this.getGridX() && Math.abs(elem.getGridX()-this.getGridX())<rightDistance){
-                    rightColliding = i;
+                    if (rightColliding < 0){
+                        rightColliding = i;
+                    } else {
+                        if (mapElements.get(rightColliding).getGridX() < i)
+                            rightColliding = i;
+                    }
                 }
             }
 

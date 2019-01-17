@@ -41,7 +41,6 @@ public class FinishScreen extends UIElement {
     long lastEnterPressed = 0;
 
     GameMode gameMode;
-    Game game;
     
 	public FinishScreen(int x, int y, int width, int height, Color backgroundColor, Setup setup, InputManager inputManager, GameMode gameMode) {
 		super(x, y, width, height, backgroundColor, setup, inputManager);
@@ -148,7 +147,7 @@ public class FinishScreen extends UIElement {
      *      Build   -   Switch to building mode
      *      Restart -   Restart current map
      */
-    public void processUserInput(){
+    public void processUserInput(Game game){
         if (getInputManager().getKeyResult()[Constants.KEY_UP]) {
             changeSelectedButton(true);
         }
@@ -156,21 +155,42 @@ public class FinishScreen extends UIElement {
             changeSelectedButton(false);
         }
         if (getInputManager().getKeyResult()[Constants.KEY_ENTER] && canSelectButtonAgain(lastEnterPressed)){
-            //gameMode.changeMode(gameMode.getPreviousMode(), false);
-            System.out.println("Selected mode: "+getSelectedMode(selectedButton));
-            selectedButton = -1;
+            getInputManager().resetEnterKey();
+            processClickedButton(game, selectedButton);
             lastEnterPressed = System.currentTimeMillis();
         }
         if(getInputManager().isMouseClicked()){
-            //int clickedButtonMode = getMouseSelectedMode(getInputManager().getMouseClickedX(),getInputManager().getMouseClickedY());
-            //if (clickedButtonMode > -1){
-            //    gameMode.changeMode(clickedButtonMode, false);
-            //    resumeEnabled = true;
-            //    selectedButton = -1;
-            //}
+            int clickedButtonMode = getMouseSelectedMode(getInputManager().getMouseClickedX(),getInputManager().getMouseClickedY());
+            processClickedButton(game, clickedButtonMode);
         }
     }
 
+    /**
+     * Process any clicked button.
+     *
+     * @param selButton the index of the selected button
+     */
+    private void processClickedButton(Game game, int selButton){
+        if (selButton<0 || selButton>buttonsText.length-1) return;
+
+        if (selButton==0){
+            game.getGraphicsManager().getTopBar().setShouldLoadMap(true);
+            gameMode.changeMode(Constants.MODE_PLAYER_GAME, false);
+        }
+        else if (selButton==1){
+            gameMode.changeMode(Constants.MODE_MAP_BUILDER, false);
+        } else {
+            gameMode.changeMode(Constants.MODE_PLAYER_GAME, false);
+        }
+        
+        selectedButton = -1;
+    }
+
+    /**
+     * Changes the selected button according to user keyboard presses.
+     *
+     * @param increase - whether the button above should be selected
+     */
     private void changeSelectedButton(boolean increase){
         if (canSelectButtonAgain(lastSelectedTime)){
             if (!increase){
@@ -201,14 +221,26 @@ public class FinishScreen extends UIElement {
         return (System.currentTimeMillis() >= lastTime+puffer);
     }
 
-    private int getSelectedMode(int selButton){
-        switch (selButton){
-            case 0: return 0;
-            case 1: return Constants.MODE_MAP_BUILDER;
-            case 2: return Constants.MODE_PLAYER_GAME;
-            default: selectedButton = -1; 
-                     return Constants.MODE_FINISH;
+    /**
+     * Handles whether user clicked on a button with the mouse.
+     *
+     * @param mouseX
+     * @param mouseY
+     *
+     * @return selected-mode
+     *          (if no button was clicked returns -1)
+     */
+    public int getMouseSelectedMode(int mouseX, int mouseY){
+        selectedButton = -1;
+
+        for(int b=0; b<buttonsText.length; b++){
+            if(buttons[b].contains(mouseX, mouseY)){
+                selectedButton = b;
+                return b;
+            }
         }
+
+        return selectedButton; 
     }
 
     private boolean loadButtonClicked(int mouseX, int mouseY){
