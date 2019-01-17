@@ -309,13 +309,13 @@ public class RightBar extends UIElement {
 		drawBackground(graphics);
 		// decide whether to draw list with map-elements or configurations for AI game-play
 		switch (Main.MODE){
-			case 2:
+			case 0:
 				drawParametersList(graphics);
                 break;
 			case 1:
 				drawMapBuilderList(graphics);
 				break;
-			case 0:
+			case 2:
 				drawAIGameModeList(graphics);
 			default:
 				break;
