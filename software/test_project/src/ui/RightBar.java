@@ -57,7 +57,7 @@ public class RightBar extends UIElement {
 	int parameterStringX = 15;
     //int parametersStartY = 100;
     int parametersStartY = Constants.WINDOW_MAP_Y0-90;
-
+    int parametersStartYnotRunning = 95;
     // y start position of first parameter
     int buttonStartY = parametersStartY;
 
@@ -314,14 +314,16 @@ public class RightBar extends UIElement {
 		drawBackground(graphics);
 		// decide whether to draw list with map-elements or configurations for AI game-play
 		switch (gameMode.getMode()){
-			case Constants.MODE_PLAYER_GAME:
-				drawParametersList(graphics);
+			case Constants.MODE_AI_GAME:
+				if (game.getAiRunning()) {drawAIGameModeList(graphics);}
+				else {
+				drawParametersList(graphics);}
                 break;
 			case Constants.MODE_MAP_BUILDER:
 				drawMapBuilderList(graphics);
 				break;
-			case 2:
-				drawAIGameModeList(graphics);
+			case Constants.MODE_PLAYER_GAME:
+				
 			default:
 				break;
 		}
@@ -439,12 +441,12 @@ public class RightBar extends UIElement {
      */
     private void drawParametersList(Graphics graphics){
         for (int para = 0; para < gameParameters.length; para++) {
-            drawParameter(graphics, para, (para * parameterHeight) + parametersStartY);
+            drawParameter(graphics, para, (para * parameterHeight) + parametersStartYnotRunning);
         }
-        drawNumberOfGenerationString(graphics);
-        drawFittestString(graphics);
-        drawRecordTime(graphics);
-        drawCheckboxes(graphics);
+    //    drawNumberOfGenerationString(graphics);
+      //  drawFittestString(graphics);
+        //drawRecordTime(graphics);
+        //drawCheckboxes(graphics);
     }
     
     private void drawAIGameModeList(Graphics graphics){
