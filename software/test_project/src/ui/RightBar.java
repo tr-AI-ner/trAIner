@@ -211,7 +211,7 @@ public class RightBar extends UIElement {
      */
     public int getParameterChanges(){
         // only change parameters in game mode or if mouse is clicked
-        if(Main.MODE != 0 || !getInputManager().isMouseClicked()) return -1;
+        if(Main.MODE != Constants.MODE_PLAYER_GAME || !getInputManager().isMouseClicked()) return -1;
 
         //population size changes
         if(isSizePlusButtonClicked(getInputManager().getMouseClickedX(), 
@@ -279,10 +279,10 @@ public class RightBar extends UIElement {
 		drawBackground(graphics);
 		// decide whether to draw list with map-elements or configurations for AI game-play
 		switch (Main.MODE){
-			case 0:
+			case Constants.MODE_PLAYER_GAME:
 				drawParametersList(graphics);
                 break;
-			case 1:
+			case Constants.MODE_MAP_BUILDER:
 				drawMapBuilderList(graphics);
 				break;
 			default:

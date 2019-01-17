@@ -36,39 +36,41 @@ public class BottomBar extends UIElement {
 	int heightRect = 18;
     int iconWidth = 30;
 
-    int playButtonX = Constants.WINDOW_MAP_MARGIN + (Constants.WINDOW_MAP_WIDTH / 2) - (iconWidth/2) - (iconWidth / 6);
+    int playButtonX = (getWidth() / 2) - iconWidth; 
 	int playButtonY = getY() + (getHeight() / 2) - (iconWidth / 2);
-	int pauseButtonX = Constants.WINDOW_MAP_MARGIN + (Constants.WINDOW_MAP_WIDTH / 2) + (iconWidth/2) + (iconWidth / 6);
+	int pauseButtonX = (getWidth() / 2) + iconWidth; 
 	int pauseButtonY = getY() + (getHeight() / 2) - (iconWidth / 2);
 
-    int settingsButtonX = Constants.WINDOW_MAP_WIDTH + (Constants.WINDOW_MAP_MARGIN * 2) + Constants.WINDOW_RIGHT_BAR_WIDTH - (iconWidth*2);
+    int exitButtonX = Constants.WINDOW_MAP_WIDTH + (Constants.WINDOW_MAP_MARGIN * 2) + Constants.WINDOW_RIGHT_BAR_WIDTH - (iconWidth*2);
+    int exitButtonY = Constants.WINDOW_MAP_HEIGHT + (Constants.WINDOW_MAP_MARGIN * 2) + Constants.WINDOW_HEADER_HEIGHT + ((Constants.WINDOW_HEADER_HEIGHT/2) - (iconWidth/2));
+
+    int settingsButtonX = exitButtonX - (iconWidth*3) + 10;
     int settingsButtonY = Constants.WINDOW_MAP_HEIGHT + (Constants.WINDOW_MAP_MARGIN * 2) + Constants.WINDOW_HEADER_HEIGHT + ((Constants.WINDOW_HEADER_HEIGHT/2) - (iconWidth/2));
 
     int previewButtonWidth = 90, previewButtonHeight = 30;
     int previewButtonX = (getWidth() / 2) - (previewButtonWidth / 2);
     int previewButtonY = getY() + (getHeight()/2) - (previewButtonHeight/2);
-	int BUTTON_ARCH_WH = 30;
-    boolean tmp = false;
 	
     private Rectangle playButton = new Rectangle(playButtonX, playButtonY, iconWidth, iconWidth);
 	private Rectangle pauseButton = new Rectangle(pauseButtonX, pauseButtonY, iconWidth, iconWidth);
 	private Rectangle settingsButton = new Rectangle(settingsButtonX, settingsButtonY, iconWidth, iconWidth);
-	private RoundRectangle2D previewButton = new RoundRectangle2D.Float(previewButtonX, previewButtonY, previewButtonWidth, previewButtonHeight, BUTTON_ARCH_WH, BUTTON_ARCH_WH);
+    Rectangle exitButton = new Rectangle(exitButtonX, exitButtonY, iconWidth, iconWidth);
+	private RoundRectangle2D previewButton = new RoundRectangle2D.Float(previewButtonX, previewButtonY, previewButtonWidth, previewButtonHeight, 
+            Constants.BUTTON_ARCH_WH, Constants.BUTTON_ARCH_WH);
 
     // directory name where images should be loaded from 
     String dirName = "../resources/";
     String pathPlayButton = "playicon.png";
     String pathPauseButton = "pauseicon.png";
     String pathSettingsButton = "settings.png";
+    String pathExitButton = "exit.png";
 
     String namePreviewButton = "Preview";
 
 	int fontSize = 16;
 	Font font = new Font(Constants.DEFAULT_FONT, Font.PLAIN, fontSize);
 
-	BufferedImage playImg;
-	BufferedImage pauseImg;
-    BufferedImage settingsImg;
+    BufferedImage exitImg, settingsImg, pauseImg, playImg;
 
 	public BottomBar(int x, int y, int width, int height, Color backgroundColor, Setup setup, InputManager inputManager) {
 		super(x, y, width, height, backgroundColor, setup, inputManager);
@@ -77,6 +79,7 @@ public class BottomBar extends UIElement {
             playImg = ImageIO.read(new File(dirName, pathPlayButton));
             pauseImg = ImageIO.read(new File(dirName, pathPauseButton));
             settingsImg = ImageIO.read(new File(dirName, pathSettingsButton));
+            exitImg = ImageIO.read(new File(dirName, pathExitButton));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -90,13 +93,14 @@ public class BottomBar extends UIElement {
 	public void draw(Graphics graphics) {
 		drawBackground(graphics);
 		drawCopyright(graphics);
-		if (Main.MODE == 1 || Main.MODE == 2){
+		if (Main.MODE == Constants.MODE_MAP_BUILDER || Main.MODE == Constants.MODE_PREVIEW){
             drawPreviewButton(graphics);
         } else {
             drawPlayButton(graphics);
 		    drawPauseButton(graphics);
         }
         drawSettingsButton(graphics);
+        drawExitButton(graphics);
 		
 		//draw other UI-elements here...
 	}
@@ -141,13 +145,8 @@ public class BottomBar extends UIElement {
 	// Draws an play button
 	private void drawPlayButton(Graphics graphics){
 		graphics.setColor(Constants.COLOR_BACKGROUND);
-
-		int imgPlayX = Constants.WINDOW_MAP_MARGIN + (Constants.WINDOW_MAP_WIDTH / 2) - (iconWidth/2) - (iconWidth / 6);
-		int imgPlayY = getY() + (getHeight() / 2) - (iconWidth / 2);
-
-		graphics.drawRect(playButtonX, playButtonY, iconWidth, iconWidth);
         try {
-		    graphics.drawImage(playImg, imgPlayX, imgPlayY, iconWidth, iconWidth, null);
+		    graphics.drawImage(playImg, playButtonX, playButtonY, iconWidth, iconWidth, null);
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -156,13 +155,8 @@ public class BottomBar extends UIElement {
     // Draws a pause button
 	private void drawPauseButton(Graphics graphics){
 		graphics.setColor(Constants.COLOR_BACKGROUND);
-
-		int imgPauseX = Constants.WINDOW_MAP_MARGIN + (Constants.WINDOW_MAP_WIDTH / 2) + (iconWidth/2) + (iconWidth / 6);
-		int imgPauseY = getY() + (getHeight() / 2) - (iconWidth / 2);
-
-		graphics.drawRect(pauseButtonX, pauseButtonY, iconWidth, iconWidth);
         try {
-            graphics.drawImage(pauseImg, imgPauseX, imgPauseY, iconWidth, iconWidth, null);
+            graphics.drawImage(pauseImg, pauseButtonX, pauseButtonY, iconWidth, iconWidth, null);
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -181,12 +175,12 @@ public class BottomBar extends UIElement {
 				+ graphics.getFontMetrics(font).getAscent();
 		int nameX = previewButtonX + (previewButtonWidth/6);
 		
-        if(Main.MODE == 2){
-		    graphics.fillRoundRect(previewButtonX,previewButtonY,previewButtonWidth,previewButtonHeight,BUTTON_ARCH_WH,BUTTON_ARCH_WH);
+        if(Main.MODE == Constants.MODE_PREVIEW){
+		    graphics.fillRoundRect(previewButtonX,previewButtonY,previewButtonWidth,previewButtonHeight,Constants.BUTTON_ARCH_WH,Constants.BUTTON_ARCH_WH);
             graphics.setColor(Constants.COLOR_HEADER_2);
             graphics.drawString(namePreviewButton, nameX, nameY);
         } else {
-		    graphics.drawRoundRect(previewButtonX,previewButtonY,previewButtonWidth,previewButtonHeight,BUTTON_ARCH_WH,BUTTON_ARCH_WH);
+		    graphics.drawRoundRect(previewButtonX,previewButtonY,previewButtonWidth,previewButtonHeight,Constants.BUTTON_ARCH_WH,Constants.BUTTON_ARCH_WH);
             graphics.drawString(namePreviewButton, nameX, nameY);
         }
 	}
@@ -200,6 +194,19 @@ public class BottomBar extends UIElement {
 
         try {
 		    graphics.drawImage(settingsImg, settingsButtonX+(offset/2), settingsButtonY+(offset/2), iconWidth-offset, iconWidth-offset, null);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+	}
+
+    // Draws the settings button
+	private void drawExitButton(Graphics graphics){
+		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
+        int offset = 6;
+        graphics.drawOval(exitButtonX-((offset+2)/2), exitButtonY-((offset+2)/2), iconWidth+offset, iconWidth+offset);
+
+        try {
+		    graphics.drawImage(exitImg, exitButtonX+(offset/2), exitButtonY+(offset/2), iconWidth-offset, iconWidth-offset, null);
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -219,6 +226,9 @@ public class BottomBar extends UIElement {
     
     public boolean isSettingsButtonClicked(int mouseClickedX, int mouseClickedY){
         return settingsButton.contains(mouseClickedX, mouseClickedY);
+    }
+    public boolean isExitButtonClicked(int mouseX, int mouseY){
+        return exitButton.contains(mouseX, mouseY);
     }
 
 }
