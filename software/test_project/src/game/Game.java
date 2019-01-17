@@ -286,34 +286,13 @@ public class Game {
             }
         }
     }
-
-    //private void runGA(){
-    //    if(this.currentMove < this.maxNrOfMoves){
-    //        this.pop.live(currentMove);
-    //        if(this.foundFinish && (this.currentMove < this.recordtime)){
-    //            this.recordtime = this.currentMove;
-    //        }
-    //        this.currentMove++;
-    //    }else{
-    //        if(this.foundFinish) {
-    //            this.foundFinish = false;
-    //            if(this.recordtime>this.currentMove)
-    //            this.recordtime = this.currentMove;
-    //        }
-    //        this.currentMove = 0;
-    //        this.pop.calculateFitness();
-    //        this.pop.selection();
-    //        this.pop.reproduction(this);
-    //        this.pop.resetDaShiat(this);
-    //        this.currentGen++;
-    //        this.shouldExtend = true;
-    //    } 
-    //    this.updateState();
-    //    this.redrawAll();
-
-    //}
-
+    /**
+     * runs one step of the genetic algorithm, checks if individuals reached 
+     * the goal, handles selection and reproduction, contains the evolution strategy 
+     *
+     */
     private void runGA(){
+        // finish found, evolve
         if(this.foundFinish){
             this.maxNrOfMoves = this.recordtime;
             this.currentMove = 0;
@@ -324,18 +303,17 @@ public class Game {
             this.currentGen++;
             this.foundFinish = false;
             this.shouldExtend = false;
-            System.out.println("im here after i finished");
 
-        //normal behavior
+        // normal behavior
         }else if(this.currentMove < this.maxNrOfMoves){
             this.pop.live(currentMove);
             this.currentMove++;
             if(this.foundFinish){
                 this.foundPrevFinish = true;
                 this.recordtime = this.currentMove-1;
-                System.out.println(this.recordtime);
 
             }
+        // generation has ended, evolve
         }else{
             this.currentMove = 0;
             this.pop.calculateFitness();
@@ -457,11 +435,9 @@ public class Game {
         if (Main.MODE != 1 && Main.MODE != 2 && inputManager.isMouseClicked()){
             // 	Play Button to play the game
             if (graphicsManager.getBottomBar().isPlayButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
-                System.out.println("Play Button Clicked");
             }
             //  Pause Button to pause the game
             if (graphicsManager.getBottomBar().isPauseButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
-                System.out.println("Pause Button Clicked");
             }
         }
 
@@ -481,7 +457,6 @@ public class Game {
         }
         if(this.ai_playing) {
             this.foundFinish = true;
-            System.out.println("AI PLAYING");
         } else {
             avatar.reset();
         }
@@ -640,7 +615,6 @@ public class Game {
 
         // check for range, element cannot be placed outside of map
         if(mouseX < 0 || mouseX >= Constants.WINDOW_MAP_WIDTH || mouseY < 0 || mouseY >= Constants.WINDOW_MAP_HEIGHT){
-            System.out.println("Aborting placing element, out of range...");
             return;
         }
 
@@ -707,10 +681,7 @@ public class Game {
             mapElements.add(newElement);
             entities.add(newElement);
             map.setMapArr(newElement.getGridX(), newElement.getGridY(), newElement.getMapType().representation());
-        } else {
-            System.out.println("No position found for placing element... gridX: "+gridX+", gridY: "+gridY);
-        }
-        
+        }         
         // reset clicked element -> uncomment if only 1 element should be added
         //this.clickedMapElement = null;
     }
@@ -728,8 +699,7 @@ public class Game {
                 else if (((MapElement)entities.get(i)).getMapType()==MapType.PLASMA_BALL){
                     ((ElementPlasmaBall)entities.get(i)).reset();
                 } 
-            } else {
-            }
+            } 
         }
     }
 
@@ -744,14 +714,10 @@ public class Game {
         if(Main.MODE != 1 && clickedMapElement != null) clickedMapElement=null;
     }
 
-    //public ElementStart getStart(){
-    //    for(int i = 0; i < entities.size(); i++){
-    //        if(entities.get(i).getMapType() == MapType.START)
-    //            return (ElementStart)entities.get(i);
-    //    }
-    //    return new ElementStart(0,0,Constants.COLOR_MAP_START);
-    //}
-
+    /**
+     * getters and setters
+     *
+     */
     public int[] getStartXY(){
         for(int i = 0; i < entities.size(); i++){
             if (entities.get(i).getType()==EntityType.MapElement){

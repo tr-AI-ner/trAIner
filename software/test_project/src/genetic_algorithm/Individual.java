@@ -35,7 +35,7 @@ public class Individual extends Avatar {
     // tunable hyper parameters
     // x, y coordinate of the goal field
     int[] goal;
-    // reached the goal
+    // reached the goal in number of steps
     int fin = 0;
     // start position
     int[] start_pos;
@@ -75,7 +75,10 @@ public class Individual extends Avatar {
         this.genome = genome;
         this.maxNrOfMoves = genome.getMaxNrOfMoves();
     }
-
+    /**
+     * Constructor of the individual, inheriting from Avatar
+     *
+     */
     public Individual(Individual oldInd, Genome newGenes){
         super(oldInd.getX(), oldInd.getY(), oldInd.getWidth(), oldInd.getHeight(), oldInd.getColor());
         this.genome = newGenes;
@@ -91,7 +94,6 @@ public class Individual extends Avatar {
         double preFit = this.maxNrOfMoves * 100;
         // calculate the distance if individual has finished
         if (getFinAI() != 0) {
-            System.out.println("YAAAAAAAAAAAAAY");
             this.fitness = (preFit / (getFinAI()));
             this.fitness *= 2;
         }else
@@ -102,10 +104,6 @@ public class Individual extends Avatar {
             // calculate the fitness
             this.fitness = (preFit / (this.maxNrOfMoves * distance));
             this.fitness = Math.pow(this.fitness, 3);
-            if(distance == 0.0){
-                System.out.println("X/gX "+this.getX() +"/"+ goal[0]);
-                System.out.println("Y/gY "+this.getY() +"/"+ goal[1]);
-            }
         }
     }
 
@@ -179,7 +177,8 @@ public class Individual extends Avatar {
     }
     /**
      * move the individual according to the next direction in the gene
-     *
+     * 
+     * @param currentMove int
      */
     public void makeMove(int currentMove){
         int direction[] = new int[2];
@@ -187,6 +186,13 @@ public class Individual extends Avatar {
         this.move(direction[0], direction[1]);
     }
 
+    /**
+     * sets a new gene and updates the maximum number of possible moves per 
+     * generation accordingly
+     *
+     *@param newGenes Genome
+     *
+     */
     public void updateGenome(Genome newGenes){
         this.genome = newGenes;
         this.maxNrOfMoves = this.game.getMaxNrOfMoves();
