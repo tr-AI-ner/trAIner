@@ -14,6 +14,7 @@ import java.awt.geom.RoundRectangle2D;
 import functionality.Constants;
 import functionality.Setup;
 import functionality.InputManager;
+import game.Game;
 import game.GameMode;
 
 public class FinishScreen extends UIElement {
@@ -28,7 +29,7 @@ public class FinishScreen extends UIElement {
     int buttonX = 0;
     //buttons load, build, restart
     int[] buttonsY = new int[]{0, 0, 0};
-    int buttonWidth = 150, buttonHeight = 30;
+    int buttonWidth = 220, buttonHeight = 30;
 
     private RoundRectangle2D[] buttons;
     
@@ -36,18 +37,33 @@ public class FinishScreen extends UIElement {
     int selectedButton = -1;
     // last time a button was selected with the arrow keyboard keys (in millis)
     long lastSelectedTime = 0;
+    // last time enter was pressed on keyboard
+    long lastEnterPressed = 0;
 
     GameMode gameMode;
+    Game game;
     
 	public FinishScreen(int x, int y, int width, int height, Color backgroundColor, Setup setup, InputManager inputManager, GameMode gameMode) {
 		super(x, y, width, height, backgroundColor, setup, inputManager);
         this.gameMode = gameMode;
 
         int offsetY = 10;
-        buttonsY[0] = (height/2) - (buttonHeight*2) - offsetY;
-        buttonsY[1] = buttonsY[0] + (buttonHeight/2) + offsetY;
-        buttonsY[2] = buttonsY[1] + (buttonHeight*2) + offsetY;
+        buttonsY[0] = (height/2) - buttonHeight - offsetY;
+        buttonsY[1] = buttonsY[0] + buttonHeight + offsetY;
+        buttonsY[2] = buttonsY[1] + buttonHeight + offsetY;
         buttonX = (width/2) - (buttonWidth/2);
+
+        initButtons();
+    }
+
+    /**
+     * Initalizes the RoundRectangles for all buttons.
+     */
+    private void initButtons(){
+        buttons = new RoundRectangle2D[buttonsText.length];
+        for (int b=0; b<buttonsText.length; b++){
+            buttons[b] = new RoundRectangle2D.Float(buttonX, buttonsY[b], buttonWidth, buttonHeight, buttonHeight, buttonHeight);
+        }
     }
 
 	@Override
@@ -113,13 +129,13 @@ public class FinishScreen extends UIElement {
         if (selected){
             graphics.fillRoundRect(x, y,
                     buttonWidth,buttonHeight,
-                    Constants.BUTTON_ARCH_WH,Constants.BUTTON_ARCH_WH);
+                    buttonHeight,buttonHeight);
             graphics.setColor(Constants.COLOR_HEADER_2);
             graphics.drawString(text, textX, textY);
         } else {
             graphics.drawRoundRect(x, y,
                     buttonWidth,buttonHeight,
-                    Constants.BUTTON_ARCH_WH,Constants.BUTTON_ARCH_WH);
+                    buttonHeight,buttonHeight);
             graphics.drawString(text, textX, textY);
         }
     }
@@ -128,20 +144,71 @@ public class FinishScreen extends UIElement {
      * Processes the user input of the finish screen.
      *
      * User can select 3 different buttons on Finish screen:
-     *      Load    -   Loads a new mao
+     *      Load    -   Loads a new map
      *      Build   -   Switch to building mode
      *      Restart -   Restart current map
      */
     public void processUserInput(){
-        if (getInputManager().getKeyResult()[Constants.KEY_ENTER] && canSelectButtonAgain()){
+        if (getInputManager().getKeyResult()[Constants.KEY_UP]) {
+            changeSelectedButton(true);
+        }
+        if (getInputManager().getKeyResult()[Constants.KEY_DOWN]) {
+            changeSelectedButton(false);
+        }
+        if (getInputManager().getKeyResult()[Constants.KEY_ENTER] && canSelectButtonAgain(lastEnterPressed)){
             //gameMode.changeMode(gameMode.getPreviousMode(), false);
-            //System.out.println("");
+            System.out.println("Selected mode: "+getSelectedMode(selectedButton));
+            selectedButton = -1;
+            lastEnterPressed = System.currentTimeMillis();
+        }
+        if(getInputManager().isMouseClicked()){
+            //int clickedButtonMode = getMouseSelectedMode(getInputManager().getMouseClickedX(),getInputManager().getMouseClickedY());
+            //if (clickedButtonMode > -1){
+            //    gameMode.changeMode(clickedButtonMode, false);
+            //    resumeEnabled = true;
+            //    selectedButton = -1;
+            //}
         }
     }
 
-    private boolean canSelectButtonAgain(){
+    private void changeSelectedButton(boolean increase){
+        if (canSelectButtonAgain(lastSelectedTime)){
+            if (!increase){
+                if (selectedButton+1 > buttonsText.length-1)
+                    selectedButton = 0;
+                else
+                    selectedButton++;
+            } else {
+                if (selectedButton-1 < 0)
+                    selectedButton = buttonsText.length-1;
+                else
+                    selectedButton--;
+            }
+            lastSelectedTime = System.currentTimeMillis();
+        }
+    }
+
+    /**
+     * Decides whether a next button can be selected based on elapsed time of last button change.
+     *
+     * @param lastTime the button was selected in milliseconds
+     *
+     * @return whether a new button can be selected
+     */
+    private boolean canSelectButtonAgain(long lastTime){
+        //in milliseconds
         long puffer = 200;
-        return (System.currentTimeMillis() >= lastSelectedTime+puffer);
+        return (System.currentTimeMillis() >= lastTime+puffer);
+    }
+
+    private int getSelectedMode(int selButton){
+        switch (selButton){
+            case 0: return 0;
+            case 1: return Constants.MODE_MAP_BUILDER;
+            case 2: return Constants.MODE_PLAYER_GAME;
+            default: selectedButton = -1; 
+                     return Constants.MODE_FINISH;
+        }
     }
 
     private boolean loadButtonClicked(int mouseX, int mouseY){

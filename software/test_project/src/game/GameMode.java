@@ -24,6 +24,7 @@ public class GameMode {
      *      5: Menu
      *      6: Help Screen
      *      7: Exit Screen
+     *      8: Finish Screen
      */
 	private int MODE = Constants.MODE_MENU; 
     private int PREVIOUS_MODE = Constants.MODE_NONE;
@@ -49,6 +50,7 @@ public class GameMode {
      *      5: Menu
      *      6: Help Screen
      *      7: Exit Screen
+     *      8: Finish Screen
      *
      */
     public void changeMode(int mode, boolean fromBar){
@@ -144,6 +146,14 @@ public class GameMode {
                 break;
             case Constants.MODE_EXIT:
                 System.exit(0);
+                break;
+            case Constants.MODE_FINISH:
+                if(MODE==Constants.MODE_AI_GAME){
+                }
+                if (MODE==Constants.MODE_PLAYER_GAME){
+                    PREVIOUS_MODE = MODE;
+                    MODE = Constants.MODE_FINISH;
+                }
                 break;
             default: 
                 System.out.println("default case... mode: "+getModeString(mode));

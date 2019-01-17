@@ -28,6 +28,7 @@ import ui.RightBar;
 import ui.TopBar;
 import ui.Menu;
 import ui.HelpScreen;
+import ui.FinishScreen;
 import ui.ExitScreen;
 
 public class GraphicsManager extends JPanel {
@@ -55,6 +56,7 @@ public class GraphicsManager extends JPanel {
 
     private Menu menu;
     private HelpScreen helpScreen;
+    private FinishScreen finishScreen;
     private ExitScreen exitScreen;
 
 	
@@ -111,10 +113,17 @@ public class GraphicsManager extends JPanel {
 	}
 
     /**
-     * draws the menu
+     * Draws the menu.
      */
     public void drawMenu(){
         menu.draw(graphics);
+    }
+
+    /**
+     * Draws the finish screen.
+     */
+    public void drawFinishScreen(){
+        finishScreen.draw(graphics);
     }
 
     /**
@@ -208,6 +217,8 @@ public class GraphicsManager extends JPanel {
                 Constants.COLOR_MAP_LAND, setup, inputManager, gameMode);
         helpScreen = new HelpScreen(0,0,setup.getFrameWidth()+12,setup.getFrameHeight()+12,
                 Constants.COLOR_MAP_LAND, setup, inputManager, gameMode);
+        finishScreen = new FinishScreen(0,0,setup.getFrameWidth()+12,setup.getFrameHeight()+12,
+                Constants.COLOR_MAP_LAND, setup, inputManager, gameMode);
         exitScreen = new ExitScreen(0,0,setup.getFrameWidth()+12,setup.getFrameHeight()+12,
                 Constants.COLOR_MAP_LAND, setup, inputManager, gameMode);
     }
@@ -235,6 +246,7 @@ public class GraphicsManager extends JPanel {
 	public RightBar getRightBar(){return rightBar;}
 	public Menu getMenu(){return menu;}
     public HelpScreen getHelpScreen(){return helpScreen;}
+    public FinishScreen getFinishScreen(){return finishScreen;}
 	public ExitScreen getExitScreen(){return exitScreen;}
 	public GameMode getGameMode(){return gameMode;}
 

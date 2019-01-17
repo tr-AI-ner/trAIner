@@ -133,6 +133,10 @@ public class Game {
         else if(gameMode.getMode() == Constants.MODE_HELP){
             graphicsManager.getHelpScreen().processUserInput();
         }
+        //Handle user input if finish screen is open
+        else if(gameMode.getMode() == Constants.MODE_FINISH){
+            graphicsManager.getFinishScreen().processUserInput();
+        }
         // Hanlde user input if exit screen is open
         else if (gameMode.getMode() == Constants.MODE_EXIT){
             graphicsManager.getExitScreen().processUserInput();
@@ -209,12 +213,14 @@ public class Game {
      *
      * @author Kasparas
      */
-	public void restart() {
+	public void playerFinished() {
         for (MapElement element: this.getMapElements()){
             element.reset();
         }
         avatar.reset();
+        gameMode.changeMode(Constants.MODE_FINISH, false);
     }
+
 
     /**
      * Updates the state of the game according to the current mode
@@ -267,6 +273,9 @@ public class Game {
         else if (gameMode.getMode() == Constants.MODE_EXIT){
             graphicsManager.drawExitScreen();
         } 
+        else if (gameMode.getMode() == Constants.MODE_FINISH){
+            graphicsManager.drawFinishScreen();
+        } 
         else if (gameMode.getMode() == Constants.MODE_HELP){
             graphicsManager.drawHelpScreen();
         } else {
@@ -301,7 +310,7 @@ public class Game {
                     // Because of the grid element system we have to check if the elements don't collide on the grid level
                     if(Math.abs(element.getX()  - avatar.getX()) < Constants.MAP_ELEMENT_SIZE
                             && Math.abs(element.getY()  - avatar.getY()) < Constants.MAP_ELEMENT_SIZE) {
-                        this.restart();
+                        this.playerFinished();
                     }
                 }
             }

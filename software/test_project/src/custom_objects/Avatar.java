@@ -29,8 +29,8 @@ public class Avatar extends Entity {
 	}
 	
 	public void move(int incX, int incY){
-		this.toMoveX = (int) (this.toMoveX != 0 ? this.toMoveX : this.getX() + incX); 
-		this.toMoveY = (int) (this.toMoveY != 0 ? this.toMoveY : this.getY() + incY); 
+		this.toMoveX = (this.toMoveX != 0 ? this.toMoveX : this.getX() + incX); 
+		this.toMoveY = (this.toMoveY != 0 ? this.toMoveY : this.getY() + incY); 
 		
 		if(incY == 0) // left-arrow right-arrow
 			this.toMoveX = (this.getX() + incX);
@@ -64,7 +64,7 @@ public class Avatar extends Entity {
 				} else if(finished()) {
 					toMoveX = game.getStart().getX();
 					toMoveY = game.getStart().getY();
-					game.restart();
+					game.playerFinished();
 				}
 			} else {
 				toMoveX = getX();
