@@ -64,6 +64,7 @@ public class Avatar extends Entity {
 				} else if(finished()) {
 					toMoveX = game.getStart().getX();
 					toMoveY = game.getStart().getY();
+                    game.restart();
 					game.playerFinished();
 				}
 			} else {

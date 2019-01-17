@@ -67,6 +67,9 @@ public class TopBar extends UIElement {
 	//Font font = FontLoader.getFont("ChakraPetch-SemiBold.ttf"); //TODO: not loading for everybody
 	String mapName;
 
+    // whether load-map-window should be shown
+    boolean shouldLoadMap = false;
+
 	private RoundRectangle2D saveButton = new RoundRectangle2D.Float(
                 BUTTON_SAVE_X-BUTTON_OFFSET_X, BUTTON_SAVE_Y-BUTTON_OFFSET_Y,
 			    Constants.BUTTON_WIDTH, Constants.BUTTON_HEIGHT, Constants.BUTTON_ARCH_WH, Constants.BUTTON_ARCH_WH
@@ -298,6 +301,8 @@ public class TopBar extends UIElement {
      *
      */
     public void processUserInput(){
+        showLoadMap();
+
         // check if user clicked on save button
         if (getInputManager().isMouseClicked()  && mapSaverLoader.saveButtonClicked()){
             mapSaverLoader.saveButtonLogic();
@@ -322,6 +327,16 @@ public class TopBar extends UIElement {
                 && isBrainButtonClicked(getInputManager().getMouseClickedX(), getInputManager().getMouseClickedY())) {
             gameMode.changeMode(Constants.MODE_AI_GAME, true);
         }
+    }
+
+    /**
+     * Should show map window if load-button was clicked on finish screen
+     */
+    private void showLoadMap(){
+        if (shouldLoadMap){
+            shouldLoadMap = false;
+            mapSaverLoader.loadButtonLogic();
+        }    
     }
 
 	/**
@@ -355,5 +370,7 @@ public class TopBar extends UIElement {
         return brainButton.contains(mouseX, mouseY);
     }
 
+    public boolean getShouldLoadMap(){return shouldLoadMap;}
+    public void setShouldLoadMap(boolean shouldLoad){this.shouldLoadMap=shouldLoad;}
 }
 
