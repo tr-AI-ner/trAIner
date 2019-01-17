@@ -674,7 +674,7 @@ public class RightBar extends UIElement {
 			}
     	}
 		graphics.setColor(Color.WHITE);
-		graphics.drawString("Visualisation of Genes", rightBarStartX+15, 630);
+		graphics.drawString("Visualisation of Genes", rightBarStartX+25, 630);
 		graphics.drawString("      (smaller => faster)", rightBarStartX+20, 655);
 	}
 }
