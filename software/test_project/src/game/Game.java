@@ -38,8 +38,11 @@ public class Game {
     private int noOfTries = 1;
     private boolean shouldExtend = true;
     private boolean foundFinish = false;
+    //true if in game mode AI
     private boolean ai_playing;
     private boolean foundPrevFinish = false;	
+    // true if genetic algorithm is running
+    private boolean aiRunning;
 	Avatar avatar;
     ArrayList<Entity> entities;
     ArrayList<MapElement> mapElements;
@@ -79,6 +82,14 @@ public class Game {
         this.gameMode = gm.getGameMode();
 
 		entities = new ArrayList<>();
+        this.maxNrOfMoves = 10;
+
+        this.populationSize = 500;
+        this.mutationRate = (float) 0.01;
+        this.maxGens = 500;
+        this.incMovesAfterGen = 1;
+        this.increaseMovesBy = 10;
+        this.currentGen= 1;
 
 
 		//TODO set the avatar to appear on the start block
@@ -96,19 +107,22 @@ public class Game {
 		start = new ElementStart(33,33,Constants.COLOR_MAP_START);
         finish = new ElementFinish(50,12,Constants.COLOR_MAP_FINISH);
 
-        //blackHole = new ElementBlackHole(52,2,Constants.COLOR_BLACK_HOLE);
-        //blackHole2 = new ElementBlackHole(4,
-        //        25,
-        //               Constants.COLOR_BLACK_HOLE);
-        //blackHole.setAttachedBlackHole(blackHole2);
-        //blackHole2.setAttachedBlackHole(blackHole);
-
-
         mapElements.add(start);
         mapElements.add(finish);
 
 		// add all map-elements to entities
 		entities.addAll(mapElements);
+        this.pop = new Population(this.populationSize, this.mutationRate, this);
+        this.currentMove = 0;
+        for(int i = 0; i < populationSize; i++){
+            Individual ind = pop.getIndividual(i);
+            ind.setSetup(setup);
+            entities.add(ind);
+        }
+
+        this.recordtime = this.maxNrOfMoves +(this.maxGens * this.increaseMovesBy)+ 1;
+            
+
 	}
     
     /**
@@ -137,8 +151,7 @@ public class Game {
             this.incMovesAfterGen = 1;
             this.increaseMovesBy = 10;
             this.currentGen= 1;
-
-
+            
             mapElements = new ArrayList<>();
             start = new ElementStart(3,3,Constants.COLOR_MAP_START);
             this.finish = new ElementFinish(20,30,Constants.COLOR_MAP_FINISH);
@@ -146,8 +159,6 @@ public class Game {
             mapElements.add(start);
             mapElements.add(finish);
             // add all map-elements to entities
-
-
            
             entities.addAll(mapElements);
             this.pop = new Population(this.populationSize, this.mutationRate, this);
@@ -215,35 +226,16 @@ public class Game {
      *
      */
 	public void run(){
-		while(true)
-			this.gameLoop();
-	}
-    
-    /**
-     * run the game loop for when the AI is playing
-     *
-     * @param ai true if ai is playing
-     */
-    public void run(boolean ai){
-        if(ai){
-            while(true)
+		while(true){
+            if(gameMode.getMode() == Constants.MODE_AI_GAME){
                 this.gameLoop(true);
+            }else{
+                this.gameLoop(false);
+            }
         }
-    }
-	
-	/**
-     *main game loop, processes user input, updates states and draws everything
-     *
-     */
-	private void gameLoop(){
-		if(this.clock.frameShouldChange()) { // if fps right (ifnot, sleep, or do nothing), and update clock
-			this.processUserInput(); // Process user input	
-			this.updateState(); // Update state
-			this.redrawAll();//graphicsManager); // Redraw everything
-		}
 	}
     
-    /**
+     /**
      * main game loop for when the AI is playing, let the population live, 
      * do selection and reproduction
      *
@@ -251,15 +243,24 @@ public class Game {
      */
     private void gameLoop(boolean ai_playing) {
         if(this.clock.frameShouldChange()){
-            if(this.currentGen < this.maxGens){
-                if((this.currentGen % this.incMovesAfterGen) == 0  && this.shouldExtend ){
-                    this.maxNrOfMoves+=this.increaseMovesBy;
-                    this.pop.extendGenes(this.increaseMovesBy);
-                    this.shouldExtend = false;
-                    runGA();             
+            if(ai_playing){
+                if(this.currentGen < this.maxGens){
+                    if((this.currentGen % this.incMovesAfterGen) == 0  && this.shouldExtend ){
+                        this.maxNrOfMoves+=this.increaseMovesBy;
+                        this.pop.extendGenes(this.increaseMovesBy);
+                        this.shouldExtend = false;
+                        runGA();             
+                    }else{
+                        runGA();         
+                    }
                 }else{
-                    runGA();         
+                    gameMode.changeMode(8,false);
                 }
+            }else{
+                this.processUserInput(); // Process user input	
+                this.updateState(); // Update state
+                this.redrawAll();//graphicsManager); // Redraw everything
+
             }
         }
     }
@@ -415,7 +416,7 @@ public class Game {
         for (MapElement element: this.getMapElements()) {
             element.reset();
         }
-        if(this.ai_playing) {
+        if(gameMode.getMode() == Constants.MODE_AI_GAME) {
             this.foundFinish = true;
         } else {
             avatar.reset();
@@ -755,6 +756,6 @@ public class Game {
     public int getNoOfTries(){return noOfTries;}
 
     public ElementFinish getFinish(){ return finish;}
-
+    public boolean getAiRunning(){return this.aiRunning;}
 }
 
