@@ -252,7 +252,6 @@ public class BottomBar extends UIElement {
             //  Pause Button to pause the game
             if (isPauseButtonClicked(getInputManager().getMouseClickedX(), getInputManager().getMouseClickedY())) {
                 game.setAiRunning(false);
-                game.restart();
             }
         }
     }

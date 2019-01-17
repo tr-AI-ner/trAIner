@@ -255,12 +255,14 @@ public class Game {
                             runGA();         
                         }
                     }else{
-                        this.processUserInput(); // Process user input	
-                        this.updateState(); // Update state
-                        this.redrawAll();//graphicsManager); // Redraw everything
-                    }
+                        gameMode.changeMode(8,false);
+                   }
                 }else{
-                    gameMode.changeMode(8,false);
+                    this.restart();
+                    this.processUserInput(); // Process user input	
+                    this.updateState(); // Update state
+                    this.redrawAll();//graphicsManager); // Redraw everything
+
                 }
             }else{
                 this.processUserInput(); // Process user input	
@@ -424,7 +426,7 @@ public class Game {
             element.reset();
         }
         if(gameMode.getMode() == Constants.MODE_AI_GAME) {
-            this.foundFinish = true;
+            if(this.aiRunning) this.foundFinish = true;
         } else {
             avatar.reset();
             gameMode.changeMode(Constants.MODE_FINISH, false);
