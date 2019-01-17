@@ -1,4 +1,5 @@
 package genetic_algorithm;
+
 import java.util.Arrays;
 import java.util.Random;
 
@@ -130,8 +131,6 @@ public class Genome {
      */
     public void mutateGene(float mutationRate) {
         Random rand = new Random();
-
-
         for (int i = 0; i < this.gene.length; i++) {
             if(rand.nextFloat() < mutationRate){
                 this.gene[i] = this.getRandomDirection();
