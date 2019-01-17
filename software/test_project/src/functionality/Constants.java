@@ -8,12 +8,16 @@ public final class Constants {
 	public static final long FRAME_MINIMUM_MILLIS = 10;
 
     // modes
+    public static final int MODE_NONE = -1; 
     public static final int MODE_PLAYER_GAME = 0; 
     public static final int MODE_MAP_BUILDER = 1; 
     public static final int MODE_PREVIEW = 2; 
     public static final int MODE_AI_GAME = 3; 
     public static final int MODE_CHALLENGE = 4; 
     public static final int MODE_MENU = 5; 
+    public static final int MODE_HELP = 6; 
+    public static final int MODE_EXIT = 7;
+    public static final int MODE_FINISH = 8;
 	
 	// basic window sizes
 	public static final int WINDOW_MAP_WIDTH = 1024; //1024 or 960

@@ -20,8 +20,10 @@ import functionality.Constants;
 import functionality.FontLoader;
 import functionality.InputManager;
 import functionality.Setup;
-import game.Main;
+import game.Game;
+import game.GameMode;
 import ui.UIElement;
+import map_saver.MapSaverLoader;
 
 /**
  * this will be the header of the game
@@ -65,6 +67,9 @@ public class TopBar extends UIElement {
 	//Font font = FontLoader.getFont("ChakraPetch-SemiBold.ttf"); //TODO: not loading for everybody
 	String mapName;
 
+    // whether load-map-window should be shown
+    boolean shouldLoadMap = false;
+
 	private RoundRectangle2D saveButton = new RoundRectangle2D.Float(
                 BUTTON_SAVE_X-BUTTON_OFFSET_X, BUTTON_SAVE_Y-BUTTON_OFFSET_Y,
 			    Constants.BUTTON_WIDTH, Constants.BUTTON_HEIGHT, Constants.BUTTON_ARCH_WH, Constants.BUTTON_ARCH_WH
@@ -75,9 +80,16 @@ public class TopBar extends UIElement {
                 Constants.BUTTON_WIDTH,Constants.BUTTON_HEIGHT,Constants.BUTTON_ARCH_WH,Constants.BUTTON_ARCH_WH
             );
 
-	public TopBar(int x, int y, int width, int height, Color backgroundColor, Setup setup, InputManager inputManager, String mapName) {
+    GameMode gameMode;
+    Game game;
+	MapSaverLoader mapSaverLoader;
+
+	public TopBar(int x, int y, int width, int height, Color backgroundColor, Setup setup, InputManager inputManager, String mapName, GameMode gameMode) {
 		super(x, y, width, height, backgroundColor, setup, inputManager);
 		this.mapName = mapName;
+        this.gameMode = gameMode;
+
+		mapSaverLoader = new MapSaverLoader(gameMode.getGame());
 
         try {
             gameplayInactiveImg = ImageIO.read(new File(dirName, pathGameplayInactiveButton));
@@ -106,7 +118,6 @@ public class TopBar extends UIElement {
 
 		drawMapName(graphics);
         drawButtons(graphics);
-		//draw other UI-elements here...
 	}
 
     private void drawButtons(Graphics graphics){
@@ -210,7 +221,7 @@ public class TopBar extends UIElement {
 
     // Draws the game play button
 	private void drawGameplayButton(Graphics graphics){
-        if (Main.MODE == Constants.MODE_PLAYER_GAME){
+        if (gameMode.getMode() == Constants.MODE_PLAYER_GAME){
 		    graphics.setColor(Constants.COLOR_AVATAR_RED);
         } else {
 		    graphics.setColor(Constants.COLOR_AVATAR_WHITE);
@@ -218,7 +229,7 @@ public class TopBar extends UIElement {
         int offset = 6;
         graphics.drawOval(BUTTON_GAMEPLAY_X-((offset+2)/2), BUTTONS_Y-((offset+2)/2), iconWidth+offset, iconWidth+offset);
         try {
-            if (Main.MODE == Constants.MODE_PLAYER_GAME)
+            if (gameMode.getMode() == Constants.MODE_PLAYER_GAME)
 		        graphics.drawImage(gameplayActiveImg, BUTTON_GAMEPLAY_X+(offset/2), BUTTONS_Y+(offset/2), iconWidth-offset, iconWidth-offset, null);
             else
 		        graphics.drawImage(gameplayInactiveImg, BUTTON_GAMEPLAY_X+(offset/2), BUTTONS_Y+(offset/2), iconWidth-offset, iconWidth-offset, null);
@@ -229,7 +240,7 @@ public class TopBar extends UIElement {
     
     // Draws the build mode button
 	private void drawBuildButton(Graphics graphics){
-        if (Main.MODE == Constants.MODE_MAP_BUILDER){
+        if (gameMode.getMode() == Constants.MODE_MAP_BUILDER){
 		    graphics.setColor(Constants.COLOR_AVATAR_RED);
         } else {
 		    graphics.setColor(Constants.COLOR_AVATAR_WHITE);
@@ -237,7 +248,7 @@ public class TopBar extends UIElement {
         int offset = 6;
         graphics.drawOval(BUTTON_BUILD_X-((offset+2)/2), BUTTONS_Y-((offset+2)/2), iconWidth+offset, iconWidth+offset);
         try {
-            if(Main.MODE == Constants.MODE_MAP_BUILDER) graphics.drawImage(buildActiveImg, BUTTON_BUILD_X+(offset/2), BUTTONS_Y+(offset/2), iconWidth-offset, iconWidth-offset, null);
+            if(gameMode.getMode() == Constants.MODE_MAP_BUILDER) graphics.drawImage(buildActiveImg, BUTTON_BUILD_X+(offset/2), BUTTONS_Y+(offset/2), iconWidth-offset, iconWidth-offset, null);
 		    else graphics.drawImage(buildInactiveImg, BUTTON_BUILD_X+(offset/2), BUTTONS_Y+(offset/2), iconWidth-offset, iconWidth-offset, null);
         } catch (Exception e){
             e.printStackTrace();
@@ -247,7 +258,7 @@ public class TopBar extends UIElement {
     
     // Draws the brain/AI button
 	private void drawBrainButton(Graphics graphics){
-        if (Main.MODE == Constants.MODE_AI_GAME){
+        if (gameMode.getMode() == Constants.MODE_AI_GAME){
 		    graphics.setColor(Constants.COLOR_AVATAR_RED);
         } else {
 		    graphics.setColor(Constants.COLOR_AVATAR_WHITE);
@@ -255,7 +266,7 @@ public class TopBar extends UIElement {
         int offset = 6;
         graphics.drawOval(BUTTON_BRAIN_X-((offset+2)/2), BUTTONS_Y-((offset+2)/2), iconWidth+offset, iconWidth+offset);
         try {
-            if (Main.MODE == Constants.MODE_AI_GAME){
+            if (gameMode.getMode() == Constants.MODE_AI_GAME){
 		        graphics.drawImage(brainActiveImg, BUTTON_BRAIN_X+(offset/2), BUTTONS_Y+(offset/2), iconWidth-offset, iconWidth-offset, null);
             } else {
 		        graphics.drawImage(brainInactiveImg, BUTTON_BRAIN_X+(offset/2), BUTTONS_Y+(offset/2), iconWidth-offset, iconWidth-offset, null);
@@ -278,6 +289,55 @@ public class TopBar extends UIElement {
 		int y2 = Constants.WINDOW_HEADER_HEIGHT - (y1);
 		graphics.drawLine(x1, y1, x1, y2);
 	}
+    
+    /**
+     * Process user input for the top bar.
+     * E.g. button clicks for
+     *      AI Gameplay,
+     *      Player Gameplay,
+     *      Building Mode,
+     *      Save button
+     *      Load button
+     *
+     */
+    public void processUserInput(){
+        showLoadMap();
+
+        // check if user clicked on save button
+        if (getInputManager().isMouseClicked()  && mapSaverLoader.saveButtonClicked()){
+            mapSaverLoader.saveButtonLogic();
+        }
+        //check if user clicked on load button
+        if (getInputManager().isMouseClicked()  && mapSaverLoader.loadButtonClicked()){
+            mapSaverLoader.loadButtonLogic();
+        }
+
+        // 	building mode Button
+        if (getInputManager().isMouseClicked()
+                && isBuildModeButtonClicked(getInputManager().getMouseClickedX(), getInputManager().getMouseClickedY())) {
+            gameMode.changeMode(Constants.MODE_MAP_BUILDER, true);
+        }
+        // 	game-play mode Button
+        if (getInputManager().isMouseClicked()
+                && isGamePlayModeButtonClicked(getInputManager().getMouseClickedX(), getInputManager().getMouseClickedY())) {
+            gameMode.changeMode(Constants.MODE_PLAYER_GAME, true);
+        }
+        // 	AI mode Button
+        if (getInputManager().isMouseClicked()
+                && isBrainButtonClicked(getInputManager().getMouseClickedX(), getInputManager().getMouseClickedY())) {
+            gameMode.changeMode(Constants.MODE_AI_GAME, true);
+        }
+    }
+
+    /**
+     * Should show map window if load-button was clicked on finish screen
+     */
+    private void showLoadMap(){
+        if (shouldLoadMap){
+            shouldLoadMap = false;
+            mapSaverLoader.loadButtonLogic();
+        }    
+    }
 
 	/**
 	 * Takes away .csv extention from a filename for The MapName at the TopBar
@@ -285,6 +345,11 @@ public class TopBar extends UIElement {
 	public void setMapName(String mapName) {
 		this.mapName=mapName;
 	}
+
+    public void setGame(Game game){
+        this.game=game;
+        this.mapSaverLoader = new MapSaverLoader(this.game);
+    }
 
     public RoundRectangle2D getSaveButton() {
         return saveButton;
@@ -305,5 +370,7 @@ public class TopBar extends UIElement {
         return brainButton.contains(mouseX, mouseY);
     }
 
+    public boolean getShouldLoadMap(){return shouldLoadMap;}
+    public void setShouldLoadMap(boolean shouldLoad){this.shouldLoadMap=shouldLoad;}
 }
 

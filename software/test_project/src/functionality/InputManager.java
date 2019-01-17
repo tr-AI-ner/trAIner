@@ -5,6 +5,8 @@ import java.awt.*;
 
 public class InputManager extends Component implements KeyListener, MouseListener, MouseMotionListener {
 
+    private static final long serialVersionUID = 42L;
+
 	// everything a user can press on keyboard or mouse	
 	private int mousePressedX, mousePressedY, mouseMovedX, mouseMovedY, mouseButton;
 	private int mouseClickedX, mouseClickedY, mouseButtonClicked;
@@ -17,7 +19,7 @@ public class InputManager extends Component implements KeyListener, MouseListene
 	private boolean isMouseEvent, isKeyEvent, isMousePressed, isMouseDragged, isMouseClicked;
 	
 	//boolean array to "save" keys
-	private boolean[] keyArray = new boolean[100]; 
+	private boolean[] keyArray = new boolean[10]; 
 	//0=up-arrow 1=down-arrow   2=left-arrow   3=right-arrow    4=ESC   5=SHIFT
     //6=build-mode 7=empty-map 8=AI-mode
 	//UP, DOWN, LEFT, RIGHT, ESCAPE, RUN
@@ -106,6 +108,19 @@ public class InputManager extends Component implements KeyListener, MouseListene
 	@Override
 	public void keyTyped(KeyEvent evt){}	
 
+    /**
+     * Print-out string of key-array for debugging purposes.
+     *
+     * @return 
+     */
+    public String getKeyArray(){
+        String s = "";
+        String[] vals = new String[]{"up","down","left","right","esc","g","b","e","a","enter"};
+        for (int i=0; i<keyArray.length; i++){
+            s += ""+vals[i]+": "+keyArray[i]+", ";
+        }
+        return s;
+    }
 
 	public int getMousePressedX(){return mousePressedX;}
 	public int getMousePressedY(){return mousePressedY;}
@@ -144,10 +159,14 @@ public class InputManager extends Component implements KeyListener, MouseListene
 	public void setMouseClicked(boolean mouseClicked) {
 		isMouseClicked = mouseClicked;
         //also reset the mouse button
-        if (mouseClicked==false){
+        /*if (mouseClicked==false){
             mouseButton = 0;
-        }
+        }*/
 	}
 
 	public int getMouseButtonClicked(){return mouseButtonClicked;}
+
+
+    public void resetEnterKey(){keyArray[Constants.KEY_ENTER] = false;}
+
 }
