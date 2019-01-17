@@ -8,6 +8,7 @@ import custom_objects.Avatar;
 import custom_objects.Entity;
 import functionality.Constants;
 import game.Main;
+import game.GameMode;
 
 public class Map {
 	
@@ -42,7 +43,7 @@ public class Map {
 	 * 
 	 * @param graphics
 	 */
-	public void draw(Graphics graphics, ArrayList<Entity> entities){
+	public void draw(Graphics graphics, ArrayList<Entity> entities, GameMode gameMode){
 		// set grid color for map
 		graphics.setColor(Constants.COLOR_MAP_LAND);
 		
@@ -77,7 +78,7 @@ public class Map {
 			if (!(e instanceof Avatar))
 				e.draw(graphics);
 		}
-		if(Main.MODE != 1 && Main.MODE != 2) {
+		if(gameMode.getMode() != Constants.MODE_MAP_BUILDER && gameMode.getMode() != Constants.MODE_PREVIEW) {
 			// draw entities which are avatar(s) only, since they're not bound to the grid (they can move freely)
 			for (Entity avatar: entities){
 				if (avatar instanceof Avatar){

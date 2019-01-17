@@ -14,6 +14,7 @@ import functionality.Setup;
 import functionality.InputManager;
 import functionality.FontLoader;
 import game.Main;
+import game.GameMode;
 
 import javax.imageio.ImageIO;
 
@@ -41,42 +42,48 @@ public class BottomBar extends UIElement {
 	int pauseButtonX = (getWidth() / 2) + iconWidth; 
 	int pauseButtonY = getY() + (getHeight() / 2) - (iconWidth / 2);
 
-    int settingsButtonX = Constants.WINDOW_MAP_WIDTH + (Constants.WINDOW_MAP_MARGIN * 2) + Constants.WINDOW_RIGHT_BAR_WIDTH - (iconWidth*2);
-    int settingsButtonY = Constants.WINDOW_MAP_HEIGHT + (Constants.WINDOW_MAP_MARGIN * 2) + Constants.WINDOW_HEADER_HEIGHT + ((Constants.WINDOW_HEADER_HEIGHT/2) - (iconWidth/2));
+    int exitButtonX = Constants.WINDOW_MAP_WIDTH + (Constants.WINDOW_MAP_MARGIN * 2) + Constants.WINDOW_RIGHT_BAR_WIDTH - (iconWidth*2);
+    int exitButtonY = Constants.WINDOW_MAP_HEIGHT + (Constants.WINDOW_MAP_MARGIN * 2) + Constants.WINDOW_HEADER_HEIGHT + ((Constants.WINDOW_HEADER_HEIGHT/2) - (iconWidth/2));
+
+    int helpButtonX = exitButtonX - (iconWidth*3) + 10;
+    int helpButtonY = Constants.WINDOW_MAP_HEIGHT + (Constants.WINDOW_MAP_MARGIN * 2) + Constants.WINDOW_HEADER_HEIGHT + ((Constants.WINDOW_HEADER_HEIGHT/2) - (iconWidth/2));
 
     int previewButtonWidth = 90, previewButtonHeight = 30;
     int previewButtonX = (getWidth() / 2) - (previewButtonWidth / 2);
     int previewButtonY = getY() + (getHeight()/2) - (previewButtonHeight/2);
-	int BUTTON_ARCH_WH = 30;
-    boolean tmp = false;
 	
     private Rectangle playButton = new Rectangle(playButtonX, playButtonY, iconWidth, iconWidth);
 	private Rectangle pauseButton = new Rectangle(pauseButtonX, pauseButtonY, iconWidth, iconWidth);
-	private Rectangle settingsButton = new Rectangle(settingsButtonX, settingsButtonY, iconWidth, iconWidth);
-	private RoundRectangle2D previewButton = new RoundRectangle2D.Float(previewButtonX, previewButtonY, previewButtonWidth, previewButtonHeight, BUTTON_ARCH_WH, BUTTON_ARCH_WH);
+	private Rectangle helpButton = new Rectangle(helpButtonX, helpButtonY, iconWidth, iconWidth);
+    Rectangle exitButton = new Rectangle(exitButtonX, exitButtonY, iconWidth, iconWidth);
+	private RoundRectangle2D previewButton = new RoundRectangle2D.Float(previewButtonX, previewButtonY, previewButtonWidth, previewButtonHeight, 
+            Constants.BUTTON_ARCH_WH, Constants.BUTTON_ARCH_WH);
 
     // directory name where images should be loaded from 
     String dirName = "../resources/";
     String pathPlayButton = "playicon.png";
     String pathPauseButton = "pauseicon.png";
-    String pathSettingsButton = "settings.png";
+    String pathHelpButton = "question.png";
+    String pathExitButton = "exit.png";
 
     String namePreviewButton = "Preview";
 
 	int fontSize = 16;
 	Font font = new Font(Constants.DEFAULT_FONT, Font.PLAIN, fontSize);
 
-	BufferedImage playImg;
-	BufferedImage pauseImg;
-    BufferedImage settingsImg;
+    BufferedImage exitImg, helpImg, pauseImg, playImg;
 
-	public BottomBar(int x, int y, int width, int height, Color backgroundColor, Setup setup, InputManager inputManager) {
+    GameMode gameMode;
+
+	public BottomBar(int x, int y, int width, int height, Color backgroundColor, Setup setup, InputManager inputManager, GameMode gameMode) {
 		super(x, y, width, height, backgroundColor, setup, inputManager);
+        this.gameMode = gameMode;
 
 		try {
             playImg = ImageIO.read(new File(dirName, pathPlayButton));
             pauseImg = ImageIO.read(new File(dirName, pathPauseButton));
-            settingsImg = ImageIO.read(new File(dirName, pathSettingsButton));
+            helpImg = ImageIO.read(new File(dirName, pathHelpButton));
+            exitImg = ImageIO.read(new File(dirName, pathExitButton));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -90,13 +97,14 @@ public class BottomBar extends UIElement {
 	public void draw(Graphics graphics) {
 		drawBackground(graphics);
 		drawCopyright(graphics);
-		if (Main.MODE == 1 || Main.MODE == 2){
+		if (gameMode.getMode() == Constants.MODE_MAP_BUILDER || gameMode.getMode() == Constants.MODE_PREVIEW){
             drawPreviewButton(graphics);
         } else {
             drawPlayButton(graphics);
 		    drawPauseButton(graphics);
         }
-        drawSettingsButton(graphics);
+        drawHelpButton(graphics);
+        drawExitButton(graphics);
 		
 		//draw other UI-elements here...
 	}
@@ -171,29 +179,81 @@ public class BottomBar extends UIElement {
 				+ graphics.getFontMetrics(font).getAscent();
 		int nameX = previewButtonX + (previewButtonWidth/6);
 		
-        if(Main.MODE == 2){
-		    graphics.fillRoundRect(previewButtonX,previewButtonY,previewButtonWidth,previewButtonHeight,BUTTON_ARCH_WH,BUTTON_ARCH_WH);
+        if(gameMode.getMode() == Constants.MODE_PREVIEW){
+		    graphics.fillRoundRect(previewButtonX,previewButtonY,previewButtonWidth,previewButtonHeight,Constants.BUTTON_ARCH_WH,Constants.BUTTON_ARCH_WH);
             graphics.setColor(Constants.COLOR_HEADER_2);
             graphics.drawString(namePreviewButton, nameX, nameY);
         } else {
-		    graphics.drawRoundRect(previewButtonX,previewButtonY,previewButtonWidth,previewButtonHeight,BUTTON_ARCH_WH,BUTTON_ARCH_WH);
+		    graphics.drawRoundRect(previewButtonX,previewButtonY,previewButtonWidth,previewButtonHeight,Constants.BUTTON_ARCH_WH,Constants.BUTTON_ARCH_WH);
             graphics.drawString(namePreviewButton, nameX, nameY);
         }
 	}
 
 	
-    // Draws the settings button
-	private void drawSettingsButton(Graphics graphics){
+    // Draws the help button
+	private void drawHelpButton(Graphics graphics){
 		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
         int offset = 6;
-        graphics.drawOval(settingsButtonX-((offset+2)/2), settingsButtonY-((offset+2)/2), iconWidth+offset, iconWidth+offset);
+        graphics.drawOval(helpButtonX-((offset+2)/2), helpButtonY-((offset+2)/2), iconWidth+offset, iconWidth+offset);
 
         try {
-		    graphics.drawImage(settingsImg, settingsButtonX+(offset/2), settingsButtonY+(offset/2), iconWidth-offset, iconWidth-offset, null);
+		    graphics.drawImage(helpImg, helpButtonX+(offset/2), helpButtonY+(offset/2), iconWidth-offset, iconWidth-offset, null);
         } catch (Exception e){
             e.printStackTrace();
         }
 	}
+
+    // Draws the exit button
+	private void drawExitButton(Graphics graphics){
+		graphics.setColor(Constants.COLOR_AVATAR_WHITE);
+        int offset = 6;
+        graphics.drawOval(exitButtonX-((offset+2)/2), exitButtonY-((offset+2)/2), iconWidth+offset, iconWidth+offset);
+
+        try {
+		    graphics.drawImage(exitImg, exitButtonX+(offset/2), exitButtonY+(offset/2), iconWidth-offset, iconWidth-offset, null);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+	}
+
+    /**
+     * Process the user input for the bottom bar.
+     * E.g. button clicks for 
+     *      Preview,
+     *      Exit,
+     *      Help,
+     *      Play,
+     *      Pause
+     */
+    public void processUserInput(){
+        // check if preview button was clicked
+        if((gameMode.getMode()==Constants.MODE_MAP_BUILDER || gameMode.getMode()==Constants.MODE_PREVIEW) && getInputManager().isMouseClicked() 
+                && isPreviewButtonClicked(getInputManager().getMouseClickedX(), getInputManager().getMouseClickedY())){
+            gameMode.changeMode(Constants.MODE_PREVIEW, false);
+        }
+
+        // 	Exit Button to open memu 
+        if (getInputManager().isMouseClicked()
+                && isExitButtonClicked(getInputManager().getMouseClickedX(), getInputManager().getMouseClickedY())) {
+            gameMode.changeMode(Constants.MODE_MENU, false);
+        }
+        // 	Help Button to open help screen
+        if (getInputManager().isMouseClicked()
+                && isHelpButtonClicked(getInputManager().getMouseClickedX(), getInputManager().getMouseClickedY())) {
+            gameMode.changeMode(Constants.MODE_HELP, false);
+        }
+
+        if (gameMode.getMode() != Constants.MODE_MAP_BUILDER && gameMode.getMode() != Constants.MODE_PREVIEW && getInputManager().isMouseClicked()){
+            // 	Play Button to play the game
+            if (isPlayButtonClicked(getInputManager().getMouseClickedX(), getInputManager().getMouseClickedY())) {
+                System.out.println("Play Button Clicked");
+            }
+            //  Pause Button to pause the game
+            if (isPauseButtonClicked(getInputManager().getMouseClickedX(), getInputManager().getMouseClickedY())) {
+                gameMode.changeMode(Constants.MODE_MENU, false);
+            }
+        }
+    }
 
 	public boolean isPlayButtonClicked(int mouseClickedX, int mouseClickedY){
 	    return playButton.contains(mouseClickedX, mouseClickedY);
@@ -207,8 +267,11 @@ public class BottomBar extends UIElement {
         return previewButton.contains(mouseClickedX, mouseClickedY);
     }
     
-    public boolean isSettingsButtonClicked(int mouseClickedX, int mouseClickedY){
-        return settingsButton.contains(mouseClickedX, mouseClickedY);
+    public boolean isHelpButtonClicked(int mouseClickedX, int mouseClickedY){
+        return helpButton.contains(mouseClickedX, mouseClickedY);
+    }
+    public boolean isExitButtonClicked(int mouseX, int mouseY){
+        return exitButton.contains(mouseX, mouseY);
     }
 
 }

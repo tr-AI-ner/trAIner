@@ -5,7 +5,19 @@ import java.awt.geom.RoundRectangle2D;
 
 public final class Constants {
 
-	public static final long FRAME_MINIMUM_MILLIS = 3;
+	public static final long FRAME_MINIMUM_MILLIS = 10;
+
+    // modes
+    public static final int MODE_NONE = -1; 
+    public static final int MODE_PLAYER_GAME = 0; 
+    public static final int MODE_MAP_BUILDER = 1; 
+    public static final int MODE_PREVIEW = 2; 
+    public static final int MODE_AI_GAME = 3; 
+    public static final int MODE_CHALLENGE = 4; 
+    public static final int MODE_MENU = 5; 
+    public static final int MODE_HELP = 6; 
+    public static final int MODE_EXIT = 7;
+    public static final int MODE_FINISH = 8;
 	
 	// basic window sizes
 	public static final int WINDOW_MAP_WIDTH = 1024; //1024 or 960
@@ -79,7 +91,9 @@ public final class Constants {
     public static final int MAX_NO_OF_GENERATIONS = 1000;
     public static final int MAX_MUTATION_RATE = 1000;
 	
-	
+	//Menu buttons
+    public static final int MENU_BUTTON_WIDTH = 200;
+    public static final int MENU_BUTTON_HEIGHT = 50;
 	
     //Load and Save Button
 	public static final int BUTTON_SAVE_X = 360; 
@@ -89,9 +103,21 @@ public final class Constants {
 	public static final int BUTTON_OFFSET_X = 15;
 	public static final int BUTTON_OFFSET_Y = 20;
 	
+    // arch width and height of rounded corner of a button
 	public static final int BUTTON_ARCH_WH = 30;
 	public static final int BUTTON_WIDTH = 70;
 	public static final int BUTTON_HEIGHT = 30;
-	
+
+    // keyboard keys
+    public static final int KEY_UP = 0;
+    public static final int KEY_DOWN = 1;
+    public static final int KEY_LEFT = 2;
+    public static final int KEY_RIGHT = 3;
+    public static final int KEY_ESCAPE = 4;
+    public static final int KEY_G = 5;
+    public static final int KEY_B = 6;
+    public static final int KEY_E = 7;
+    public static final int KEY_A = 8;
+    public static final int KEY_ENTER = 9;
 
 }

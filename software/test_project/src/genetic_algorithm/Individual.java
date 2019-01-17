@@ -1,5 +1,6 @@
 package genetic_algorithm;
 
+import map_builder.*;
 import java.lang.Math;
 import custom_objects.Avatar;
 import java.util.Random;
@@ -34,7 +35,7 @@ public class Individual extends Avatar {
     // tunable hyper parameters
     // x, y coordinate of the goal field
     int[] goal;
-    // reached the goal
+    // reached the goal in number of steps
     int fin = 0;
     // start position
     int[] start_pos;
@@ -74,7 +75,10 @@ public class Individual extends Avatar {
         this.genome = genome;
         this.maxNrOfMoves = genome.getMaxNrOfMoves();
     }
-
+    /**
+     * Constructor of the individual, inheriting from Avatar
+     *
+     */
     public Individual(Individual oldInd, Genome newGenes){
         super(oldInd.getX(), oldInd.getY(), oldInd.getWidth(), oldInd.getHeight(), oldInd.getColor());
         this.genome = newGenes;
@@ -89,13 +93,14 @@ public class Individual extends Avatar {
         // pre factor determining fluctuation of fitness function
         double preFit = this.maxNrOfMoves * 100;
         // calculate the distance if individual has finished
-        if (this.fin != 0) {
-            this.fitness = (preFit / (this.fin));
-            this.fitness = Math.pow(this.fitness, 3);
+        if (getFinAI() != 0) {
+            this.fitness = (preFit / (getFinAI()));
+            this.fitness *= 2;
         }else
         {
             // calculate the distance of the individual to the goal
-            double distance = Math.sqrt(Math.abs(Math.pow((this.getX() - goal[0]), 2) - Math.pow((this.getY() - goal[1]), 2)));
+            double distance = Math.sqrt(Math.abs(Math.pow((this.getX() - goal[0]), 2) + Math.pow((this.getY() - goal[1]), 2)));
+
             // calculate the fitness
             this.fitness = (preFit / (this.maxNrOfMoves * distance));
             this.fitness = Math.pow(this.fitness, 3);
@@ -172,14 +177,22 @@ public class Individual extends Avatar {
     }
     /**
      * move the individual according to the next direction in the gene
-     *
+     * 
+     * @param currentMove int
      */
-    public void makeMove(int maxNrOfMovestep){
+    public void makeMove(int currentMove){
         int direction[] = new int[2];
-        direction = this.getGenome().getGenes()[maxNrOfMovestep]; 
+        direction = this.getGenome().getGenes()[currentMove]; 
         this.move(direction[0], direction[1]);
     }
 
+    /**
+     * sets a new gene and updates the maximum number of possible moves per 
+     * generation accordingly
+     *
+     *@param newGenes Genome
+     *
+     */
     public void updateGenome(Genome newGenes){
         this.genome = newGenes;
         this.maxNrOfMoves = this.game.getMaxNrOfMoves();
@@ -228,6 +241,8 @@ public class Individual extends Avatar {
     public void setFin(int fin) {
         this.fin = fin;
     }
+
+    public int getFin(){return this.fin;}
 
     public int[] getStart_pos() {
         return start_pos;
