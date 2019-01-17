@@ -13,7 +13,6 @@ import functionality.GraphicsManager;
 import functionality.InputManager;
 import functionality.Setup;
 import map_builder.*;
-import map_saver.MapSaverLoader;
 
 
 public class Game {
@@ -23,6 +22,7 @@ public class Game {
 	private Clock clock; // Clock (time manager)
 	Setup setup;
 	private Map map;
+    private GameMode gameMode;
     
     // will hold a selected element when user places new element in map in map-builder-mode
     private MapElement clickedMapElement = null;
@@ -61,8 +61,6 @@ public class Game {
     int maxGens;
     int currentGen;
 
-	MapSaverLoader mapSaverLoader;
-
 	ElementPlasmaBall ball;
     ElementEnemy theEnemy;
 	ElementBlackHole blackHole;
@@ -78,7 +76,7 @@ public class Game {
 		this.inputManager = gm.getInputManager();
 		this.setup = gm.getSetup();
 		this.map = gm.getMap();
-
+        this.gameMode = gm.getGameMode();
 
 		entities = new ArrayList<>();
 
@@ -95,40 +93,19 @@ public class Game {
 		
 		mapElements = new ArrayList<>();
 
-		mapSaverLoader = new MapSaverLoader(this);
-
 		start = new ElementStart(33,33,Constants.COLOR_MAP_START);
         finish = new ElementFinish(50,12,Constants.COLOR_MAP_FINISH);
 
-		for(int i = 0; i < 36; i++) {
-            theGreatWall = new ElementWall(15, i, Constants.COLOR_WALL);
-            if(i != 30 && i != 31)  mapElements.add(theGreatWall);
-        }
-        for(int i = 0; i < 36; i++) {
-            theGreatWall = new ElementWall(43, i, Constants.COLOR_WALL);
-            mapElements.add(theGreatWall);
-        }
-
-		ball = new ElementPlasmaBall(13,7,Constants.COLOR_PLASMA_BALL);
-
-        theEnemy = new ElementEnemy(30, 30, Constants.COLOR_ENEMY);
-
-        blackHole = new ElementBlackHole(52,2,Constants.COLOR_BLACK_HOLE);
-        blackHole2 = new ElementBlackHole(4,
-                25,
-                       Constants.COLOR_BLACK_HOLE);
-
-
-        blackHole.setAttachedBlackHole(blackHole2);
-        blackHole2.setAttachedBlackHole(blackHole);
+        //blackHole = new ElementBlackHole(52,2,Constants.COLOR_BLACK_HOLE);
+        //blackHole2 = new ElementBlackHole(4,
+        //        25,
+        //               Constants.COLOR_BLACK_HOLE);
+        //blackHole.setAttachedBlackHole(blackHole2);
+        //blackHole2.setAttachedBlackHole(blackHole);
 
 
         mapElements.add(start);
         mapElements.add(finish);
-		mapElements.add(ball);
-        mapElements.add(theEnemy);
-        mapElements.add(blackHole);
-        mapElements.add(blackHole2);
 
 		// add all map-elements to entities
 		entities.addAll(mapElements);
@@ -260,7 +237,7 @@ public class Game {
      */
 	private void gameLoop(){
 		if(this.clock.frameShouldChange()) { // if fps right (ifnot, sleep, or do nothing), and update clock
-			this.processUserInput(); // Process user input		
+			this.processUserInput(); // Process user input	
 			this.updateState(); // Update state
 			this.redrawAll();//graphicsManager); // Redraw everything
 		}
@@ -332,7 +309,7 @@ public class Game {
         this.redrawAll();
     }
     /**
-     * process user input
+     * Processing user input, e.g. mouse clicks and keyboard presses.
      *
      * @author Kasparas
      * @author Rahul
@@ -342,47 +319,41 @@ public class Game {
      */
 	private void processUserInput() {
 		//Enters menu when escape is pressed
-		if(inputManager.getKeyResult()[Constants.KEY_ESCAPE]) {Main.MODE = Constants.MODE_MENU;}
+		if(inputManager.getKeyResult()[Constants.KEY_ESCAPE]) {
+            gameMode.changeMode(Constants.MODE_MENU, false);
+        }
 
         //Handle user input if menu is open
-        if(Main.MODE == Constants.MODE_MENU){
-                if (inputManager.getKeyResult()[Constants.KEY_UP]) {
-                    graphicsManager.getMenu().changeSelectedButton(true);
-                }
-                if (inputManager.getKeyResult()[Constants.KEY_DOWN]) {
-                    graphicsManager.getMenu().changeSelectedButton(false);
-                }
-                if (inputManager.getKeyResult()[Constants.KEY_ENTER]){
-                    Main.MODE = graphicsManager.getMenu().getSelectedMode(); 
-                }
-                if(inputManager.isMouseClicked()){
-                    int clickedButtonMode = graphicsManager.getMenu().getMouseSelectedMode(inputManager.getMouseClickedX(),inputManager.getMouseClickedY());
-                    if (clickedButtonMode > -1){
-                        Main.MODE = clickedButtonMode;
-                    }
-                }
+        if(gameMode.getMode() == Constants.MODE_MENU){
+            graphicsManager.getMenu().processUserInput();
+        }
+        //Handle user input if help screen is open
+        else if(gameMode.getMode() == Constants.MODE_HELP){
+            graphicsManager.getHelpScreen().processUserInput();
+        }
+        //Handle user input if finish screen is open
+        else if(gameMode.getMode() == Constants.MODE_FINISH){
+            graphicsManager.getFinishScreen().processUserInput();
+        }
+        // Hanlde user input if exit screen is open
+        else if (gameMode.getMode() == Constants.MODE_EXIT){
+            graphicsManager.getExitScreen().processUserInput();
         } else {
             //Switches between the game and the build mode
-            if(inputManager.getKeyResult()[Constants.KEY_G]) { Main.MODE = Constants.MODE_PLAYER_GAME; }
+            if(inputManager.getKeyResult()[Constants.KEY_G]) { 
+                gameMode.changeMode(Constants.MODE_PLAYER_GAME, false);
+            }
             if(inputManager.getKeyResult()[Constants.KEY_B]) { 
-                Main.MODE = Constants.MODE_MAP_BUILDER; 
-                reloadBuildState();
+                gameMode.changeMode(Constants.MODE_MAP_BUILDER, false);
+            }
+            if(inputManager.getKeyResult()[Constants.KEY_A]) { 
+                gameMode.changeMode(Constants.MODE_AI_GAME, false);
             }
             // loads an empty map
-            if(inputManager.getKeyResult()[Constants.KEY_E]) { mapSaverLoader.initEmptyMap(); }
+            //if(inputManager.getKeyResult()[Constants.KEY_E]) { mapSaverLoader.initEmptyMap(); }
             // switch to AI mode
-            if(inputManager.getKeyResult()[Constants.KEY_A]) { Main.MODE = Constants.MODE_AI_GAME; }
 
-            // check if user clicked on save button
-            if (inputManager.isMouseClicked()  && mapSaverLoader.saveButtonClicked()){
-                mapSaverLoader.saveButtonLogic();
-            }
-            //check if user clicked on load button
-            if (inputManager.isMouseClicked()  && mapSaverLoader.loadButtonClicked()){
-                mapSaverLoader.loadButtonLogic();
-            }
-
-            if (Main.MODE==Constants.MODE_PLAYER_GAME){
+            if (gameMode.getMode()==Constants.MODE_PLAYER_GAME){
                 //moves in the desired direction
                 if (inputManager.getKeyResult()[Constants.KEY_UP]) {
                     avatar.move(0, (-setup.getNewEntitySpeed()));
@@ -399,7 +370,7 @@ public class Game {
             }
 
             //handle mouse clicks during building mode
-            if(Main.MODE==Constants.MODE_MAP_BUILDER && inputManager.isMouseClicked()){
+            if(gameMode.getMode()==Constants.MODE_MAP_BUILDER && inputManager.isMouseClicked()){
                 //Check for clicks on blocks on right bar
                 if (graphicsManager.getRightBar().isRightBarClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
                     MapElement clickedElement = graphicsManager.getRightBar().getSelectedElement(
@@ -423,56 +394,15 @@ public class Game {
                 }
             }
 
-            // check if preview button was clicked
-            if((Main.MODE==Constants.MODE_MAP_BUILDER || Main.MODE==Constants.MODE_PREVIEW) && inputManager.isMouseClicked() 
-                    && graphicsManager.getBottomBar().isPreviewButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())){
-                if(Main.MODE==Constants.MODE_MAP_BUILDER){ 
-                    Main.MODE = Constants.MODE_PREVIEW;
-                }
-                else if(Main.MODE == Constants.MODE_PREVIEW){ 
-                    Main.MODE = Constants.MODE_MAP_BUILDER;
-                    reloadBuildState();
-                }
-            }
-
             // check for parameter changes by user and process them
             processParameterChanges(graphicsManager.getRightBar().getParameterChanges());
             
-            // 	Exit Button to exit the game
-            if (inputManager.isMouseClicked()
-                    && graphicsManager.getBottomBar().isExitButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
-                System.exit(0);
-            }
-            // 	building mode Button
-            if (inputManager.isMouseClicked()
-                    && graphicsManager.getTopBar().isBuildModeButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
-                Main.MODE = Constants.MODE_MAP_BUILDER;
-            }
-            // 	game-play mode Button
-            if (inputManager.isMouseClicked()
-                    && graphicsManager.getTopBar().isGamePlayModeButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
-                Main.MODE = Constants.MODE_PLAYER_GAME;
-            }
-            // 	AI mode Button
-            if (inputManager.isMouseClicked()
-                    && graphicsManager.getTopBar().isBrainButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
-                Main.MODE = Constants.MODE_AI_GAME;
-            }
+            graphicsManager.getTopBar().processUserInput();
+            graphicsManager.getBottomBar().processUserInput();
 
-            if (Main.MODE != Constants.MODE_MAP_BUILDER && Main.MODE != Constants.MODE_PREVIEW && inputManager.isMouseClicked()){
-                // 	Play Button to play the game
-                if (graphicsManager.getBottomBar().isPlayButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
-                    System.out.println("Play Button Clicked");
-                }
-                //  Pause Button to pause the game
-                if (graphicsManager.getBottomBar().isPauseButtonClicked(inputManager.getMouseClickedX(), inputManager.getMouseClickedY())) {
-                    System.out.println("Pause Button Clicked");
-                }
-            }
         }
 
         inputManager.setMouseClicked(false);
-
 	}
 
     /**
@@ -489,6 +419,7 @@ public class Game {
             this.foundFinish = true;
         } else {
             avatar.reset();
+            gameMode.changeMode(Constants.MODE_FINISH, false);
         }
     }
 
@@ -500,11 +431,13 @@ public class Game {
      *      2 - Preview Mode
      *      3 - AI Game
      *      4 - Challenge Mode
+     *      5 - Menu Mode
+     *      6 - Help Screen
      * 
      * @author Patrick
      */
 	private void updateState(){
-	    switch(Main.MODE){
+	    switch(gameMode.getMode()){
             case Constants.MODE_PLAYER_GAME:
                 moveElements();
                 break;
@@ -521,20 +454,31 @@ public class Game {
                 break;
             case Constants.MODE_MENU:
                 break;
+            case Constants.MODE_HELP:
+                break;
         }
         cleanUp();
     }
 
     /**
-     * redraws the full window
+     * Redraws the full window according to current mode.
      *
      */
 	private void redrawAll(){
 		//clear full window
 		graphicsManager.clear();
 		
-        if (Main.MODE == Constants.MODE_MENU){
+        if (gameMode.getMode() == Constants.MODE_MENU){
             graphicsManager.drawMenu();
+        } 
+        else if (gameMode.getMode() == Constants.MODE_EXIT){
+            graphicsManager.drawExitScreen();
+        } 
+        else if (gameMode.getMode() == Constants.MODE_FINISH){
+            graphicsManager.drawFinishScreen();
+        } 
+        else if (gameMode.getMode() == Constants.MODE_HELP){
+            graphicsManager.drawHelpScreen();
         } else {
             // draw all bars
             graphicsManager.drawWindowSetup();
@@ -556,7 +500,7 @@ public class Game {
      * @author Kasparas
      */
     private void moveElements(){
-		if(Main.MODE == Constants.MODE_PLAYER_GAME || Main.MODE == Constants.MODE_PREVIEW) {
+		if(gameMode.getMode() == Constants.MODE_PLAYER_GAME || gameMode.getMode() == Constants.MODE_PREVIEW) {
             for (MapElement element: this.getMapElements()){
                 if(element.getMapType() == MapType.PLASMA_BALL || element.getMapType() == MapType.ENEMY) {
                     if(element.getMapType() == MapType.ENEMY) {
@@ -567,16 +511,14 @@ public class Game {
                     // Because of the grid element system we have to check if the elements don't collide on the grid level
                     if(Math.abs(element.getX()  - avatar.getX()) < Constants.MAP_ELEMENT_SIZE
                             && Math.abs(element.getY()  - avatar.getY()) < Constants.MAP_ELEMENT_SIZE) {
-
                             this.restart();
-
-
                     }
                 }
             }
         }
         map.updateEntitiesInMap(entities);
     }
+
 
     /**
      * process a parameter change when user clicked on a minus or plus button
@@ -613,7 +555,7 @@ public class Game {
      */
     private void removeMapElement(){
         //exit if game is not in building mode or right mouse button was not clicked
-        if(Main.MODE != Constants.MODE_MAP_BUILDER /*|| inputManager.getMouseButton() != 3*/) return;
+        if(gameMode.getMode() != Constants.MODE_MAP_BUILDER /*|| inputManager.getMouseButton() != 3*/) return;
 
         int removeX = inputManager.getMouseClickedX()-Constants.WINDOW_MAP_X0;
         int removeY = inputManager.getMouseClickedY()-Constants.WINDOW_MAP_Y0;
@@ -729,7 +671,7 @@ public class Game {
      * Reloads the original coordinates of the elements when switchin preview mode off.
      *
      */
-    private void reloadBuildState(){
+    public void reloadBuildState(){
         for(int i=0; i<entities.size(); i++){
             if (entities.get(i).getType()==EntityType.MapElement){
                 if(((MapElement)entities.get(i)).getMapType()==MapType.ENEMY){
@@ -750,7 +692,7 @@ public class Game {
     private void cleanUp(){
         //if player is not in building mode and an element is still underneath the mouse
         //will be removed
-        if(Main.MODE != Constants.MODE_MAP_BUILDER && clickedMapElement != null) clickedMapElement=null;
+        if(gameMode.getMode() != Constants.MODE_MAP_BUILDER && clickedMapElement != null) clickedMapElement=null;
     }
 
     /**
