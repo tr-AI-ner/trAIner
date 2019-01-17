@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.io.BufferedReader;
 
 import java.awt.EventQueue;
@@ -132,6 +133,7 @@ public class MapSaverLoader {
     public void saveMap(String fileName){
         FileWriter fileWriter = null;
         char[][] m =game.getMap().getMapArr();
+        m=updateMapArr(m);
         try {
             fileWriter = new FileWriter(new File(dirName,fileName));
             //fileWriter.setCurrentDirectory("../../default_maps/");
@@ -162,6 +164,8 @@ public class MapSaverLoader {
     }
 
 
+
+    
     //============= LOGIC =====================
 
     /**
@@ -348,4 +352,22 @@ public class MapSaverLoader {
         game.resetEntities();
     }
     
+	/**
+	 * overwrites the map representation array with land representation
+	 * then fills it up with characters
+	 */
+    public char[][] updateMapArr(char[][] map) {
+    	ArrayList<MapElement> mapElements=game.getMapElements();
+    	for(int y=0;y<Constants.WINDOW_MAP_HEIGHT/MAP_ELEMENT_SIZE;y++) {
+    		for(int x=0;y<Constants.WINDOW_MAP_HEIGHT/MAP_ELEMENT_SIZE;y++) {
+        		map[x][y]=MapType.LAND.representation();
+        	}
+    	}
+    	for(int i=0;i<mapElements.size();i++) {  	
+    		int x=mapElements.get(i).getGridX();	
+    		int y=mapElements.get(i).getGridY();
+    		map[x][y]=mapElements.get(i).getMapType().representation();
+    	}	
+    	return map;
+    }
 }
