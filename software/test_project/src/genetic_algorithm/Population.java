@@ -222,5 +222,8 @@ public class Population {
         return this.population[index];
     }
  
+    public int getCurrentGeneration() {
+    	return currentGeneration;
+    }
 
 }

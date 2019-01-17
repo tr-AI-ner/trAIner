@@ -32,7 +32,7 @@ public class Game {
     private int speed = 1;
 	private int noOfMoves = 20;
 	private float mutationRate = (float)0.01;
-	private int noOfGenerations = 1;
+	private int noOfGenerations = 100;
     private int incMovesAfterGen = 2;
     private int increaseMovesBy = 10;
     private int noOfTries = 1;
@@ -761,6 +761,10 @@ public class Game {
     }
 
     public int getNoOfTries(){return noOfTries;}
+    public Population getPopulation() {return pop;}
+    public int getRecordTime() {return recordtime;}
+    public boolean hasFinished() {return foundFinish;}
+    public int getCurentMoove() {return currentMove;}
 
     public ElementFinish getFinish(){ return finish;}
     public boolean getAiRunning(){return this.aiRunning;}
