@@ -15,6 +15,7 @@ import functionality.InputManager;
 import functionality.FontLoader;
 import game.Main;
 import game.GameMode;
+import game.Game;
 
 import javax.imageio.ImageIO;
 
@@ -225,7 +226,7 @@ public class BottomBar extends UIElement {
      *      Play,
      *      Pause
      */
-    public void processUserInput(){
+    public void processUserInput(Game game){
         // check if preview button was clicked
         if((gameMode.getMode()==Constants.MODE_MAP_BUILDER || gameMode.getMode()==Constants.MODE_PREVIEW) && getInputManager().isMouseClicked() 
                 && isPreviewButtonClicked(getInputManager().getMouseClickedX(), getInputManager().getMouseClickedY())){
@@ -246,11 +247,11 @@ public class BottomBar extends UIElement {
         if (gameMode.getMode() != Constants.MODE_MAP_BUILDER && gameMode.getMode() != Constants.MODE_PREVIEW && getInputManager().isMouseClicked()){
             // 	Play Button to play the game
             if (isPlayButtonClicked(getInputManager().getMouseClickedX(), getInputManager().getMouseClickedY())) {
-                System.out.println("Play Button Clicked");
+                game.setAiRunning(true);
             }
             //  Pause Button to pause the game
             if (isPauseButtonClicked(getInputManager().getMouseClickedX(), getInputManager().getMouseClickedY())) {
-                gameMode.changeMode(Constants.MODE_MENU, false);
+                game.setAiRunning(false);
             }
         }
     }

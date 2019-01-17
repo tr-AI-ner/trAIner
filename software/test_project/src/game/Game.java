@@ -42,7 +42,7 @@ public class Game {
     private boolean ai_playing;
     private boolean foundPrevFinish = false;	
     // true if genetic algorithm is running
-    private boolean aiRunning=true;
+    private boolean aiRunning = true;
 	Avatar avatar;
     ArrayList<Entity> entities;
     ArrayList<MapElement> mapElements;
@@ -306,6 +306,7 @@ public class Game {
             }
             
         }
+        this.processUserInput();
         this.updateState();
         this.redrawAll();
     }
@@ -399,7 +400,7 @@ public class Game {
             processParameterChanges(graphicsManager.getRightBar().getParameterChanges());
             
             graphicsManager.getTopBar().processUserInput();
-            graphicsManager.getBottomBar().processUserInput();
+            graphicsManager.getBottomBar().processUserInput(this);
 
         }
 
@@ -757,5 +758,6 @@ public class Game {
 
     public ElementFinish getFinish(){ return finish;}
     public boolean getAiRunning(){return this.aiRunning;}
+    public void setAiRunning(boolean running){this.aiRunning = running;}
 }
 
