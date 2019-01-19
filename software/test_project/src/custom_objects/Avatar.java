@@ -193,6 +193,10 @@ public class Avatar extends Entity {
         toMoveY=sourceY;
     }
 
+    @Override
+    public String toString(){
+        return "EntityType: Avatar, x: "+getX()+", y: "+getY();
+    }
 
 	public void setSetup(Setup setup){
 		this.setup = setup;
@@ -200,10 +204,15 @@ public class Avatar extends Entity {
 	public void setGame(Game game){
 		this.game = game;
 	}
-	
+
+    /**
+     * Sets new start position for avatar
+     *
+     * @param start 
+     */
 	public void setToStart(ElementStart start) {
-		setX(start.getGridX());
-		setY(start.getGridY());
+        sourceX = start.getWindowX();
+        sourceY = start.getWindowY();
 	}
 	
 }

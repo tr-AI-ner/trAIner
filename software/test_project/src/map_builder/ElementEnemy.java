@@ -71,20 +71,25 @@ public class ElementEnemy extends MapElement {
             int leftDistance = 10000, rightDistance = 10000;
             for(int i=0; i<collidingElems.size(); i++){
                 MapElement elem = mapElements.get(collidingElems.get(i));
-                if(elem.getGridX() < this.getGridX() && Math.abs(elem.getGridX()-this.getGridX())<leftDistance){
+
+                int newDistance = Math.abs(elem.getGridX()-this.getGridX());
+
+                if(elem.getGridX() < this.getGridX() && newDistance<leftDistance){
                     if (leftColliding < 0){
                         leftColliding = i;
+                        leftDistance = newDistance;
                     } else {
-                        if (mapElements.get(leftColliding).getGridX() < i)
-                            leftColliding = i;
+                        leftColliding = i;
+                        leftDistance = newDistance;
                     }
                 }
-                if(elem.getGridX() > this.getGridX() && Math.abs(elem.getGridX()-this.getGridX())<rightDistance){
+                if(elem.getGridX() > this.getGridX() && newDistance<rightDistance){
                     if (rightColliding < 0){
                         rightColliding = i;
+                        rightDistance = newDistance;
                     } else {
-                        if (mapElements.get(rightColliding).getGridX() < i)
-                            rightColliding = i;
+                        rightColliding = i;
+                        rightDistance = newDistance;
                     }
                 }
             }

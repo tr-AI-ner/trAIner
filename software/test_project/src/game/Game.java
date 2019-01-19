@@ -318,7 +318,6 @@ public class Game {
         map.updateEntitiesInMap(entities);
     }
 
-
     /**
      * process a parameter change when user clicked on a minus or plus button
      * on the right bar
@@ -449,9 +448,10 @@ public class Game {
             MapElement newElement = clickedMapElement;
             newElement.setGridX(gridX);
             newElement.setGridY(gridY);
+            boolean isStartFinish = false;
             switch (clickedMapElement.getMapType()){
-                case START: newElement = new ElementStart((ElementStart)clickedMapElement); break;
-                case FINISH: newElement = new ElementFinish((ElementFinish)clickedMapElement); break;
+                case START: newElement = new ElementStart((ElementStart)clickedMapElement); setStart((ElementStart)newElement); break;
+                case FINISH: newElement = new ElementFinish((ElementFinish)clickedMapElement); setFinish((ElementFinish)newElement); break;
                 case WALL: newElement = new ElementWall((ElementWall)clickedMapElement); break;
                 case BLACK_HOLE: newElement = new ElementBlackHole((ElementBlackHole)clickedMapElement); break;
                 case ENEMY: newElement = new ElementEnemy((ElementEnemy)clickedMapElement); break;
@@ -459,8 +459,11 @@ public class Game {
                 case PLASMA_BALL: newElement = new ElementPlasmaBall((ElementPlasmaBall)clickedMapElement); break;
                 default: break;
             }
-            mapElements.add(newElement);
-            entities.add(newElement);
+            // add new elements except for start & finish since they can exist only once
+            if (!isStartFinish){
+                mapElements.add(newElement);
+                entities.add(newElement);
+            }
             map.setMapArr(newElement.getGridX(), newElement.getGridY(), newElement.getMapType().representation());
         } else {
             System.out.println("No position found for placing element... gridX: "+gridX+", gridY: "+gridY);
@@ -499,6 +502,64 @@ public class Game {
         if(gameMode.getMode() != Constants.MODE_MAP_BUILDER && clickedMapElement != null) clickedMapElement=null;
     }
 
+	public ElementStart getStart() {return start;}
+    public void setStart(ElementStart newStart){
+        this.start = newStart;
+        //set new start in entities list
+        for (int ent=0; ent<entities.size(); ent++){
+            if (entities.get(ent).getType()==EntityType.MapElement 
+                && (((MapElement)entities.get(ent)).getMapType()==MapType.START)){
+                entities.set(ent, newStart);
+                break;
+            }
+        }
+        //set new start in map-elements list
+        for (int i=0; i<mapElements.size(); i++){
+            if (mapElements.get(i).getMapType()==MapType.START){
+                mapElements.set(i, newStart);
+                break;
+            }
+        }
+        avatar.setToStart(this.start);
+        avatar.reset();
+    }
+
+    /**
+     * Prints all entities on map, for debugging purposes.
+     */
+    public void printAllEntities(){
+        String s = "------------- All entities -------------\n";
+        for (int i=0; i<entities.size(); i++){
+            s += ""+i+" - "+entities.get(i).toString()+"\n";
+        }
+        s += "------------- End of entities -------------";
+        System.out.println(s);
+    }
+
+	public ElementFinish getFinish() {return finish;}
+    public void setFinish(ElementFinish newFinish){
+        this.finish = newFinish;
+        //set new finish in entities list
+        for (int ent=0; ent<entities.size(); ent++){
+            if (entities.get(ent).getType()==EntityType.MapElement 
+                && (((MapElement)entities.get(ent)).getMapType()==MapType.FINISH)){
+                //entities.set(ent, newFinish);
+                ((MapElement)entities.get(ent)).setGridX(newFinish.getGridX());
+                ((MapElement)entities.get(ent)).setGridY(newFinish.getGridY());
+                break;
+            }
+        }
+        //set new finish in map-elements list
+        for (int i=0; i<mapElements.size(); i++){
+            if (mapElements.get(i).getMapType()==MapType.FINISH){
+                //mapElements.set(i, newFinish);
+                mapElements.get(i).setGridX(newFinish.getGridX());
+                mapElements.get(i).setGridY(newFinish.getGridY());
+                break;
+            }
+        }
+    }
+
 	public Avatar getAvatar(){return avatar;}
 	public ArrayList<Entity> getEntities(){return entities;}
 
@@ -510,8 +571,6 @@ public class Game {
 	public void setMapElements(ArrayList<MapElement> mapElements){this.mapElements=mapElements;}
 	public void resetMapElements(){this.mapElements = new ArrayList<>();}
 	public ArrayList<MapElement> getMapElements(){return mapElements;}
-
-	public ElementStart getStart() {return start;}
 
     public int getPopulationSize(){return populationSize;}
     public int getSpeed(){return speed;}
