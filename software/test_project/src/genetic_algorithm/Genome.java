@@ -29,10 +29,10 @@ public class Genome {
         this.gene = new int[maxNrOfMoves][2];
         int[] move = this.getRandomDirection(); 
         for(int i=0; i<maxNrOfMoves; i++){
-            move = this.getRandomDirection(); 
-            if(i % numberOfSameMoves == 0){
-                move = this.getRandomDirection();
-            }
+           // move = this.getRandomDirection();
+//            if(i % numberOfSameMoves == 0){
+//                move = this.getRandomDirection();
+//            }
             this.gene[i] = move;
         }
 
@@ -46,18 +46,7 @@ public class Genome {
         this.gene = gene;
         this.maxNrOfMoves = moves;
     }
-    
-    /**
-     * function to fully randomize the gene
-     *
-     * ---obsolete--
-     */
-    private void randomizeGene(int population_size) {
-        for (int i = 0; i < population_size; i++) {
-            this.gene[i] = getRandomDirection();
-        }
 
-    }
     
     /**
      * randomly pick a direction
@@ -172,11 +161,13 @@ public class Genome {
     public Genome getExtendedGene(int increase){
         int newLen = this.maxNrOfMoves + increase;
         int[][] newGene = new int[newLen][2];
+        int[] direction = getRandomDirection();
         for(int i=0; i < newLen; i++){
             if(i < this.maxNrOfMoves){
                 newGene[i] = this.gene[i];
             }else{
-                newGene[i] = getRandomDirection();
+                //newGene[i] = getRandomDirection();
+                newGene[i] = direction;
             }
         }
         this.maxNrOfMoves = newLen;

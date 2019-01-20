@@ -671,7 +671,7 @@ public class RightBar extends UIElement {
     			hlist.add(i,height);}
     		if(i<=current) {
     			if (finished[i]==false) {
-    				graphics.setColor(Constants.COLOR_RIGHT_BAR_HEADER);
+    				graphics.setColor(Constants.COLOR_PLASMA_BALL);
     			}
     			else {
     				graphics.setColor(Color.GREEN);

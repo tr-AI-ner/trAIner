@@ -61,6 +61,7 @@ public class GameMode {
                     || PREVIOUS_MODE==Constants.MODE_NONE){
                     MODE = Constants.MODE_PLAYER_GAME;
                     PREVIOUS_MODE = Constants.MODE_PLAYER_GAME;
+                    game.cleanEntities();
                 }
                 else if(PREVIOUS_MODE != Constants.MODE_PLAYER_GAME
                         || (MODE == Constants.MODE_AI_GAME)
@@ -70,6 +71,7 @@ public class GameMode {
                         PREVIOUS_MODE = Constants.MODE_PLAYER_GAME;
                         NEXT_MODE = Constants.MODE_NONE;
                         graphicsManager.getExitScreen().resetYesSelected();
+                        game.cleanEntities();
                     } else {
                         showExitScreen(PREVIOUS_MODE, mode);
                     }
@@ -112,6 +114,7 @@ public class GameMode {
                   || PREVIOUS_MODE==Constants.MODE_NONE){
                     MODE = Constants.MODE_AI_GAME;
                     PREVIOUS_MODE = Constants.MODE_AI_GAME;
+                    game.cleanEntities();
                 }
                 else if(PREVIOUS_MODE != Constants.MODE_AI_GAME
                         || (MODE == Constants.MODE_PLAYER_GAME)
@@ -121,6 +124,7 @@ public class GameMode {
                         PREVIOUS_MODE = Constants.MODE_AI_GAME;
                         NEXT_MODE = Constants.MODE_NONE;
                         graphicsManager.getExitScreen().resetYesSelected();
+                        game.cleanEntities();
                     } else {
                         showExitScreen(PREVIOUS_MODE, mode);
                     }

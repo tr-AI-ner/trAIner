@@ -84,7 +84,7 @@ public class Game {
 
         this.populationSize = 500;
         this.mutationRate = (float) 0.01;
-        this.noOfGenerations = 500;
+        this.noOfGenerations = 100;
         this.increaseMovesBy = 10;
 
 
@@ -96,7 +96,7 @@ public class Game {
 		avatar.setSetup(setup);
 		avatar.setGame(this);
 		// add avatar to entities
-		entities.add(avatar);
+		//entities.add(avatar);
 		
 		mapElements = new ArrayList<>();
 
@@ -113,7 +113,7 @@ public class Game {
         for(int i = 0; i < populationSize; i++){
             Individual ind = pop.getIndividual(i);
             ind.setSetup(setup);
-            entities.add(ind);
+            //entities.add(ind);
         }
 
         this.recordtime = this.maxNrOfMoves +(this.noOfGenerations * this.increaseMovesBy)+ 1;
@@ -388,7 +388,8 @@ public class Game {
         } 
         else if (gameMode.getMode() == Constants.MODE_HELP){
             graphicsManager.drawHelpScreen();
-        } else {
+        }
+        else {
             // draw all bars
             graphicsManager.drawWindowSetup();
 
@@ -605,6 +606,25 @@ public class Game {
         //if player is not in building mode and an element is still underneath the mouse
         //will be removed
         if(gameMode.getMode() != Constants.MODE_MAP_BUILDER && clickedMapElement != null) clickedMapElement=null;
+    }
+
+    /**
+     *
+     * Function to clean up the entities
+     */
+    public void cleanEntities() {
+        ArrayList<Entity> temp = new ArrayList<>();
+        temp.addAll(mapElements);
+        if(gameMode.getMode() == Constants.MODE_PLAYER_GAME) {
+            temp.add(avatar);
+        } else if (gameMode.getMode() == Constants.MODE_AI_GAME) {
+            for ( Entity entity: entities) {
+                if(!entity.equals(avatar)) {
+                   temp.add(entity);
+                }
+            }
+        }
+        entities = temp;
     }
 
     /**
