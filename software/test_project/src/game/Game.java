@@ -30,19 +30,21 @@ public class Game {
     //genetic algorithm parameters
     private int populationSize = 1;
     private int speed = 1;
-	private int noOfMoves = 20;
+	private int maxNrOfMoves = 20;
 	private float mutationRate = (float)0.01;
 	private int noOfGenerations = 100;
+    
     private int incMovesAfterGen = 2;
     private int increaseMovesBy = 10;
     private int noOfTries = 1;
+
     private boolean shouldExtend = true;
     private boolean foundFinish = false;
     //true if in game mode AI
     private boolean ai_playing;
     private boolean foundPrevFinish = false;	
     // true if genetic algorithm is running
-    private boolean aiRunning = true;
+    private boolean aiRunning = false;
 	Avatar avatar;
     ArrayList<Entity> entities;
     ArrayList<MapElement> mapElements;
@@ -124,101 +126,6 @@ public class Game {
             
 
 	}
-    
-    /**
-     * default constructor for when the AI is playing
-     *
-     * @param gm Graphics Mangaer
-     * @param ai_playing true if in game mode when ai is playing
-     */
-    public Game(GraphicsManager gm, boolean ai_playing) {
-        this.ai_playing = ai_playing;
-        if (!ai_playing) {
-            new Game(gm);
-        } else {
-            this.graphicsManager = gm;
-            this.clock = new Clock(); // Initialize clock
-            this.inputManager = gm.getInputManager();
-            this.setup = gm.getSetup();
-            gm.getRightBar().setGame(this);
-            this.map = gm.getMap();
-            this.maxNrOfMoves = 10;
-
-            entities = new ArrayList<>();
-            this.populationSize = 500;
-            this.mutationRate = (float) 0.01;
-            this.maxGens = 500;
-            this.incMovesAfterGen = 1;
-            this.increaseMovesBy = 10;
-            this.currentGen= 1;
-            
-            mapElements = new ArrayList<>();
-            start = new ElementStart(3,3,Constants.COLOR_MAP_START);
-            this.finish = new ElementFinish(20,30,Constants.COLOR_MAP_FINISH);
-
-            mapElements.add(start);
-            mapElements.add(finish);
-            // add all map-elements to entities
-           
-            entities.addAll(mapElements);
-            this.pop = new Population(this.populationSize, this.mutationRate, this);
-            this.currentMove = 0;
-            for(int i = 0; i < populationSize; i++){
-                Individual ind = pop.getIndividual(i);
-                ind.setSetup(setup);
-                entities.add(ind);
-            }
-
-            this.recordtime = this.maxNrOfMoves +(this.maxGens * this.increaseMovesBy)+ 1;
-            
-        }
-    }
-
-    /**
-     * specific constructor to set all hyperparameters of the genetic algorithm
-     *
-     * @param gm GraphicsManager
-     * @param ai_playing true if ai is playing
-     * @param maxNrOfMoves number of moves until the generation ends
-     * @param populationSize number of individuals in the population
-     * @param mutationRate probability for a genome of an individual to get mutated
-     */
-    public Game(GraphicsManager gm, boolean ai_playing, int maxNrOfMoves, int populationSize, float mutationRate) {
-        this.ai_playing = ai_playing;
-        if (!ai_playing) {
-            new Game(gm);
-        } else {
-            this.graphicsManager = gm;
-            this.clock = new Clock(); // Initialize clock
-            this.inputManager = gm.getInputManager();
-            this.setup = gm.getSetup();
-            this.map = gm.getMap();
-            gm.getRightBar().setGame(this);
-
-            this.maxNrOfMoves = maxNrOfMoves;
-            entities = new ArrayList<>();
-            this.populationSize = populationSize;
-            this.mutationRate = mutationRate;
-
-            this.pop = new Population(this.populationSize, this.mutationRate, this);
-            this.currentMove = 0;
-
-            for(int i = 0; i < populationSize; i++){
-                Individual ind = pop.getIndividual(i);
-                ind.setSetup(setup);
-                ind.setGame(this);
-                entities.add(ind);
-            }
-            this.recordtime = this.maxNrOfMoves +(this.maxGens * this.increaseMovesBy)+ 1;
-            mapElements = new ArrayList<>();
-            // help
-
-            theGreatWall = new ElementWall( 50, 20, Constants.COLOR_WALL);
-            mapElements.add(theGreatWall);
-            // add all map-elements to entities
-            entities.addAll(mapElements);
-        }
-    }
     
    
     /**
@@ -547,8 +454,8 @@ public class Game {
             case 1: populationSize--; break;
             case 2: speed++; break;
             case 3: speed--; break;
-            case 4: noOfMoves++; break;
-            case 5: noOfMoves--; break;
+            case 4: maxNrOfMoves++; break;
+            case 5: maxNrOfMoves--; break;
             case 6: mutationRate+= (float)0.005; break;
             case 7: mutationRate-= (float)0.005; break;
             case 8: noOfGenerations++; break;
@@ -750,7 +657,7 @@ public class Game {
 
     public int getPopulationSize(){return populationSize;}
     public int getSpeed(){return speed;}
-    public int getNoOfMoves(){return noOfMoves;}
+    public int getNoOfMoves(){return maxNrOfMoves;}
     public float getMutationRate(){return mutationRate;}
     public int getNoOfGenerations(){return noOfGenerations;}
 
