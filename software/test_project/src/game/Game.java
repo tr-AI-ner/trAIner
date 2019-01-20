@@ -1,8 +1,9 @@
 package game;
-
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
-
+import java.util.concurrent.TimeUnit;
+import genetic_algorithm.Individual;
+import genetic_algorithm.Population;
 import custom_objects.Avatar;
 import custom_objects.Entity;
 import custom_objects.EntityType;
@@ -28,18 +29,38 @@ public class Game {
 	
     //genetic algorithm parameters
     private int populationSize = 1;
-    private int speed = 1;
-	private int noOfMoves = 1;
-	private int mutationRate = 1;
-	private int noOfGenerations = 1;
-
+    public static int speed = 10;
+	private int maxNrOfMoves = 20;
+	private float mutationRate = (float)0.01;
+	private int noOfGenerations = 100;
+    
+    private int incMovesAfterGen = 2;
+    private int increaseMovesBy = 10;
     private int noOfTries = 1;
-	
+
+    private boolean shouldExtend = true;
+    private boolean foundFinish = false;
+    //true if in game mode AI
+    private boolean ai_playing;
+    private boolean foundPrevFinish = false;	
+    // true if genetic algorithm is running
+    private boolean aiRunning = false;
 	Avatar avatar;
-	
     ArrayList<Entity> entities;
     ArrayList<MapElement> mapElements;
 	ElementWall theGreatWall;
+	ElementWall theGreatWall2;
+    Population pop;
+
+
+    //size of the population
+    //int populationSize;
+    //mutation rate of the population
+    //float mutationRate;
+    //current lifecycle
+    int currentMove;
+    //least nr of steps to complete the map
+    int recordtime;
 
 	ElementPlasmaBall ball;
     ElementEnemy theEnemy;
@@ -58,8 +79,13 @@ public class Game {
 		this.map = gm.getMap();
         this.gameMode = gm.getGameMode();
 
-
 		entities = new ArrayList<>();
+        this.maxNrOfMoves = 10;
+
+        this.populationSize = 500;
+        this.mutationRate = (float) 0.01;
+        this.noOfGenerations = 100;
+        this.increaseMovesBy = 10;
 
 
 		//TODO set the avatar to appear on the start block
@@ -70,46 +96,127 @@ public class Game {
 		avatar.setSetup(setup);
 		avatar.setGame(this);
 		// add avatar to entities
-		entities.add(avatar);
+		//entities.add(avatar);
 		
 		mapElements = new ArrayList<>();
 
 		start = new ElementStart(33,33,Constants.COLOR_MAP_START);
         finish = new ElementFinish(50,12,Constants.COLOR_MAP_FINISH);
 
-        //blackHole = new ElementBlackHole(52,2,Constants.COLOR_BLACK_HOLE);
-        //blackHole2 = new ElementBlackHole(4,
-        //        25,
-        //               Constants.COLOR_BLACK_HOLE);
-        //blackHole.setAttachedBlackHole(blackHole2);
-        //blackHole2.setAttachedBlackHole(blackHole);
-
-
         mapElements.add(start);
         mapElements.add(finish);
 
 		// add all map-elements to entities
 		entities.addAll(mapElements);
+        this.pop = new Population(this.populationSize, this.mutationRate, this);
+        this.currentMove = 0;
+        for(int i = 0; i < populationSize; i++){
+            Individual ind = pop.getIndividual(i);
+            ind.setSetup(setup);
+            //entities.add(ind);
+        }
+
+        this.recordtime = this.maxNrOfMoves +(this.noOfGenerations * this.increaseMovesBy)+ 1;
+            
+
 	}
-	
+    
+   
     /**
      * this will start the game loop
      *
      */
 	public void run(){
-		while(true)
-			this.gameLoop();
+		while(true){
+            if(gameMode.getMode() == Constants.MODE_AI_GAME){
+                this.gameLoop(true);
+            }else{
+                this.gameLoop(false);
+            }
+        }
 	}
-	
-	// Main game loop
-	private void gameLoop(){
-		if(this.clock.frameShouldChange()) { // if fps right (ifnot, sleep, or do nothing), and update clock
-			this.processUserInput(); // Process user input	
-			this.updateState(); // Update state
-			this.redrawAll();//graphicsManager); // Redraw everything
-		}
-	}
+    
+     /**
+     * main game loop for when the AI is playing, let the population live, 
+     * do selection and reproduction
+     *
+     * @param ai_playing true if ai is playing
+     */
+    private void gameLoop(boolean ai_playing) {
+        if(this.clock.frameShouldChange()){
+            if(ai_playing){
+                if(aiRunning){
+                    if(this.pop.getCurrentGeneration() < this.noOfGenerations){
+                        if((this.pop.getCurrentGeneration() % this.incMovesAfterGen) == 0  && this.shouldExtend ){
+                            this.maxNrOfMoves+=this.increaseMovesBy;
+                            this.pop.extendGenes(this.increaseMovesBy);
+                            this.shouldExtend = false;
+                            runGA();
+                        }else{
+                            runGA();
+                        }
+                    }else{
+                        gameMode.changeMode(8,false);
+                   }
+                }else{
+                    this.restart();
+                    this.processUserInput(); // Process user input
+                    this.updateState(); // Update state
+                    this.redrawAll();//graphicsManager); // Redraw everything
 
+                }
+            }else{
+                this.processUserInput(); // Process user input
+                this.updateState(); // Update state
+                this.redrawAll();//graphicsManager); // Redraw everything
+
+            }
+        }
+    }
+    /**
+     * runs one step of the genetic algorithm, checks if individuals reached
+     * the goal, handles selection and reproduction, contains the evolution strategy
+     *
+     */
+    private void runGA(){
+        // finish found, evolve
+        if(this.foundFinish){
+            this.maxNrOfMoves = this.recordtime;
+            this.currentMove = 0;
+            this.pop.calculateFitness();
+            this.pop.selection();
+            this.pop.reproduction(this);
+            this.pop.resetDaShiat(this);
+            this.foundFinish = false;
+            this.shouldExtend = false;
+
+        // normal behavior
+        }else if(this.currentMove < this.maxNrOfMoves){
+            this.pop.live(currentMove);
+            this.currentMove++;
+            if(this.foundFinish){
+                this.foundPrevFinish = true;
+                this.recordtime = this.currentMove-1;
+
+            }
+        // generation has ended, evolve
+        }else{
+            this.currentMove = 0;
+            this.pop.calculateFitness();
+            this.pop.selection();
+            this.pop.reproduction(this);
+            this.pop.resetDaShiat(this);
+            if(this.foundPrevFinish){
+                this.shouldExtend = false;
+            }else{
+                this.shouldExtend = true;
+            }
+            
+        }
+        this.processUserInput();
+        this.updateState();
+        this.redrawAll();
+    }
     /**
      * Processing user input, e.g. mouse clicks and keyboard presses.
      *
@@ -195,7 +302,7 @@ public class Game {
             processParameterChanges(graphicsManager.getRightBar().getParameterChanges());
             
             graphicsManager.getTopBar().processUserInput();
-            graphicsManager.getBottomBar().processUserInput();
+            graphicsManager.getBottomBar().processUserInput(this);
 
         }
 
@@ -209,10 +316,14 @@ public class Game {
      * @author Kasparas
      */
 	public void restart() {
-        for (MapElement element: this.getMapElements()){
+        for (MapElement element: this.getMapElements()) {
             element.reset();
         }
-        avatar.reset();
+        if(gameMode.getMode() == Constants.MODE_AI_GAME) {
+            if(this.aiRunning) this.foundFinish = true;
+        } else {
+            avatar.reset();
+        }
     }
 
     public void playerFinished(){
@@ -220,7 +331,6 @@ public class Game {
             gameMode.changeMode(Constants.MODE_FINISH, false);
         }
     }
-
 
     /**
      * Updates the state of the game according to the current mode
@@ -278,7 +388,8 @@ public class Game {
         } 
         else if (gameMode.getMode() == Constants.MODE_HELP){
             graphicsManager.drawHelpScreen();
-        } else {
+        }
+        else {
             // draw all bars
             graphicsManager.drawWindowSetup();
 
@@ -335,10 +446,10 @@ public class Game {
             case 1: populationSize--; break;
             case 2: speed++; break;
             case 3: speed--; break;
-            case 4: noOfMoves++; break;
-            case 5: noOfMoves--; break;
-            case 6: mutationRate++; break;
-            case 7: mutationRate--; break;
+            case 4: maxNrOfMoves++; break;
+            case 5: maxNrOfMoves--; break;
+            case 6: mutationRate+= (float)0.005; break;
+            case 7: mutationRate-= (float)0.005; break;
             case 8: noOfGenerations++; break;
             case 9: noOfGenerations--; break;
             default: break;
@@ -394,7 +505,6 @@ public class Game {
 
         // check for range, element cannot be placed outside of map
         if(mouseX < 0 || mouseX >= Constants.WINDOW_MAP_WIDTH || mouseY < 0 || mouseY >= Constants.WINDOW_MAP_HEIGHT){
-            System.out.println("Aborting placing element, out of range...");
             return;
         }
 
@@ -465,10 +575,7 @@ public class Game {
                 entities.add(newElement);
             }
             map.setMapArr(newElement.getGridX(), newElement.getGridY(), newElement.getMapType().representation());
-        } else {
-            System.out.println("No position found for placing element... gridX: "+gridX+", gridY: "+gridY);
-        }
-        
+        }         
         // reset clicked element -> uncomment if only 1 element should be added
         //this.clickedMapElement = null;
     }
@@ -486,8 +593,7 @@ public class Game {
                 else if (((MapElement)entities.get(i)).getMapType()==MapType.PLASMA_BALL){
                     ((ElementPlasmaBall)entities.get(i)).reset();
                 } 
-            } else {
-            }
+            } 
         }
     }
 
@@ -502,6 +608,52 @@ public class Game {
         if(gameMode.getMode() != Constants.MODE_MAP_BUILDER && clickedMapElement != null) clickedMapElement=null;
     }
 
+    /**
+     *
+     * Function to clean up the entities
+     */
+    public void cleanEntities() {
+        ArrayList<Entity> temp = new ArrayList<>();
+        temp.addAll(mapElements);
+        if(gameMode.getMode() == Constants.MODE_PLAYER_GAME) {
+            temp.add(avatar);
+        } else if (gameMode.getMode() == Constants.MODE_AI_GAME) {
+            for ( Entity entity: entities) {
+                if(!entity.equals(avatar)) {
+                   temp.add(entity);
+                }
+            }
+        }
+        entities = temp;
+    }
+
+    /**
+     * getters and setters
+     *
+     */
+    public int[] getStartXY(){
+        for(int i = 0; i < entities.size(); i++){
+            if (entities.get(i).getType()==EntityType.MapElement){
+                if(((MapElement)entities.get(i)).getMapType()==MapType.START){
+                    return new int[] {((ElementStart)entities.get(i)).getX(), ((ElementStart)entities.get(i)).getY()};
+                }
+            }
+        }
+        return new int[] {110,500};
+    }
+
+
+    public int[] getFinishXY(){
+        for(int i = 0; i < entities.size(); i++){
+            if (entities.get(i).getType()==EntityType.MapElement){
+                if(((MapElement)entities.get(i)).getMapType()==MapType.FINISH){
+                    return new int[] {((ElementFinish)entities.get(i)).getX(), ((ElementFinish)entities.get(i)).getY()};
+                }
+            }
+        }
+        return new int[] {222,220};
+
+            }
 	public ElementStart getStart() {return start;}
     public void setStart(ElementStart newStart){
         this.start = newStart;
@@ -536,7 +688,6 @@ public class Game {
         System.out.println(s);
     }
 
-	public ElementFinish getFinish() {return finish;}
     public void setFinish(ElementFinish newFinish){
         this.finish = newFinish;
         //set new finish in entities list
@@ -574,10 +725,25 @@ public class Game {
 
     public int getPopulationSize(){return populationSize;}
     public int getSpeed(){return speed;}
-    public int getNoOfMoves(){return noOfMoves;}
-    public int getMutationRate(){return mutationRate;}
+    public float getMutationRate(){return mutationRate;}
     public int getNoOfGenerations(){return noOfGenerations;}
-    
-    public int getNoOfTries(){return noOfTries;}
 
+    public int getMaxNrOfMoves() {
+        return maxNrOfMoves;
+    }
+
+    public void setMaxNrOfMoves(int maxNrOfMoves) {
+        this.maxNrOfMoves = maxNrOfMoves;
+    }
+
+    public int getNoOfTries(){return noOfTries;}
+    public Population getPopulation() {return pop;}
+    public int getRecordTime() {return recordtime;}
+    public boolean hasFinished() {return foundFinish;}
+    public int getCurentMoove() {return currentMove;}
+
+    public ElementFinish getFinish(){ return finish;}
+    public boolean getAiRunning(){return this.aiRunning;}
+    public void setAiRunning(boolean running){this.aiRunning = running;}
 }
+
