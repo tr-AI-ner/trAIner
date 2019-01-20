@@ -1,7 +1,6 @@
 package custom_objects;
 
 import java.awt.*;
-
 import functionality.Constants;
 import functionality.Setup;
 import game.Game;
@@ -14,29 +13,43 @@ public class Avatar extends Entity {
 	
 	private int toMoveX = getX();
 	private int toMoveY = getY();
-	
+    
+    private int finAI = 0;
 	private Setup setup;
 	private Game game;
 	private ElementBlackHole currentlyTouched;
 	//Store the starting position of the Avatar so that we can reset it easily
 	private int sourceX,sourceY;
 
+    /**
+     * constructor 
+     *
+     *@param x      starting x coordinate of where the avatar should be displayed
+     *@param y      starting y coordinate of where the avatar should be displayed
+     *@param width  width of the avatar
+     *@param height height of the avatar
+     *@param color  color of the avatar
+     */
 	public Avatar(int x, int y, int width, int height, Color color) {
 		super(x, y, width, height, EntityType.Avatar);
 		sourceX=x;
 		sourceY=y;
 		this.setColor(color);
 	}
-	
+	/**
+     * move the avatar in the direction specified
+     *
+     *@param incX integer to increment the x coordinate of the avatar by 
+     *@param incY integer to increment the y coordinate of the avatar by 
+     */
 	public void move(int incX, int incY){
-		this.toMoveX = (this.toMoveX != 0 ? this.toMoveX : this.getX() + incX); 
-		this.toMoveY = (this.toMoveY != 0 ? this.toMoveY : this.getY() + incY); 
-		
+		this.toMoveX = this.toMoveX == 0 ? this.toMoveX : this.getX() + incX; 
+        this.toMoveY = this.toMoveY == 0 ? this.toMoveY : this.getY() + incY;
+	
 		if(incY == 0) // left-arrow right-arrow
 			this.toMoveX = (this.getX() + incX);
 		else if(incX == 0)  // up-arrow down-arrow
 			this.toMoveY = (this.getY() + incY);
-
 
 			if(!checkForCollision()){
 				if(blackHoled()) {
@@ -62,7 +75,8 @@ public class Avatar extends Entity {
 					}
 
 				} else if(finished()) {
-					toMoveX = game.getStart().getX();
+					this.finAI = 1;
+                    toMoveX = game.getStart().getX();
 					toMoveY = game.getStart().getY();
                     game.restart();
 					game.playerFinished();
@@ -78,10 +92,10 @@ public class Avatar extends Entity {
 		this.setY(toMoveY);
 	}
 	
-	/**
-	 *  checks if avatar collides with any objects or border,
-	 *  if so returns true
-	 * @return
+    /**
+	 * checks if avatar collides with any objects or border,
+	 * if so returns true
+	 *@return true if collision occured
 	 */
 	private boolean checkForCollision(){
 		return (
@@ -91,9 +105,9 @@ public class Avatar extends Entity {
 	}
 	
 	/**
-	 *  checks if avatar collides with border,
-	 *  if so returns true
-	 * @return
+	 * checks if avatar collides with border,
+	 * if so returns true
+	 *@return true if colliding with border
 	 */
 	private boolean collidingWithBorder(){
 		return (
@@ -106,6 +120,8 @@ public class Avatar extends Entity {
 
 
     /**
+     * checks if avatar is in black hole
+     *
      * @return whether the avatar is inside or touching the black hole
      */
     private boolean blackHoled(){
@@ -124,9 +140,12 @@ public class Avatar extends Entity {
     }
 
 	/**
+     * checks if avatar has reached the finish
+     *
 	 * @return if the avatar is touching the finish block
 	 */
 	private boolean finished(){
+
 		for (MapElement element: game.getMapElements()){
 			if (toMoveX+getWidth() > element.getX()
 					&& toMoveX < (element.getX()+element.getWidth())
@@ -141,9 +160,12 @@ public class Avatar extends Entity {
 	}
 
 	/**
-	 * @return if avatar collides with another map-element
+     * check if colliding with map element
+     *
+	 *@return if avatar collides with another map-element
 	 */
 	private boolean collidingWithMapElement(){
+
 		for (MapElement element: game.getMapElements()){
 			if (toMoveX+getWidth() > element.getX() 
 					&& toMoveX < (element.getX()+element.getWidth())
@@ -161,7 +183,7 @@ public class Avatar extends Entity {
 	/**
 	 * draws the avatar
 	 *
-	 * @param graphics
+	 *@param graphics
 	 */
 	public void draw(Graphics graphics){
 
@@ -193,6 +215,10 @@ public class Avatar extends Entity {
         toMoveY=sourceY;
     }
 
+    /**
+     * getterrs and setters
+     *
+     */
     @Override
     public String toString(){
         return "EntityType: Avatar, x: "+getX()+", y: "+getY();
@@ -204,6 +230,10 @@ public class Avatar extends Entity {
 	public void setGame(Game game){
 		this.game = game;
 	}
+
+    public int getFinAI(){return this.finAI;}
+
+    public void setFinAI(int finAI){this.finAI = finAI;}
 
     /**
      * Sets new start position for avatar
