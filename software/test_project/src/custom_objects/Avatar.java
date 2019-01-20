@@ -78,7 +78,8 @@ public class Avatar extends Entity {
 					this.finAI = 1;
                     toMoveX = game.getStart().getX();
 					toMoveY = game.getStart().getY();
-					game.restart();
+                    game.restart();
+					game.playerFinished();
 				}
 			} else {
 				toMoveX = getX();
@@ -218,6 +219,11 @@ public class Avatar extends Entity {
      * getterrs and setters
      *
      */
+    @Override
+    public String toString(){
+        return "EntityType: Avatar, x: "+getX()+", y: "+getY();
+    }
+
 	public void setSetup(Setup setup){
 		this.setup = setup;
 	}
@@ -228,10 +234,15 @@ public class Avatar extends Entity {
     public int getFinAI(){return this.finAI;}
 
     public void setFinAI(int finAI){this.finAI = finAI;}
-	
+
+    /**
+     * Sets new start position for avatar
+     *
+     * @param start 
+     */
 	public void setToStart(ElementStart start) {
-		setX(start.getGridX());
-		setY(start.getGridY());
+        sourceX = start.getWindowX();
+        sourceY = start.getWindowY();
 	}
 	
 }

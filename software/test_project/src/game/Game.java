@@ -231,9 +231,8 @@ public class Game {
 		if(inputManager.getKeyResult()[Constants.KEY_ESCAPE]) {
             gameMode.changeMode(Constants.MODE_MENU, false);
         }
-
         //Handle user input if menu is open
-        if(gameMode.getMode() == Constants.MODE_MENU){
+        else if(gameMode.getMode() == Constants.MODE_MENU){
             graphicsManager.getMenu().processUserInput();
         }
         //Handle user input if help screen is open
@@ -242,7 +241,7 @@ public class Game {
         }
         //Handle user input if finish screen is open
         else if(gameMode.getMode() == Constants.MODE_FINISH){
-            graphicsManager.getFinishScreen().processUserInput();
+            graphicsManager.getFinishScreen().processUserInput(this);
         }
         // Hanlde user input if exit screen is open
         else if (gameMode.getMode() == Constants.MODE_EXIT){
@@ -258,12 +257,8 @@ public class Game {
             if(inputManager.getKeyResult()[Constants.KEY_A]) { 
                 gameMode.changeMode(Constants.MODE_AI_GAME, false);
             }
-            // loads an empty map
-            //if(inputManager.getKeyResult()[Constants.KEY_E]) { mapSaverLoader.initEmptyMap(); }
-            // switch to AI mode
-
+            //moves player avatar in the desired direction
             if (gameMode.getMode()==Constants.MODE_PLAYER_GAME){
-                //moves in the desired direction
                 if (inputManager.getKeyResult()[Constants.KEY_UP]) {
                     avatar.move(0, (-setup.getNewEntitySpeed()));
                 }
@@ -328,6 +323,11 @@ public class Game {
             if(this.aiRunning) this.foundFinish = true;
         } else {
             avatar.reset();
+        }
+    }
+
+    public void playerFinished(){
+        if (gameMode.getMode() == Constants.MODE_PLAYER_GAME){
             gameMode.changeMode(Constants.MODE_FINISH, false);
         }
     }
@@ -420,14 +420,13 @@ public class Game {
                     // Because of the grid element system we have to check if the elements don't collide on the grid level
                     if(Math.abs(element.getX()  - avatar.getX()) < Constants.MAP_ELEMENT_SIZE
                             && Math.abs(element.getY()  - avatar.getY()) < Constants.MAP_ELEMENT_SIZE) {
-                            this.restart();
+                        this.restart();
                     }
                 }
             }
         }
         map.updateEntitiesInMap(entities);
     }
-
 
     /**
      * process a parameter change when user clicked on a minus or plus button
@@ -558,9 +557,10 @@ public class Game {
             MapElement newElement = clickedMapElement;
             newElement.setGridX(gridX);
             newElement.setGridY(gridY);
+            boolean isStartFinish = false;
             switch (clickedMapElement.getMapType()){
-                case START: newElement = new ElementStart((ElementStart)clickedMapElement); break;
-                case FINISH: newElement = new ElementFinish((ElementFinish)clickedMapElement); break;
+                case START: newElement = new ElementStart((ElementStart)clickedMapElement); setStart((ElementStart)newElement); break;
+                case FINISH: newElement = new ElementFinish((ElementFinish)clickedMapElement); setFinish((ElementFinish)newElement); break;
                 case WALL: newElement = new ElementWall((ElementWall)clickedMapElement); break;
                 case BLACK_HOLE: newElement = new ElementBlackHole((ElementBlackHole)clickedMapElement); break;
                 case ENEMY: newElement = new ElementEnemy((ElementEnemy)clickedMapElement); break;
@@ -568,8 +568,11 @@ public class Game {
                 case PLASMA_BALL: newElement = new ElementPlasmaBall((ElementPlasmaBall)clickedMapElement); break;
                 default: break;
             }
-            mapElements.add(newElement);
-            entities.add(newElement);
+            // add new elements except for start & finish since they can exist only once
+            if (!isStartFinish){
+                mapElements.add(newElement);
+                entities.add(newElement);
+            }
             map.setMapArr(newElement.getGridX(), newElement.getGridY(), newElement.getMapType().representation());
         }         
         // reset clicked element -> uncomment if only 1 element should be added
@@ -631,9 +634,64 @@ public class Game {
         return new int[] {222,220};
 
             }
-        
-    
-    public Avatar getAvatar(){return avatar;}
+	public ElementStart getStart() {return start;}
+    public void setStart(ElementStart newStart){
+        this.start = newStart;
+        //set new start in entities list
+        for (int ent=0; ent<entities.size(); ent++){
+            if (entities.get(ent).getType()==EntityType.MapElement 
+                && (((MapElement)entities.get(ent)).getMapType()==MapType.START)){
+                entities.set(ent, newStart);
+                break;
+            }
+        }
+        //set new start in map-elements list
+        for (int i=0; i<mapElements.size(); i++){
+            if (mapElements.get(i).getMapType()==MapType.START){
+                mapElements.set(i, newStart);
+                break;
+            }
+        }
+        avatar.setToStart(this.start);
+        avatar.reset();
+    }
+
+    /**
+     * Prints all entities on map, for debugging purposes.
+     */
+    public void printAllEntities(){
+        String s = "------------- All entities -------------\n";
+        for (int i=0; i<entities.size(); i++){
+            s += ""+i+" - "+entities.get(i).toString()+"\n";
+        }
+        s += "------------- End of entities -------------";
+        System.out.println(s);
+    }
+
+    public void setFinish(ElementFinish newFinish){
+        this.finish = newFinish;
+        //set new finish in entities list
+        for (int ent=0; ent<entities.size(); ent++){
+            if (entities.get(ent).getType()==EntityType.MapElement 
+                && (((MapElement)entities.get(ent)).getMapType()==MapType.FINISH)){
+                //entities.set(ent, newFinish);
+                ((MapElement)entities.get(ent)).setGridX(newFinish.getGridX());
+                ((MapElement)entities.get(ent)).setGridY(newFinish.getGridY());
+                break;
+            }
+        }
+        //set new finish in map-elements list
+        for (int i=0; i<mapElements.size(); i++){
+            if (mapElements.get(i).getMapType()==MapType.FINISH){
+                //mapElements.set(i, newFinish);
+                mapElements.get(i).setGridX(newFinish.getGridX());
+                mapElements.get(i).setGridY(newFinish.getGridY());
+                break;
+            }
+        }
+    }
+
+	public Avatar getAvatar(){return avatar;}
 	public ArrayList<Entity> getEntities(){return entities;}
 
     public void resetEntities(){this.entities = new ArrayList<>();}
@@ -644,8 +702,6 @@ public class Game {
 	public void setMapElements(ArrayList<MapElement> mapElements){this.mapElements=mapElements;}
 	public void resetMapElements(){this.mapElements = new ArrayList<>();}
 	public ArrayList<MapElement> getMapElements(){return mapElements;}
-
-	public ElementStart getStart() {return start;}
 
     public int getPopulationSize(){return populationSize;}
     public int getSpeed(){return speed;}

@@ -28,6 +28,9 @@ public class ElementEnemy extends MapElement {
         temp = gridX;
 	}
 
+    /**
+     * Copy constructor
+     */
     public ElementEnemy(ElementEnemy object){
         super(object.getGridX(), object.getGridY(), MapType.ENEMY, object.getColor());
         sourceX = object.getGridX();
@@ -35,6 +38,9 @@ public class ElementEnemy extends MapElement {
         this.temp = object.getGridX();
     }
 
+    /**
+     * Make enemy move horizontally.
+     */
     public void update() {
         if (getGridX() >= Constants.GRID_COLUMNS-1){
             forward = false;
@@ -65,11 +71,26 @@ public class ElementEnemy extends MapElement {
             int leftDistance = 10000, rightDistance = 10000;
             for(int i=0; i<collidingElems.size(); i++){
                 MapElement elem = mapElements.get(collidingElems.get(i));
-                if(elem.getGridX() < this.getGridX() && Math.abs(elem.getGridX()-this.getGridX())<leftDistance){
-                    leftColliding = i;
+
+                int newDistance = Math.abs(elem.getGridX()-this.getGridX());
+
+                if(elem.getGridX() < this.getGridX() && newDistance<leftDistance){
+                    if (leftColliding < 0){
+                        leftColliding = i;
+                        leftDistance = newDistance;
+                    } else {
+                        leftColliding = i;
+                        leftDistance = newDistance;
+                    }
                 }
-                if(elem.getGridX() > this.getGridX() && Math.abs(elem.getGridX()-this.getGridX())<rightDistance){
-                    rightColliding = i;
+                if(elem.getGridX() > this.getGridX() && newDistance<rightDistance){
+                    if (rightColliding < 0){
+                        rightColliding = i;
+                        rightDistance = newDistance;
+                    } else {
+                        rightColliding = i;
+                        rightDistance = newDistance;
+                    }
                 }
             }
 
