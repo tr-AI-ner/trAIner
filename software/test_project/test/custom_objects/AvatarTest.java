@@ -55,6 +55,7 @@ public class AvatarTest {
 	
 	@Test
 	public void testCollisionWithBorder(){
+        int x = 10;
 		avatar.setX(x);
 	}
 

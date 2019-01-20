@@ -1,20 +1,19 @@
 /** 
-  * Copyright 2018-11-22 Patrick
+  * Copyright 2019-01-20 Patrick
   *
   * All rights reserved
   *
   * @Author: Patrick
   * 
-  * 
-  * Short description for what this file does...
+  * This tester class is responsible for testing the loading & saving logic of maps 
   * 
   */
-package ui;
+package map_saver;
 
-import org.junit.Test;
+import org.junit.*;
 import static org.junit.Assert.assertEquals;
 
-public class UIElementTest {
+public class MapSaverLoaderTest {
 
 
     @Test
