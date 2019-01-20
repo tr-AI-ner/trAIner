@@ -271,11 +271,11 @@ public class RightBar extends UIElement {
 
         //number of moves changes
         else if(isMovePlusButtonClicked(getInputManager().getMouseClickedX(), 
-                    getInputManager().getMouseClickedY()) && game.getNoOfMoves() <= Constants.MAX_NO_OF_MOVES){
+                    getInputManager().getMouseClickedY()) && game.getMaxNrOfMoves() <= Constants.MAX_NO_OF_MOVES){
             return 4;
         }
         else if(isMoveMinusButtonClicked(getInputManager().getMouseClickedX(), 
-                    getInputManager().getMouseClickedY()) && game.getNoOfMoves() > 1){
+                    getInputManager().getMouseClickedY()) && game.getMaxNrOfMoves() > 1){
             return 5;
         }
 
@@ -454,7 +454,7 @@ public class RightBar extends UIElement {
 		graphics.setFont(font);
     	graphics.drawString("Population Size: "+String.format("%1$9s",game.getPopulationSize())+"x", minusButtonX+rightBarStartX, parametersStartY+rightBarOffestY+betweenStrings*4);
     	graphics.drawString("Speed: "+String.format("%1$27s",game.getSpeed())+"x", minusButtonX+rightBarStartX, parametersStartY+rightBarOffestY+betweenStrings*1);
-    	graphics.drawString("Maximum Moves: "+String.format("%1$9s",game.getNoOfMoves()+"x"), minusButtonX+rightBarStartX,parametersStartY+rightBarOffestY+betweenStrings*3);
+    	graphics.drawString("Maximum Moves: "+String.format("%1$9s",game.getMaxNrOfMoves()+"x"), minusButtonX+rightBarStartX,parametersStartY+rightBarOffestY+betweenStrings*3);
     	graphics.drawString("Mutation Rate: "+String.format("%1$13s",game.getMutationRate()+"x"), minusButtonX+rightBarStartX,  parametersStartY+rightBarOffestY+betweenStrings*2);
     	graphics.drawString("Max Generations: "+String.format("%1$9s",game.getNoOfGenerations()+"x"), minusButtonX+rightBarStartX,  parametersStartY+rightBarOffestY+betweenStrings*5);
     	graphics.drawString("Current Move: "+game.getCurentMoove(), minusButtonX+rightBarStartX,  parametersStartY+betweenStrings*10);
@@ -583,7 +583,7 @@ public class RightBar extends UIElement {
             graphics.drawString(game.getSpeed()+"x", parameterX, (y+buttonOffsetY)+((plusMinusButtonWidth/2)+beautyFactor));
             break;
         case 2: 
-            graphics.drawString(game.getNoOfMoves()+"x", parameterX, (y+buttonOffsetY)+((plusMinusButtonWidth/2)+beautyFactor));
+            graphics.drawString(game.getMaxNrOfMoves()+"x", parameterX, (y+buttonOffsetY)+((plusMinusButtonWidth/2)+beautyFactor));
             break;
         case 3:
             graphics.drawString(game.getMutationRate()+"x", parameterX, (y+buttonOffsetY)+((plusMinusButtonWidth/2)+beautyFactor));

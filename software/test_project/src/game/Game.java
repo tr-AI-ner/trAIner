@@ -52,8 +52,7 @@ public class Game {
 	ElementWall theGreatWall2;
     Population pop;
 
-    // lifetime of a population
-    int maxNrOfMoves;
+
     //size of the population
     //int populationSize;
     //mutation rate of the population
@@ -657,7 +656,6 @@ public class Game {
 
     public int getPopulationSize(){return populationSize;}
     public int getSpeed(){return speed;}
-    public int getNoOfMoves(){return maxNrOfMoves;}
     public float getMutationRate(){return mutationRate;}
     public int getNoOfGenerations(){return noOfGenerations;}
 
