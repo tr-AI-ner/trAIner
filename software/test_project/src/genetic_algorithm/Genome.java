@@ -1,5 +1,7 @@
 package genetic_algorithm;
 
+import game.Game;
+
 import java.util.Arrays;
 import java.util.Random;
 
@@ -35,7 +37,8 @@ public class Genome {
         }
 
     }
-    
+
+
     /**
      * Copy constructor
      */

@@ -29,7 +29,7 @@ public class Game {
 	
     //genetic algorithm parameters
     private int populationSize = 1;
-    private int speed = 1;
+    public static int speed = 10;
 	private int maxNrOfMoves = 20;
 	private float mutationRate = (float)0.01;
 	private int noOfGenerations = 100;
@@ -61,9 +61,6 @@ public class Game {
     int currentMove;
     //least nr of steps to complete the map
     int recordtime;
-    //max nr of generations
-    int maxGens;
-    int currentGen;
 
 	ElementPlasmaBall ball;
     ElementEnemy theEnemy;
@@ -87,10 +84,8 @@ public class Game {
 
         this.populationSize = 500;
         this.mutationRate = (float) 0.01;
-        this.maxGens = 500;
-        this.incMovesAfterGen = 1;
+        this.noOfGenerations = 500;
         this.increaseMovesBy = 10;
-        this.currentGen= 1;
 
 
 		//TODO set the avatar to appear on the start block
@@ -121,7 +116,7 @@ public class Game {
             entities.add(ind);
         }
 
-        this.recordtime = this.maxNrOfMoves +(this.maxGens * this.increaseMovesBy)+ 1;
+        this.recordtime = this.maxNrOfMoves +(this.noOfGenerations * this.increaseMovesBy)+ 1;
             
 
 	}
@@ -151,27 +146,27 @@ public class Game {
         if(this.clock.frameShouldChange()){
             if(ai_playing){
                 if(aiRunning){
-                    if(this.currentGen < this.maxGens){
-                        if((this.currentGen % this.incMovesAfterGen) == 0  && this.shouldExtend ){
+                    if(this.pop.getCurrentGeneration() < this.noOfGenerations){
+                        if((this.pop.getCurrentGeneration() % this.incMovesAfterGen) == 0  && this.shouldExtend ){
                             this.maxNrOfMoves+=this.increaseMovesBy;
                             this.pop.extendGenes(this.increaseMovesBy);
                             this.shouldExtend = false;
-                            runGA();             
+                            runGA();
                         }else{
-                            runGA();         
+                            runGA();
                         }
                     }else{
                         gameMode.changeMode(8,false);
                    }
                 }else{
                     this.restart();
-                    this.processUserInput(); // Process user input	
+                    this.processUserInput(); // Process user input
                     this.updateState(); // Update state
                     this.redrawAll();//graphicsManager); // Redraw everything
 
                 }
             }else{
-                this.processUserInput(); // Process user input	
+                this.processUserInput(); // Process user input
                 this.updateState(); // Update state
                 this.redrawAll();//graphicsManager); // Redraw everything
 
@@ -179,8 +174,8 @@ public class Game {
         }
     }
     /**
-     * runs one step of the genetic algorithm, checks if individuals reached 
-     * the goal, handles selection and reproduction, contains the evolution strategy 
+     * runs one step of the genetic algorithm, checks if individuals reached
+     * the goal, handles selection and reproduction, contains the evolution strategy
      *
      */
     private void runGA(){
@@ -192,7 +187,6 @@ public class Game {
             this.pop.selection();
             this.pop.reproduction(this);
             this.pop.resetDaShiat(this);
-            this.currentGen++;
             this.foundFinish = false;
             this.shouldExtend = false;
 
@@ -212,7 +206,6 @@ public class Game {
             this.pop.selection();
             this.pop.reproduction(this);
             this.pop.resetDaShiat(this);
-            this.currentGen++;
             if(this.foundPrevFinish){
                 this.shouldExtend = false;
             }else{
