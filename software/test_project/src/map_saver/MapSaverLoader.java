@@ -20,6 +20,12 @@ import static functionality.Constants.WINDOW_MAP_WIDTH;
 import static functionality.Constants.WINDOW_MAP_HEIGHT;
 import static javax.swing.JOptionPane.showMessageDialog;
 
+/**
+ * This class is responsible for loading and saving custom-built maps from/as csv files.
+ *
+ * @author Sasha
+ * @author Patrick
+ */
 public class MapSaverLoader {
 
     private static final String COMMA_DELIMITER = ",";
@@ -70,8 +76,7 @@ public class MapSaverLoader {
                 else if (map[col][row] == MapType.START.representation())	{
                     ElementStart newStart = new ElementStart(col, row, functionality.Constants.COLOR_MAP_START);
                     game.getMapElements().add(newStart);
-                    game.getAvatar().setX(row*Constants.MAP_ELEMENT_SIZE);
-                    game.getAvatar().setY(col*Constants.MAP_ELEMENT_SIZE);
+                    game.getAvatar().setToStart(newStart);
                     game.getAvatar().reset();
                     // TODO: do this for every single individual once the GA is merged with the master branch
                 }

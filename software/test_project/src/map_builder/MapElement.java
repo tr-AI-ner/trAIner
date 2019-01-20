@@ -175,5 +175,7 @@ public abstract class MapElement extends Entity {
 	public void setMapType(MapType mapType) {
 		this.mapType = mapType;
 	}
-	
+
+    public int getWindowX(){return gridX*Constants.MAP_ELEMENT_SIZE;}
+    public int getWindowY(){return gridY*Constants.MAP_ELEMENT_SIZE;}
 }
