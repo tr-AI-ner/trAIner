@@ -1,0 +1,3 @@
+"We were supposed to make AI do all the work and we play games but we do all the work and the AI is playing games!"
+- Andrey Karpathy 
+
