@@ -16,7 +16,7 @@ public class Genome {
     int[][] gene;
     int step;
     int maxNrOfMoves;
-    int speed = 10;
+    int speed = 9;
     /**
      * default constructor
      *

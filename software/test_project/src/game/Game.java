@@ -34,7 +34,7 @@ public class Game {
 	private float mutationRate = (float)0.01;
 	private int noOfGenerations = 100;
     
-    private int incMovesAfterGen = 2;
+    private int incMovesAfterGen = 1;
     private int increaseMovesBy = 10;
     private int noOfTries = 1;
 
@@ -80,12 +80,12 @@ public class Game {
         this.gameMode = gm.getGameMode();
 
 		entities = new ArrayList<>();
-        this.maxNrOfMoves = 10;
+        this.maxNrOfMoves = 65;
 
-        this.populationSize = 500;
+        this.populationSize = 700;
         this.mutationRate = (float) 0.01;
         this.noOfGenerations = 100;
-        this.increaseMovesBy = 10;
+        this.increaseMovesBy = 25;
 
 
 		//TODO set the avatar to appear on the start block
@@ -100,8 +100,8 @@ public class Game {
 		
 		mapElements = new ArrayList<>();
 
-		start = new ElementStart(33,33,Constants.COLOR_MAP_START);
-        finish = new ElementFinish(50,12,Constants.COLOR_MAP_FINISH);
+		start = new ElementStart(1,1,Constants.COLOR_MAP_START);
+        finish = new ElementFinish(59,28,Constants.COLOR_MAP_FINISH);
 
         mapElements.add(start);
         mapElements.add(finish);
