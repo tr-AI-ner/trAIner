@@ -57,9 +57,9 @@ public class RightBar extends UIElement {
 	int parameterStringX = 15;
     //int parametersStartY = 100;
     int parametersStartY = Constants.WINDOW_MAP_Y0-90;
-    int parametersStartYnotRunning = 95;
+    int parametersStartYnotRunning = Constants.WINDOW_MAP_Y0;
     // y start position of first parameter
-    int buttonStartY = parametersStartY;
+    int buttonStartY = parametersStartYnotRunning;
 
     // offset so that the button is drawn beneath the string for each parameter
     int buttonOffsetY = 22;
@@ -246,7 +246,7 @@ public class RightBar extends UIElement {
      */
     public int getParameterChanges(){
         // only change parameters in game mode or if mouse is clicked
-        if(gameMode.getMode() != Constants.MODE_PLAYER_GAME || !getInputManager().isMouseClicked()) return -1;
+        if(gameMode.getMode() != Constants.MODE_AI_GAME || !getInputManager().isMouseClicked()) return -1;
 
         //population size changes
         if(isSizePlusButtonClicked(getInputManager().getMouseClickedX(),
@@ -323,7 +323,7 @@ public class RightBar extends UIElement {
 				drawMapBuilderList(graphics);
 				break;
 			case Constants.MODE_PLAYER_GAME:
-
+				break;
 			default:
 				break;
 		}
@@ -463,7 +463,6 @@ public class RightBar extends UIElement {
     	drawNumberOfGenerationString(graphics);
         drawFittestString(graphics);
         drawRecordTime(graphics);
-        drawCheckboxes(graphics);
 		drawChart(graphics);
     }
 
@@ -531,15 +530,6 @@ public class RightBar extends UIElement {
 		if (str.length()>maxChar) {str=str.substring(0, maxChar);}
 		return str;
 	}
-
-    /**
-     * TODO: draw checkboxes below parameters
-     *
-     * @author Patrick
-     */
-    private void drawCheckboxes(Graphics graphics){
-        //draw checkbox for showing only fittest genome
-    }
 
     /**
      * draws a parameter item
