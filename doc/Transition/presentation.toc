@@ -1,9 +1,8 @@
 \beamer@sectionintoc {1}{Introduction}{2}{0}{1}
 \beamer@sectionintoc {2}{User Pitch}{4}{0}{2}
 \beamer@subsectionintoc {2}{1}{Audience}{6}{0}{2}
-\beamer@subsectionintoc {2}{2}{Features}{7}{0}{2}
-\beamer@subsectionintoc {2}{3}{Functionality}{8}{0}{2}
-\beamer@subsectionintoc {2}{4}{Genetic Algorithm}{14}{0}{2}
+\beamer@subsectionintoc {2}{2}{Functionality}{7}{0}{2}
+\beamer@subsectionintoc {2}{3}{Genetic Algorithm}{14}{0}{2}
 \beamer@sectionintoc {3}{Investor Pitch}{16}{0}{3}
 \beamer@subsectionintoc {3}{1}{Requirements}{16}{0}{3}
 \beamer@subsectionintoc {3}{2}{Architectural Patterns}{17}{0}{3}
